@@ -20,7 +20,7 @@ export default function TourHero({
   return (
     <div className='relative'>
       {/* Hero background */}
-      <div className='relative h-[70vh] min-h-[600px] overflow-hidden rounded-3xl'>
+      <div className='relative h-[70vh] min-h-[600px] overflow-hidden '>
         <img
           src={heroImage}
           alt={title}

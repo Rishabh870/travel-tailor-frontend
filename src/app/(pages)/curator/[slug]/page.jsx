@@ -52,7 +52,7 @@ export default function TourPage() {
       {/* Sticky Menu */}
 
       {/* Hero Section */}
-      <div className='container mx-auto px-4 py-6'>
+      <div className=''>
         <TourHero
           title={tour.title}
           subtitle={tour.subtitle}
