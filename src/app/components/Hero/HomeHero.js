@@ -1,15 +1,15 @@
-'use client';
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+"use client";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import Image from 'next/image';
-import styles from './styles.module.css';
+import Image from "next/image";
+import styles from "./styles.module.css";
 
-import Button from '../CustomUI/Button/Button';
-import ArrowBtn from '../CustomUI/Button/ArrowBtn';
+import Button from "../CustomUI/Button/Button";
+import ArrowBtn from "../CustomUI/Button/ArrowBtn";
 
-import Varients from '../../lib/varients';
-import parseUrl from '../../../../app/util/parseUrl';
+import Varients from "../../lib/varients";
+import parseUrl from "../../util/parseUrl";
 
 function HomeHero({ heroData }) {
   const [current, setCurrent] = useState(0);
@@ -34,9 +34,9 @@ function HomeHero({ heroData }) {
   useEffect(() => {
     if (!imagesPreloaded.current) {
       heroData.forEach((item) => {
-        const img = document.createElement('link');
-        img.rel = 'preload';
-        img.as = 'image';
+        const img = document.createElement("link");
+        img.rel = "preload";
+        img.as = "image";
         img.href = parseUrl(item.imgUrl);
         document.head.appendChild(img);
       });
@@ -46,12 +46,12 @@ function HomeHero({ heroData }) {
 
   // Background style for persistent black background
   const backgroundStyle = {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'black',
+    width: "100%",
+    height: "100%",
+    backgroundColor: "black",
     zIndex: -3,
   };
 
@@ -62,14 +62,15 @@ function HomeHero({ heroData }) {
         <div style={backgroundStyle}></div>
 
         {/* BgImage with AnimatePresence */}
-        <AnimatePresence mode='wait'>
+        <AnimatePresence mode="wait">
           <motion.div
             className={styles.heroHomeImgContainer}
             key={hero.imgUrl}
-            initial={{ opacity: 0, filter: 'brightness(0.2)' }}
-            animate={{ opacity: 1, filter: 'brightness(0.8)' }}
-            exit={{ opacity: 0, filter: 'brightness(0.2)' }}
-            transition={{ duration: 0.6 }}>
+            initial={{ opacity: 0, filter: "brightness(0.2)" }}
+            animate={{ opacity: 1, filter: "brightness(0.8)" }}
+            exit={{ opacity: 0, filter: "brightness(0.2)" }}
+            transition={{ duration: 0.6 }}
+          >
             <Image
               src={parseUrl(hero.imgUrl)}
               alt={hero.title}
@@ -83,14 +84,15 @@ function HomeHero({ heroData }) {
 
         {/* Hero Content */}
         <div className={styles.heroHomeContent}>
-          <AnimatePresence mode='wait'>
+          <AnimatePresence mode="wait">
             <motion.div
               className={styles.heroHomeContentMain}
               key={hero.title}
               variants={Varients.heroHomeContentMain}
-              initial='initial'
-              animate='animate'
-              exit='exit'>
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
               <div className={styles.heroHomeContentMainTitle}>
                 <motion.h1 variants={Varients.heroHomeContentChild}>
                   {hero.title}
@@ -103,8 +105,9 @@ function HomeHero({ heroData }) {
               <motion.div variants={Varients.heroHomeContentChildFinal}>
                 <Button
                   href={`${process.env.NEXT_PUBLIC_DOMAIN}${hero.url}`}
-                  className='md'>
-                  {hero.CTA || 'Explore'}
+                  className="md"
+                >
+                  {hero.CTA || "Explore"}
                 </Button>
               </motion.div>
             </motion.div>
@@ -116,18 +119,20 @@ function HomeHero({ heroData }) {
                 <div
                   key={index}
                   className={styles.progressBar}
-                  onClick={() => handleClick(index)}>
+                  onClick={() => handleClick(index)}
+                >
                   <div
                     key={item.title}
                     className={`${styles.progress} ${
-                      current === index ? styles.active : ''
-                    } ${current > index ? styles.filled : ''}`}></div>
+                      current === index ? styles.active : ""
+                    } ${current > index ? styles.filled : ""}`}
+                  ></div>
                 </div>
               ))}
             </div>
 
             <div className={styles.scrollIndicator}>
-              <ArrowBtn label='Scroll' direction='down' variant='blurred' />
+              <ArrowBtn label="Scroll" direction="down" variant="blurred" />
             </div>
           </div>
         </div>

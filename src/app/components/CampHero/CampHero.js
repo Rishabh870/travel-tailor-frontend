@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
-import styles from './styles.module.css'; // We will create this file next
-import ArrowBtn from '../CustomUI/Button/ArrowBtn';
-import Varients from '../../lib/varients';
-import parseUrl from '../../../../app/util/parseUrl';
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import styles from "./styles.module.css"; // We will create this file next
+import ArrowBtn from "../CustomUI/Button/ArrowBtn";
+import Varients from "../../lib/varients";
+import parseUrl from "../../../util/parseUrl";
 
 // The new CampHero component accepts `heroData` for the slider and `children` for the form
 function CampHero({ heroData, children }) {
@@ -27,9 +27,9 @@ function CampHero({ heroData, children }) {
   useEffect(() => {
     if (!imagesPreloaded.current) {
       heroData.forEach((item) => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
         link.href = parseUrl(item.imgUrl);
         document.head.appendChild(link);
       });
@@ -66,14 +66,15 @@ function CampHero({ heroData, children }) {
       <div className={styles.campHeroSlider}>
         <div className={styles.backgroundStyle}></div>
 
-        <AnimatePresence mode='wait'>
+        <AnimatePresence mode="wait">
           <motion.div
             className={styles.campHeroImgContainer}
             key={hero.imgUrl}
-            initial={{ opacity: 0, filter: 'brightness(0.4)' }}
-            animate={{ opacity: 1, filter: 'brightness(0.8)' }}
-            exit={{ opacity: 0, filter: 'brightness(0.4)' }}
-            transition={{ duration: 0.4 }}>
+            initial={{ opacity: 0, filter: "brightness(0.4)" }}
+            animate={{ opacity: 1, filter: "brightness(0.8)" }}
+            exit={{ opacity: 0, filter: "brightness(0.4)" }}
+            transition={{ duration: 0.4 }}
+          >
             <Image
               src={parseUrl(hero.imgUrl)}
               alt={hero.title}
@@ -86,14 +87,15 @@ function CampHero({ heroData, children }) {
         </AnimatePresence>
 
         <div className={styles.campHeroContent}>
-          <AnimatePresence mode='wait'>
+          <AnimatePresence mode="wait">
             <motion.div
               className={styles.campHeroContentMain}
               key={hero.title}
               variants={Varients.heroHomeContentMain}
-              initial='initial'
-              animate='animate'
-              exit='exit'>
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
               <div className={styles.campHeroContentMainTitle}>
                 <motion.h1 variants={Varients.heroHomeContentChild}>
                   {hero.title}
@@ -105,8 +107,8 @@ function CampHero({ heroData, children }) {
           <div className={styles.campHeroNav}>
             <div className={styles.navArrows}>
               <ArrowBtn
-                direction='left'
-                variant='blurred'
+                direction="left"
+                variant="blurred"
                 onClick={handlePrev}
               />
               <div className={styles.navSlideProgress}>
@@ -114,15 +116,15 @@ function CampHero({ heroData, children }) {
                   <motion.div
                     className={styles.navProgress}
                     initial={{ width: 0 }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 7, ease: 'linear' }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 7, ease: "linear" }}
                     key={current}
                   />
                 </div>
               </div>
               <ArrowBtn
-                direction='right'
-                variant='blurred'
+                direction="right"
+                variant="blurred"
                 onClick={handleNext}
               />
             </div>

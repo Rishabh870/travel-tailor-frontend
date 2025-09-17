@@ -1,16 +1,16 @@
-import styles from './styles.module.css';
-import Image from 'next/image';
-import Link from 'next/link';
+import styles from "./styles.module.css";
+import Image from "next/image";
+import Link from "next/link";
 
-import Button from '../CustomUI/Button/Button';
+import Button from "../CustomUI/Button/Button";
 
-import parseTitle from '../../../../app/util/parseTitle';
+import parseTitle from "../../util/parseTitle";
 
 function Banner({
   title = "Dreaming of an Adventure? /nLet's Talk!",
-  url = '/contact',
-  imgUrl = '/images/banner.jpg',
-  cta = 'Enquire now',
+  url = "/contact",
+  imgUrl = "/images/banner.jpg",
+  cta = "Enquire now",
   ...props
 }) {
   return (
@@ -30,9 +30,10 @@ function Banner({
           <h4 className={styles.bannerTitle}>{parseTitle(title)}</h4>
 
           <Button
-            varient='fill'
+            varient="fill"
             className={`md ${styles.bannerBtn}`}
-            type='block'>
+            type="block"
+          >
             {cta}
           </Button>
         </div>

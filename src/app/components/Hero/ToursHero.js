@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
-import styles from './styles.module.css';
-import ArrowBtn from '../CustomUI/Button/ArrowBtn';
-import Varients from '../../lib/varients';
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import styles from "./styles.module.css";
+import ArrowBtn from "../CustomUI/Button/ArrowBtn";
+import Varients from "../../lib/varients";
 
-import parseUrl from '../../../../app/util/parseUrl';
+import parseUrl from "../../../util/parseUrl";
 
 function ToursHero({ heroData, varient }) {
   const [current, setCurrent] = useState(0);
@@ -40,9 +40,9 @@ function ToursHero({ heroData, varient }) {
   useEffect(() => {
     if (!imagesPreloaded.current) {
       heroData.forEach((item) => {
-        const img = document.createElement('link');
-        img.rel = 'preload';
-        img.as = 'image';
+        const img = document.createElement("link");
+        img.rel = "preload";
+        img.as = "image";
         img.href = parseUrl(item.imgUrl);
         document.head.appendChild(img);
       });
@@ -51,12 +51,12 @@ function ToursHero({ heroData, varient }) {
   }, [heroData]);
 
   const backgroundStyle = {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'black',
+    width: "100%",
+    height: "100%",
+    backgroundColor: "black",
     zIndex: -3,
   };
 
@@ -64,18 +64,20 @@ function ToursHero({ heroData, varient }) {
     return (
       <section
         className={`${styles.toursHero} ${
-          varient === 'small' ? styles.vSmall : ''
-        }`}>
+          varient === "small" ? styles.vSmall : ""
+        }`}
+      >
         <div style={backgroundStyle}></div>
 
-        <AnimatePresence mode='wait'>
+        <AnimatePresence mode="wait">
           <motion.div
             className={styles.toursHeroImgContainer}
             key={hero.imgUrl}
-            initial={{ opacity: 0, filter: 'brightness(0.4)' }}
-            animate={{ opacity: 1, filter: 'brightness(0.8)' }}
-            exit={{ opacity: 0, filter: 'brightness(0.4)' }}
-            transition={{ duration: 0.4 }}>
+            initial={{ opacity: 0, filter: "brightness(0.4)" }}
+            animate={{ opacity: 1, filter: "brightness(0.8)" }}
+            exit={{ opacity: 0, filter: "brightness(0.4)" }}
+            transition={{ duration: 0.4 }}
+          >
             <Image
               src={parseUrl(hero.imgUrl)}
               alt={hero.title}
@@ -88,14 +90,15 @@ function ToursHero({ heroData, varient }) {
         </AnimatePresence>
 
         <div className={styles.toursHeroContent}>
-          <AnimatePresence mode='wait'>
+          <AnimatePresence mode="wait">
             <motion.div
               className={styles.toursHeroContentMain}
               key={hero.title}
               variants={Varients.heroHomeContentMain}
-              initial='initial'
-              animate='animate'
-              exit='exit'>
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
               <div className={styles.toursHeroContentMainTitle}>
                 <motion.h1 variants={Varients.heroHomeContentChild}>
                   {hero.title}
@@ -107,8 +110,8 @@ function ToursHero({ heroData, varient }) {
           <div className={styles.toursHeroNav}>
             <div className={styles.navArrows}>
               <ArrowBtn
-                direction='left'
-                variant='blurred'
+                direction="left"
+                variant="blurred"
                 onClick={handlePrev}
               />
               <div className={styles.navSlideProgress}>
@@ -116,15 +119,15 @@ function ToursHero({ heroData, varient }) {
                   <motion.div
                     className={styles.navProgress}
                     initial={{ width: 0 }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 7, ease: 'linear' }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 7, ease: "linear" }}
                     key={current}
                   />
                 </div>
               </div>
               <ArrowBtn
-                direction='right'
-                variant='blurred'
+                direction="right"
+                variant="blurred"
                 onClick={handleNext}
               />
             </div>
@@ -132,9 +135,9 @@ function ToursHero({ heroData, varient }) {
             <div className={styles.scrollIndicator}>
               <ArrowBtn
                 className={styles.scrollIndicatorBtn}
-                label='Scroll'
-                direction='down'
-                variant='blurred'
+                label="Scroll"
+                direction="down"
+                variant="blurred"
               />
             </div>
           </div>

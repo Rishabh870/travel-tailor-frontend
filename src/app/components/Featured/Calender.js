@@ -1,8 +1,8 @@
-import styles from './styles.module.css';
-import Link from 'next/link';
-import Image from 'next/image';
+import styles from "./styles.module.css";
+import Link from "next/link";
+import Image from "next/image";
 
-import parseUrl from '../../../../app/util/parseUrl';
+import parseUrl from "../../util/parseUrl";
 
 function Calender({ months }) {
   const MonthCard = ({ month, imgUrl }) => {

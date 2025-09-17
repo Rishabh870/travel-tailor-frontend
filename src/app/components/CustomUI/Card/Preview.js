@@ -1,17 +1,17 @@
-import styles from './styles.module.css';
-import Link from 'next/link';
-import Image from 'next/image';
-import parseUrl from '../../../util/parseUrl';
+import styles from "./styles.module.css";
+import Link from "next/link";
+import Image from "next/image";
+import parseUrl from "../../../util/parseUrl";
 
-import Button from '../Button/Button';
+import Button from "../Button/Button";
 
 function Preview({
   title,
   description,
   imgUrl,
-  className = '',
+  className = "",
   url,
-  btn = 'Read more',
+  btn = "Read more",
   ...props
 }) {
   if (!imgUrl) {
@@ -30,7 +30,7 @@ function Preview({
           <p className={styles.previewDescription}>{description}</p>
         </div>
 
-        <Button varient='outline' className='fw' type='block'>
+        <Button varient="outline" className="fw" type="block">
           {btn}
         </Button>
       </div>

@@ -1,7 +1,7 @@
-import styles from './styles.module.css';
-import Image from 'next/image';
+import styles from "./styles.module.css";
+import Image from "next/image";
 
-import parseUrl from '../../../../app/util/parseUrl';
+import parseUrl from "../../../util/parseUrl";
 
 function BlogHero({ imgUrl, title, description, auther, date }) {
   return (
@@ -17,7 +17,7 @@ function BlogHero({ imgUrl, title, description, auther, date }) {
             <div className={styles.blogHeroBg}>
               <Image
                 src={parseUrl(imgUrl)}
-                alt='Blog Hero Background'
+                alt="Blog Hero Background"
                 width={1000}
                 height={500}
               />
@@ -33,10 +33,10 @@ function BlogHero({ imgUrl, title, description, auther, date }) {
                 <p>Published on</p>
                 {/* converting date to format like 17 May 2023 */}
                 <p>
-                  {new Date(date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
+                  {new Date(date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                   })}
                 </p>
               </div>

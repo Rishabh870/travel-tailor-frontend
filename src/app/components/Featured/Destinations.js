@@ -1,9 +1,9 @@
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
-import Button from '../CustomUI/Button/Button';
-import Tour from '../CustomUI/Card/Tour';
+import Button from "../CustomUI/Button/Button";
+import Tour from "../CustomUI/Card/Tour";
 
-import parsePrice from '../../../../app/util/parsePrice';
+import parsePrice from "../../util/parsePrice";
 
 function Destinations({ destinations }) {
   return (
@@ -14,13 +14,13 @@ function Destinations({ destinations }) {
             key={destination.title}
             className={styles.boxItem}
             {...destination}
-            type='destinations'
+            type="destinations"
             tag={`Trips starting from ${parsePrice(destination.tag)}`}
           />
         ))}
       </div>
 
-      <Button className='sm' varient='outline' href='/destinations'>
+      <Button className="sm" varient="outline" href="/destinations">
         View all
       </Button>
     </div>

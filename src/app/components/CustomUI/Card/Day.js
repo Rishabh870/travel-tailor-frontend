@@ -1,19 +1,19 @@
-import styles from './styles.module.css';
-import Image from 'next/image';
+import styles from "./styles.module.css";
+import Image from "next/image";
 
-import ParallaxScrollImg from '../Animation/ParallaxScrollImg';
+import ParallaxScrollImg from "../Animation/ParallaxScrollImg";
 
-import parseUrl from '../../../../app/util/parseUrl';
+import parseUrl from "../../../util/parseUrl";
 
 function Day({ brief, imgUrl, day, ...props }) {
   if (!imgUrl) {
-    imgUrl = '/uploads/failed_bc13306774.png';
+    imgUrl = "/uploads/failed_bc13306774.png";
   }
 
   return (
     <div className={styles.day}>
       <div className={styles.dayImgBox}>
-        <ParallaxScrollImg speed={6} direction='up'>
+        <ParallaxScrollImg speed={6} direction="up">
           <Image
             src={parseUrl(imgUrl)}
             alt={brief}

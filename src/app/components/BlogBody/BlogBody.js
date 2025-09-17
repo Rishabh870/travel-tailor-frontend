@@ -1,22 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { slugify, getNodeText } from '../../../../app/util/slugify';
-import TableOfContents from '../BlogTOC/TOC';
-import styles from './styles.module.css';
-import Image from 'next/image';
+import React from "react";
+import PropTypes from "prop-types";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { slugify, getNodeText } from "../../../util/slugify";
+import TableOfContents from "../BlogTOC/TOC";
+import styles from "./styles.module.css";
+import Image from "next/image";
 
 // Helper function to extract H2 headings (no changes here)
 const extractHeadings = (markdown) => {
   const headings = [];
-  const lines = markdown.split('\n');
+  const lines = markdown.split("\n");
   for (const line of lines) {
     const match = line.match(/^##\s+(.*?)(\s+#+)?$/);
     if (match) {
       let text = match[1].trim();
-      text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-      text = text.replace(/[*_]/g, '');
+      text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+      text = text.replace(/[*_]/g, "");
       headings.push({ level: 2, text });
     }
   }
@@ -46,14 +46,15 @@ const BlogBody = ({ body }) => {
             a: ({ node, href, children, ...props }) => {
               if (
                 href &&
-                (href.startsWith('http://') || href.startsWith('https://'))
+                (href.startsWith("http://") || href.startsWith("https://"))
               ) {
                 return (
                   <a
                     href={href}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    {...props}>
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    {...props}
+                  >
                     {children}
                   </a>
                 );
@@ -66,27 +67,27 @@ const BlogBody = ({ body }) => {
             },
             // --- Image Renderer ---
             img: ({ node, src, alt, ...props }) => {
-              let effectiveAlt = alt || '';
+              let effectiveAlt = alt || "";
               if (!effectiveAlt && src) {
                 try {
                   const filename =
-                    src.split('/').pop()?.split('.')[0] || 'blog image';
-                  effectiveAlt = filename.replace(/[-_]/g, ' ');
+                    src.split("/").pop()?.split(".")[0] || "blog image";
+                  effectiveAlt = filename.replace(/[-_]/g, " ");
                 } catch (e) {
-                  effectiveAlt = 'blog image';
+                  effectiveAlt = "blog image";
                 }
               }
               return (
                 <Image
                   src={src}
                   alt={effectiveAlt}
-                  loading='lazy'
-                  decoding='async'
+                  loading="lazy"
+                  decoding="async"
                   className={styles.blogImage}
                   {...props}
                   width={1000}
                   height={500}
-                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               );
             },
@@ -125,7 +126,8 @@ const BlogBody = ({ body }) => {
                 {children}
               </blockquote>
             ),
-          }}>
+          }}
+        >
           {body}
         </ReactMarkdown>
       </div>

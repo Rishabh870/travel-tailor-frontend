@@ -1,15 +1,15 @@
-import { notFound } from 'next/navigation';
-import MonthHero from '@/app/components/Hero/MonthHero';
-import Highlights from '@/app/components/Sections/Highlights';
-import Spotlights from '@/app/components/Sections/Spotlights';
-import Destinations from '@/app/components/Sections/Destinations';
-import Blogs from '@/app/components/Featured/Blogs';
-import Banner from '@/app/components/Banner/Banner';
+import { notFound } from "next/navigation";
+import MonthHero from "@/app/components/Hero/MonthHero";
+import Highlights from "@/app/components/Sections/Highlights";
+import Spotlights from "@/app/components/Sections/Spotlights";
+import Destinations from "@/app/components/Sections/Destinations";
+import Blogs from "@/app/components/Featured/Blogs";
+import Banner from "@/app/components/Banner/Banner";
 
-import parseUrl from '../../../../app/util/parseUrl';
+import parseUrl from "../../../util/parseUrl";
 
 // Configure the page to be statically generated
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 export const revalidate = false; // Rebuild to update content
 
 // Separate function to fetch experience type data
@@ -18,16 +18,16 @@ async function fetchExperienceData(slug) {
     const response = await fetch(
       `${process.env.API_URL}/apihome/experience/${slug}`,
       {
-        cache: 'force-cache', // Cache for static build
+        cache: "force-cache", // Cache for static build
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`, // If auth is needed
         },
-      },
+      }
     );
 
     if (!response.ok) {
       console.error(
-        `Failed to fetch experience data for ${slug}: ${response.status} ${response.statusText}`,
+        `Failed to fetch experience data for ${slug}: ${response.status} ${response.statusText}`
       );
       return null; // Indicate failure
     }
@@ -46,9 +46,9 @@ export async function generateMetadata({ params }) {
 
   if (!experienceData) {
     return {
-      title: 'Experience Type Not Found',
+      title: "Experience Type Not Found",
       description:
-        'Information for the requested experience type could not be found.',
+        "Information for the requested experience type could not be found.",
     };
   }
 
@@ -74,7 +74,7 @@ export async function generateMetadata({ params }) {
       images: imageUrl ? [{ url: imageUrl }] : [],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: title,
       description: description,
       images: imageUrl ? [imageUrl] : [],
@@ -92,12 +92,12 @@ export async function generateStaticParams() {
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`, // If auth is needed
         },
-      },
+      }
     );
 
     if (!response.ok) {
       console.error(
-        `Failed to fetch experience slugs: ${response.status} ${response.statusText}`,
+        `Failed to fetch experience slugs: ${response.status} ${response.statusText}`
       );
       return [];
     }
@@ -106,16 +106,16 @@ export async function generateStaticParams() {
 
     // Adapt based on API response structure
     if (Array.isArray(slugsData) && slugsData.length > 0) {
-      if (typeof slugsData[0] === 'string') {
+      if (typeof slugsData[0] === "string") {
         return slugsData.map((slugStr) => ({ slug: slugStr }));
-      } else if (typeof slugsData[0] === 'object' && slugsData[0].slug) {
+      } else if (typeof slugsData[0] === "object" && slugsData[0].slug) {
         return slugsData.map((item) => ({ slug: item.slug })); // Ensure only slug is passed
       }
     }
-    console.error('Fetched experience slugs format is unexpected:', slugsData);
+    console.error("Fetched experience slugs format is unexpected:", slugsData);
     return [];
   } catch (error) {
-    console.error('Error fetching experience slugs:', error);
+    console.error("Error fetching experience slugs:", error);
     return [];
   }
 }
@@ -179,7 +179,7 @@ export default async function ExperiencePage({ params }) {
 
       <Banner
         title={experienceData.banner?.title || `Ready for an /nAdventure?`}
-        cta={experienceData.banner?.cta || 'Enquire Now'}
+        cta={experienceData.banner?.cta || "Enquire Now"}
         url={`/contact?src=${resolvedParams.slug}`}
       />
     </main>

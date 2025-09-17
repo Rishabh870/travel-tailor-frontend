@@ -1,6 +1,6 @@
 // src/components/Blog/TableOfContents
 import React from "react";
-import { slugify } from "../../util/slugify";
+import { slugify } from "../../../util/slugify";
 import styles from "./styles.module.css";
 
 // We don't need the Heading interface in JS, but we define prop types.

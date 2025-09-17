@@ -1,18 +1,18 @@
-import { notFound } from 'next/navigation';
-import ToursHero from '@/app/components/Hero/ToursHero';
-import ToursInfo from '@/app/components/Features/TourInfo';
-import Brief from '@/app/components/CustomUI/Card/Brief';
-import TripDays from '@/app/components/Featured/TripDays';
-import Inclusions from '@/app/components/Featured/Inclusions';
-import RollingCarousel from '@/app/components/CustomUI/Rolling/ImgCarousal';
-import ToursComponet from '@/app/components/Sections/Tours';
-import Blogs from '@/app/components/Featured/Blogs';
-import Banner from '@/app/components/Banner/Banner';
+import { notFound } from "next/navigation";
+import ToursHero from "@/app/components/Hero/ToursHero";
+import ToursInfo from "@/app/components/Features/TourInfo";
+import Brief from "@/app/components/CustomUI/Card/Brief";
+import TripDays from "@/app/components/Featured/TripDays";
+import Inclusions from "@/app/components/Featured/Inclusions";
+import RollingCarousel from "@/app/components/CustomUI/Rolling/ImgCarousal";
+import ToursComponet from "@/app/components/Sections/Tours";
+import Blogs from "@/app/components/Featured/Blogs";
+import Banner from "@/app/components/Banner/Banner";
 
-import parseUrl from '../../../../app/util/parseUrl';
+import parseUrl from "../../../util/parseUrl";
 
 // Configure the page to be statically generated
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 export const revalidate = false;
 
 // Separate function to fetch tour metadata
@@ -21,11 +21,11 @@ async function fetchTourMetadata(slug) {
     const response = await fetch(
       `${process.env.API_URL}/apihome/tour/${slug}`,
       {
-        cache: 'force-cache',
+        cache: "force-cache",
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`,
         },
-      },
+      }
     );
 
     if (!response.ok) {
@@ -45,21 +45,21 @@ export async function generateMetadata({ params }) {
 
   if (!tour) {
     return {
-      title: 'Tour Not Found',
-      description: 'The requested tour could not be found.',
+      title: "Tour Not Found",
+      description: "The requested tour could not be found.",
     };
   }
 
   return {
-    title: `${tour.title} | Travel Tailor` || 'Tour Details',
-    description: tour.description || 'Description of the tour',
+    title: `${tour.title} | Travel Tailor` || "Tour Details",
+    description: tour.description || "Description of the tour",
     openGraph: {
       title: tour.title,
       description: tour.description,
       images: tour.displayImg ? [{ url: parseUrl(tour.displayImg) }] : [],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: tour.title,
       description: tour.description,
       images: tour.displayImg ? [parseUrl(tour.displayImg)] : [],
@@ -141,7 +141,7 @@ export default async function TourPage({ params }) {
       {/* Banner with fallback values */}
       <Banner
         title={tourData.bannerTitle || "Dreaming of an Adventure?\nLet's Talk!"}
-        cta={tourData.bannerCta || 'Enquire now'}
+        cta={tourData.bannerCta || "Enquire now"}
         url={`/contact?src=${resolvedParams.slug}`}
       />
     </main>

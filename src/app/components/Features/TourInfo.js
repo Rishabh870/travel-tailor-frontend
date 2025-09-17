@@ -1,13 +1,13 @@
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
-import USP from '../CustomUI/Card/USP';
-import SectionTitle from '../CustomUI/SectionTitle/SectionTitle';
+import USP from "../CustomUI/Card/USP";
+import SectionTitle from "../CustomUI/SectionTitle/SectionTitle";
 
-import parsePrice from '../../../../app/util/parsePrice';
+import parsePrice from "../../../util/parsePrice";
 function TourInfo({
-  title = 'Best of Goa in 4 unforgettable days',
-  place = 'Goa',
-  timeline = 'Feb to Sept',
+  title = "Best of Goa in 4 unforgettable days",
+  place = "Goa",
+  timeline = "Feb to Sept",
   price = 10000,
   nights = 4,
   ...props
@@ -20,24 +20,24 @@ function TourInfo({
 
           <SectionTitle
             title={title}
-            variant='center'
+            variant="center"
             className={styles.infoTitleText}
           />
         </div>
 
         <div className={styles.tourInfoContent}>
-          <USP title='When' description={timeline} icon='/images/clock.png' />
+          <USP title="When" description={timeline} icon="/images/clock.png" />
 
           <USP
-            title='Price'
+            title="Price"
             description={`From ${parsePrice(price)}`}
-            icon='/images/price.png'
+            icon="/images/price.png"
           />
 
           <USP
-            title='How long'
+            title="How long"
             description={`${nights} nights`}
-            icon='/images/long.png'
+            icon="/images/long.png"
           />
         </div>
       </div>
