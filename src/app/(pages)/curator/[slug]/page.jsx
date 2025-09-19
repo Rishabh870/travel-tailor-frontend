@@ -13,6 +13,7 @@ import TourReviews from "../../../components/Curator/TourReview";
 import MakeReview from "../../../components/Curator/MakeReview";
 import TourFAQ from "../../../components/Curator/TourFAQ";
 import BookingCard from "../../../components/Curator/BookingCard";
+import OverviewCard from "../../../components/Curator/OverviewCard";
 import tourData from "../../../util/data";
 import TourHero from "../../../components/Curator/TourHero";
 import UserCard from "../../../components/Curator/UserCard";
@@ -122,17 +123,21 @@ export default function TourPage() {
               <TourHighlights highlights={tour.highlights} />
             </section>
 
+            {/* Itinerary */}
+            <section id="itinerary" className="scroll-mt-28">
+              <TourItinerary itinerary={tour.itinerary} />
+            </section>
+
             {/* What's Included/Excluded */}
             <section id="inclusions" className="scroll-mt-28">
+              <h2 className="text-2xl font-bold mb-6">
+                Inclusions & Exclusions
+              </h2>
+
               <TourInclusions
                 included={tour.included}
                 excluded={tour.excluded}
               />
-            </section>
-
-            {/* Itinerary */}
-            <section id="itinerary" className="scroll-mt-28">
-              <TourItinerary itinerary={tour.itinerary} />
             </section>
 
             {/* Hotel Stays */}
@@ -189,14 +194,21 @@ export default function TourPage() {
             </div>
 
             {/* Desktop: sticky sidebar */}
-            <div className="hidden lg:block lg:sticky lg:top-30">
+            <div className="hidden lg:block lg:sticky lg:top-33">
+              <OverviewCard
+                duration={tour.overview.duration}
+                suggestedAges={tour.overview.ageRange}
+                maxGroupSize={tour.overview.groupSize}
+                price={tour.price.adult}
+              />
+
               <BookingCard
                 basePrice={tour.booking.pricing.adult}
                 currency={tour.price.currency}
                 tourDuration={parseInt(tour.overview.duration.split(" ")[0])}
                 tagMonths={tour.tagMonths}
               />
-              <div className="w-full mt-4">
+              <div className="w-full mt-4  shadow-md hover:shadow-lg transition-shadow duration-300">
                 <UserCard
                   avatar={image}
                   name="John Doe"
