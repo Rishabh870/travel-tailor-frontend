@@ -60,7 +60,7 @@ export async function generateMetadata({ params }) {
   const description =
     destination.description || "Explore this amazing destination."; // Use specific meta description
   const imageUrl = destination.displayImg
-    ? process.env.NEXT_PUBLIC_URL_PREFIX + destination.displayImg
+    ? process.env.NEXT_PUBLIC_API_URL + destination.displayImg
     : null; // Construct image URL
 
   return {

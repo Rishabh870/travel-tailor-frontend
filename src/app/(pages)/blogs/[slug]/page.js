@@ -4,8 +4,6 @@ import Tours from '../../../components/Sections/Tours';
 import Blogs from '../../../components/Featured/Blogs';
 import Banner from '../../../components/Banner/Banner';
 
-import PopupForm from '../../../components/Popup/PopupForm';
-
 import { notFound } from 'next/navigation';
 
 // Configure the page to be statically generated
@@ -15,21 +13,21 @@ export const revalidate = false;
 // Fetch Blog Data
 async function fetchBlogData(slug) {
   try {
-    const response = await fetch(
-      `${process.env.API_URL}/apihome/blog/${slug}`,
-      {
-        cache: 'force-cache',
-        headers: {
-          Authorization: `Bearer ${process.env.API_TOKEN}`,
-        },
+    const response = await fetch(`${process.env.API_URL}/api/blog/${slug}`, {
+      cache: 'force-cache',
+      headers: {
+        Authorization: `Bearer ${process.env.API_TOKEN}`,
       },
-    );
+    });
 
     if (!response.ok) {
       return null;
     }
 
-    return response.json();
+    const blog = await response.json();
+    console.log('👉 Blog Data:', blog.data);
+
+    return blog;
   } catch (error) {
     return null;
   }
@@ -37,8 +35,8 @@ async function fetchBlogData(slug) {
 
 // Helper
 function generateKeywords(title, description) {
-  const titleWords = title.toLowerCase().split(/\s+/);
-  const descWords = description.toLowerCase().split(/\s+/);
+  const titleWords = title?.toLowerCase().split(/\s+/);
+  const descWords = description?.toLowerCase().split(/\s+/);
   const commonWords = new Set([
     'a',
     'an',
@@ -65,7 +63,7 @@ function generateKeywords(title, description) {
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  const data = await fetchBlogData(slug);
+  const { data } = await fetchBlogData(slug);
 
   if (!data) {
     // Returning minimal metadata, Page component will handle the 404 display
@@ -165,7 +163,7 @@ export async function generateStaticParams() {
 async function BlogPage({ params }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  const data = await fetchBlogData(slug);
+  const { data } = await fetchBlogData(slug);
 
   if (!data) {
     return notFound();

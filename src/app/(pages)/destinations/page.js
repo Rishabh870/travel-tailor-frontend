@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import List from "../../components/List/List";
-import TextList from "../../components/TextList/TextList";
-import Spinner from "../../components/CustomUI/Spinner/Spinner";
+import { useState, useEffect } from 'react';
+import List from '../../components/List/List';
+import TextList from '../../components/TextList/TextList';
+import Spinner from '../../components/CustomUI/Spinner/Spinner';
 
-import styles from "./styles.module.css";
+import styles from './styles.module.css';
 
 export default function DestinationsPage() {
   const [destinationData, setDestinationData] = useState(null);
@@ -20,12 +20,12 @@ export default function DestinationsPage() {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL_PREFIX}/api/site_destinationslist/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/site_destinationslist/`,
           {
             headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -39,8 +39,8 @@ export default function DestinationsPage() {
 
         setDestinationData(destinationsArray);
       } catch (err) {
-        console.error("Failed to fetch destinations:", err);
-        setError(err.message || "Failed to fetch destination data.");
+        console.error('Failed to fetch destinations:', err);
+        setError(err.message || 'Failed to fetch destination data.');
       } finally {
         setIsLoading(false);
       }
@@ -59,21 +59,19 @@ export default function DestinationsPage() {
         // Display error message
         <div
           style={{
-            padding: "var(--pd-page)",
-            color: "red",
-            textAlign: "center",
-          }}
-        >
+            padding: 'var(--pd-page)',
+            color: 'red',
+            textAlign: 'center',
+          }}>
           Error: {error}
         </div>
       ) : !destinationData || destinationData.group.length === 0 ? (
         <div
           style={{
-            padding: "var(--pd-page)",
-            textAlign: "center",
-            color: "var(--color-grey)",
-          }}
-        >
+            padding: 'var(--pd-page)',
+            textAlign: 'center',
+            color: 'var(--color-grey)',
+          }}>
           No destinations found.
         </div>
       ) : (
@@ -85,8 +83,8 @@ export default function DestinationsPage() {
           /> */}
           <TextList
             data={destinationData}
-            itemBasePath="/destinations"
-            itemKeyName="destinations"
+            itemBasePath='/destinations'
+            itemKeyName='destinations'
           />
         </>
       )}

@@ -17,10 +17,10 @@ export default function ToursPage() {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL_PREFIX}/api/apihome/tours/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/tour/`,
           {
             headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
             },
           },
         );

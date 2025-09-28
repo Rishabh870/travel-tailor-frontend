@@ -36,10 +36,10 @@ function Campaign() {
       setError(null);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL_PREFIX}/api/apihome/campaign/${campaignId}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/apihome/campaign/${campaignId}/`,
           {
             headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
             },
           },
         );

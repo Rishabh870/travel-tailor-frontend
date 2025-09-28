@@ -1,32 +1,32 @@
-import React from "react";
-import styles from "./styles.module.css";
+import React from 'react';
+import styles from './styles.module.css';
+import parseDate from '../../util/parseDate';
 
-const ProfileHeader = ({ data: profileData }) => {
-  const {
-    coverImage,
-    profileImage,
-    name,
-    bio,
-    location,
-    tripsCreated,
-    tripsHosted,
-    rating,
-    socialLinks,
-    badges,
-    stats,
-  } = profileData;
-
+const ProfileHeader = ({
+  backgroundImg,
+  profileImage,
+  name,
+  bio,
+  location,
+  tripsCreated,
+  tripsHosted,
+  rating,
+  socialLinks,
+  badges,
+  stats,
+  createdAt,
+}) => {
   return (
     <div className={styles.profileContainer}>
       {/* Cover Image */}
       <div className={styles.coverImageWrapper}>
-        <img src={coverImage} alt="Cover" className={styles.coverImage} />
+        <img src={backgroundImg} alt='Cover' className={styles.coverImage} />
 
         <div className={styles.profileImageSection}>
           <div className={styles.profileImgWrapper}>
             <img
               src={profileImage}
-              alt="Profile"
+              alt='Profile'
               className={styles.profileImg}
             />
           </div>
@@ -46,42 +46,39 @@ const ProfileHeader = ({ data: profileData }) => {
             <div>
               <strong>Trips Hosted:</strong> {tripsHosted}
             </div>
-            <div>
-              <strong>Rating:</strong> {rating} ⭐
-            </div>
 
             <div>
-              <strong>blogs:</strong> {stats.blogs}
+              <strong>blogs:</strong> {stats}
             </div>
             <div>
-              <strong>Joined:</strong> {stats.joinedDate}
+              <strong>Joined:</strong> {parseDate(createdAt)}
             </div>
           </div>
 
           <div className={styles.socialLinks}>
-            {socialLinks.instagram && (
-              <a href={socialLinks.instagram} target="_blank" rel="noreferrer">
+            {socialLinks?.instagram && (
+              <a href={socialLinks.instagram} target='_blank' rel='noreferrer'>
                 <img
-                  src="/images/instagram.png"
-                  alt="Instagram"
+                  src='/images/instagram.png'
+                  alt='Instagram'
                   className={styles.socialIcon}
                 />
               </a>
             )}
-            {socialLinks.youtube && (
-              <a href={socialLinks.youtube} target="_blank" rel="noreferrer">
+            {socialLinks?.youtube && (
+              <a href={socialLinks.youtube} target='_blank' rel='noreferrer'>
                 <img
-                  src="/images/youtube.png"
-                  alt="YouTube"
+                  src='/images/youtube.png'
+                  alt='YouTube'
                   className={styles.socialIcon}
                 />
               </a>
             )}
-            {socialLinks.facebook && (
-              <a href={socialLinks.facebook} target="_blank" rel="noreferrer">
+            {socialLinks?.facebook && (
+              <a href={socialLinks.facebook} target='_blank' rel='noreferrer'>
                 <img
-                  src="/images/facebook.png"
-                  alt="Facebook"
+                  src='/images/facebook.png'
+                  alt='Facebook'
                   className={styles.socialIcon}
                 />
               </a>
