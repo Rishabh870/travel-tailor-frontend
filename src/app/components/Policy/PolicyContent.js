@@ -1,5 +1,5 @@
 import React from "react";
-import { slugify } from "../../../util/slugify";
+import { slugify } from "../../util/slugify";
 import styles from "./content.module.css";
 
 const PolicyContent = ({ sections }) => {

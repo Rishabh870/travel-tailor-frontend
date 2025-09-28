@@ -1,8 +1,8 @@
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
-import SectionTitle from '../CustomUI/SectionTitle/SectionTitle';
-import Tour from '../CustomUI/Card/Tour';
-import Button from '../CustomUI/Button/Button';
+import SectionTitle from "../CustomUI/SectionTitle/SectionTitle";
+import Tour from "../CustomUI/Card/Tour";
+import Button from "../CustomUI/Button/Button";
 function Trips({ trips }) {
   // trips = [
   //     {
@@ -63,25 +63,33 @@ function Trips({ trips }) {
   //         "imgUrl": "/uploads/bernardo_lorena_ponte_ddcb_YY_4t_Ly_U_unsplash_9a0b877464.jpg"
   //     }
   // ]
-
+  console.log("trips", trips);
   return (
     <section id={styles.featuredTrips}>
       <div className={styles.tripsBox}>
         <SectionTitle
-          title='Best on /n /sTravel Tailor\s'
-          description='These are the most enjoyed and loved trips of 2025 by travellers'
+          title="Best on /n /sTravel Tailor\s"
+          description="These are the most enjoyed and loved trips of 2025 by travellers"
           className={styles.tripsTitle}
-          variant='center'
+          variant="center"
         />
 
         <div className={styles.tripsContent}>
           {trips &&
             trips.map((trip, index) => (
-              <Tour key={index} {...trip} tag={`${trip.nights} Nights`} />
+              <Tour
+                key={index}
+                slug={trip.slug}
+                title={trip.title}
+                description={trip.description}
+                imgUrl={trip.heroImg}
+                type="tours"
+                tag={`${trip?.details?.totalDays} Days`}
+              />
             ))}
         </div>
 
-        <Button href='/tours' varient='outline' className='sw'>
+        <Button href="/tours" varient="outline" className="sw">
           View more
         </Button>
       </div>

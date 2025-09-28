@@ -1,10 +1,10 @@
-import BlogBody from '@/app/components/BlogBody/BlogBody';
-import BlogHero from '@/app/components/Hero/BlogHero';
-import Tours from '@/app/components/Sections/Tours';
-import Blogs from '@/app/components/Featured/Blogs';
-import Banner from '@/app/components/Banner/Banner';
+import BlogBody from '../../../components/BlogBody/BlogBody';
+import BlogHero from '../../../components/Hero/BlogHero';
+import Tours from '../../../components/Sections/Tours';
+import Blogs from '../../../components/Featured/Blogs';
+import Banner from '../../../components/Banner/Banner';
 
-import PopupForm from '@/app/components/Popup/PopupForm';
+import PopupForm from '../../../components/Popup/PopupForm';
 
 import { notFound } from 'next/navigation';
 

@@ -6,7 +6,7 @@ import { useRef } from "react";
 import SectionTitle from "../CustomUI/SectionTitle/SectionTitle";
 import Tour from "../CustomUI/Card/Tour";
 import ScrollNav from "../CustomUI/Button/ScrollNav";
-import parsePrice from "../../../util/parsePrice";
+import parsePrice from "../../util/parsePrice";
 
 function Destinations({
   destinations = [

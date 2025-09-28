@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 import Image from "next/image";
 import ArrowBtn from "../CustomUI/Button/ArrowBtn";
 
-import parseUrl from "../../../util/parseUrl";
+import parseUrl from "../../util/parseUrl";
 
 function DestinationsHero({
   title = "The Ultimate India",

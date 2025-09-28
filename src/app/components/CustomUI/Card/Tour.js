@@ -20,8 +20,11 @@ function Tour({
     return null;
   }
 
+  const url = `${type}/${slug}`;
+  console.log("url", url);
+
   return (
-    <Link href={`/${type}/${slug}`} className={`${styles.tour} ${className}`}>
+    <Link href={url} className={`${styles.tour} ${className}`}>
       <div className={styles.tourBg}>
         <Image src={parseUrl(imgUrl)} alt="Tour" width={600} height={760} />
       </div>

@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import styles from './styles.module.css';
-import { useRef } from 'react';
+import styles from "./styles.module.css";
+import { useRef } from "react";
 
-import SectionTitle from '../CustomUI/SectionTitle/SectionTitle';
-import Preview from '../CustomUI/Card/Preview';
-import ScrollNav from '../CustomUI/Button/ScrollNav';
+import SectionTitle from "../CustomUI/SectionTitle/SectionTitle";
+import Preview from "../CustomUI/Card/Preview";
+import ScrollNav from "../CustomUI/Button/ScrollNav";
 
 function Blogs({
   blogs = [],
-  className = '',
+  className = "",
   heading = {
-    title: 'More to /s read \\s',
+    title: "More to /s read \\s",
     description:
-      'We have a few blogs post you might like to read about travelling, travelling tips, and more.',
+      "We have a few blogs post you might like to read about travelling, travelling tips, and more.",
   },
   ...props
 }) {
@@ -23,6 +23,8 @@ function Blogs({
     return null;
   }
 
+  console.log("blogs", blogs);
+
   return (
     <section className={styles.featuredBlogs}>
       <div className={styles.blogsBox}>
@@ -30,7 +32,7 @@ function Blogs({
           title={heading.title}
           description={heading.description}
           className={styles.blogsTitle}
-          variant='center'
+          variant="center"
         />
 
         <div className={styles.blogsContent}>
@@ -41,9 +43,9 @@ function Blogs({
                 url={`/blogs/${blog.slug}`}
                 title={blog.title}
                 description={blog.description}
-                imgUrl={blog.imgUrl}
+                imgUrl={blog.displayImg}
                 className={styles.blogItem}
-                btn='Read more'
+                btn="Read more"
               />
             ))}
           </div>

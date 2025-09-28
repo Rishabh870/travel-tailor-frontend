@@ -4,18 +4,18 @@ import { useState, useEffect, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 
 import styles from '../../contact/styles.module.css';
-import Spinner from '@/app/components/CustomUI/Spinner/Spinner';
+import Spinner from '../../../components/CustomUI/Spinner/Spinner';
 
-import CampaignForm from '@/app/components/CustomUI/CampaignForm/CampaignForm';
-import Banner from '@/app/components/Banner/Banner';
-import Steps from '@/app/components/Steps/Steps';
-import Plans from '@/app/components/Plans/Plans';
-import Moments from '@/app/components/CustomUI/BentoGrid/Moments';
-import SectionTitle from '@/app/components/CustomUI/SectionTitle/SectionTitle';
-import Testimonials from '@/app/components/Testimonials/Testimonials';
-import Destinations from '@/app/components/Sections/Destinations';
+import CampaignForm from '../../../components/CustomUI/CampaignForm/CampaignForm';
+import Banner from '../../../components/Banner/Banner';
+import Steps from '../../../components/Steps/Steps';
+import Plans from '../../../components/Plans/Plans';
+import Moments from '../../../components/CustomUI/BentoGrid/Moments';
+import SectionTitle from '../../../components/CustomUI/SectionTitle/SectionTitle';
+import Testimonials from '../../../components/Testimonials/Testimonials';
+import Destinations from '../../../components/Sections/Destinations';
 
-import CampHero from '@/app/components/CampHero/CampHero';
+import CampHero from '../../../components/CampHero/CampHero';
 
 function Campaign() {
   // Get path name

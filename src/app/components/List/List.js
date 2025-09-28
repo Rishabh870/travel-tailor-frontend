@@ -13,7 +13,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import styles from "./styles.module.css";
 
-import parseUrl from "../../../util/parseUrl";
+import parseUrl from "../../util/parseUrl";
 
 const getCategoryId = (title) => title.toLowerCase().replace(/\s+/g, "-");
 
@@ -21,11 +21,13 @@ const List = ({ data, itemBasePath, itemKeyName }) => {
   const [activeCategory, setActiveCategory] = useState("");
   const contentRef = useRef(null);
 
+  console.log("data", data);
+
   const categories = useMemo(() => {
-    if (!data || !Array.isArray(data.list) || !itemKeyName) {
+    if (!data || !Array.isArray(data.group) || !itemKeyName) {
       return [];
     }
-    return data.list.filter((category) => {
+    return data.group.filter((category) => {
       const items = category[itemKeyName];
       return items && Array.isArray(items) && items.length > 0;
     });
@@ -117,7 +119,7 @@ const List = ({ data, itemBasePath, itemKeyName }) => {
   }, [categories, observerCallback]);
 
   if (categories.length === 0) {
-    if (!data || !Array.isArray(data.list) || data.list.length === 0) {
+    if (!data || !Array.isArray(data.group) || data.group.length === 0) {
       return <p className={styles.emptyMessage}>No data provided.</p>;
     }
     if (!itemKeyName) {
@@ -209,9 +211,9 @@ const List = ({ data, itemBasePath, itemKeyName }) => {
                     className={styles.itemCard}
                   >
                     <div className={styles.imageWrapper}>
-                      {item.imgUrl ? (
+                      {item.heroImg ? (
                         <Image
-                          src={parseUrl(item.imgUrl)}
+                          src={item.heroImg}
                           alt={item.title}
                           fill
                           style={{ objectFit: "cover" }}

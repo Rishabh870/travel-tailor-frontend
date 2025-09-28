@@ -1,14 +1,14 @@
-import { notFound } from 'next/navigation';
-import DestinationsHero from '@/app/components/Hero/DestinationsHero';
-import Highlights from '@/app/components/Sections/Highlights';
-import Tours from '@/app/components/Sections/Tours';
-import Spotlights from '@/app/components/Sections/Spotlights';
-import Experiences from '@/app/components/Sections/Experiences';
-import Blogs from '@/app/components/Featured/Blogs';
-import Banner from '@/app/components/Banner/Banner';
+import { notFound } from "next/navigation";
+import DestinationsHero from "../../../components/Hero/DestinationsHero";
+import Highlights from "../../../components/Sections/Highlights";
+import Tours from "../../../components/Sections/Tours";
+import Spotlights from "../../../components/Sections/Spotlights";
+import Experiences from "../../../components/Sections/Experiences";
+import Blogs from "../../../components/Featured/Blogs";
+import Banner from "../../../components/Banner/Banner";
 
 // Configure the page to be statically generated
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 export const revalidate = false;
 
 // Separate function to fetch destination data
@@ -16,24 +16,25 @@ async function fetchDestinationData(slug) {
   try {
     // *** Adjust API endpoint for a single destination ***
     const response = await fetch(
-      `${process.env.API_URL}/apihome/destination/${slug}`,
+      `${process.env.API_URL}/api/destinations/${slug}`,
       {
-        cache: 'force-cache',
+        cache: "force-cache",
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`,
         },
-      },
+      }
     );
 
     if (!response.ok) {
       // Log the error for debugging purposes on the server during build
       console.error(
-        `Failed to fetch destination ${slug}: ${response.status} ${response.statusText}`,
+        `Failed to fetch destination ${slug}: ${response.status} ${response.statusText}`
       );
       return null; // Indicate data fetch failure
     }
 
-    return response.json();
+    const destination = await response.json();
+    return destination.data;
   } catch (error) {
     // Log network or parsing errors
     console.error(`Error fetching destination ${slug}:`, error);
@@ -49,15 +50,15 @@ export async function generateMetadata({ params }) {
 
   if (!destination) {
     return {
-      title: 'Destination Not Found',
-      description: 'The requested destination could not be found.',
+      title: "Destination Not Found",
+      description: "The requested destination could not be found.",
     };
   }
 
   // *** Adjust metadata fields based on expected destination data structure ***
-  const title = destination.title || 'Destination Details'; // Use specific meta title if available, fallback to title
+  const title = destination.title || "Destination Details"; // Use specific meta title if available, fallback to title
   const description =
-    destination.description || 'Explore this amazing destination.'; // Use specific meta description
+    destination.description || "Explore this amazing destination."; // Use specific meta description
   const imageUrl = destination.displayImg
     ? process.env.NEXT_PUBLIC_URL_PREFIX + destination.displayImg
     : null; // Construct image URL
@@ -71,7 +72,7 @@ export async function generateMetadata({ params }) {
       images: imageUrl ? [{ url: imageUrl }] : [],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: title,
       description: description,
       images: imageUrl ? [imageUrl] : [],
@@ -83,17 +84,17 @@ export async function generateMetadata({ params }) {
 export async function generateStaticParams() {
   try {
     const response = await fetch(
-      `${process.env.API_URL}/apihome/slugs/destination`,
+      `${process.env.API_URL}/api/slugs/destination`,
       {
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`, // Assuming auth is needed
         },
-      },
+      }
     );
 
     if (!response.ok) {
       console.error(
-        `Failed to fetch destination slugs: ${response.status} ${response.statusText}`,
+        `Failed to fetch destination slugs: ${response.status} ${response.statusText}`
       );
       return [];
     }
@@ -101,7 +102,7 @@ export async function generateStaticParams() {
     const destinations = await response.json();
 
     if (!Array.isArray(destinations)) {
-      console.error('Fetched destination slugs is not an array:', destinations);
+      console.error("Fetched destination slugs is not an array:", destinations);
       return [];
     }
 
@@ -109,7 +110,7 @@ export async function generateStaticParams() {
       slug: dest.slug,
     }));
   } catch (error) {
-    console.error('Error fetching destination slugs:', error);
+    console.error("Error fetching destination slugs:", error);
     return [];
   }
 }
@@ -125,9 +126,11 @@ export default async function DestinationPage({ params }) {
 
   // Default heading for Tours section if not provided by API
   const defaultToursHeading = {
-    title: `Explore /s${destinationData.title || 'the Destination'}\\s`, // Use fetched title if available
-    description: 'You might be interested in these tours',
+    title: `Explore /s${destinationData.title || "the Destination"}\\s`, // Use fetched title if available
+    description: "You might be interested in these tours",
   };
+
+  console.log(destinationData.highlight);
 
   return (
     <main>
@@ -141,7 +144,10 @@ export default async function DestinationPage({ params }) {
 
       {destinationData.highlight && (
         <Highlights
-          {...destinationData.highlight}
+          title={destinationData.highlight.title}
+          brief={destinationData.highlight.brief}
+          imgUrl={destinationData.highlight.imgUrl}
+          img={destinationData.highlight.img}
           url={`/contact?src=${resolvedParams.slug}`}
         />
       )}
@@ -174,7 +180,7 @@ export default async function DestinationPage({ params }) {
           destinationData.bannerTitle ||
           "Ready to Explore?\nLet's Plan Your Trip!"
         }
-        cta={destinationData.bannerCta || 'Get a Quote'}
+        cta={destinationData.bannerCta || "Get a Quote"}
         url={`/contact?src=${resolvedParams.slug}`}
       />
     </main>

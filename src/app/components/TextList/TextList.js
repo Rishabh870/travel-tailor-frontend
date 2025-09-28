@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import styles from './styles.module.css';
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import styles from "./styles.module.css";
 
 const TextList = ({ data, itemBasePath, itemKeyName }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -12,31 +12,39 @@ const TextList = ({ data, itemBasePath, itemKeyName }) => {
   const [selectedRegionIndex, setSelectedRegionIndex] = useState(null);
 
   useEffect(() => {
-    if (data?.list && data.list.length > 0) {
+    if (data?.group && data.group.length > 0) {
       setSelectedRegionIndex(0);
     } else {
       setSelectedRegionIndex(null);
     }
-  }, [data?.list]);
+  }, [data?.group]);
 
-  if (!data?.list || !Array.isArray(data.list) || data.list.length === 0 || selectedRegionIndex === null) {
+  if (
+    !data?.group ||
+    !Array.isArray(data.group) ||
+    data.group.length === 0 ||
+    selectedRegionIndex === null
+  ) {
     // You might want a more specific loading/empty state here
-    return null; 
+    return null;
   }
 
   const handleMouseMove = (e) => {
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
-  const selectedRegion = data.list[selectedRegionIndex];
+  const selectedRegion = data.group[selectedRegionIndex];
+  console.log(data, selectedRegion, selectedRegionIndex, itemKeyName);
 
   return (
     <div className={styles.textListContainer}>
       <motion.div className={styles.regionNavigation}>
-        {data.list.map((region, index) => (
+        {data.group.map((region, index) => (
           <motion.div
-            key={region.title || index} 
-            className={`${styles.regionNavItem} ${selectedRegionIndex === index ? styles.activeRegion : ''}`}
+            key={region.title || index}
+            className={`${styles.regionNavItem} ${
+              selectedRegionIndex === index ? styles.activeRegion : ""
+            }`}
             onClick={() => setSelectedRegionIndex(index)}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -51,7 +59,7 @@ const TextList = ({ data, itemBasePath, itemKeyName }) => {
         <AnimatePresence mode="wait">
           {selectedRegion && (
             <motion.div
-              key={selectedRegionIndex} 
+              key={selectedRegionIndex}
               className={styles.currentRegionContent}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -67,55 +75,65 @@ const TextList = ({ data, itemBasePath, itemKeyName }) => {
                 </motion.h2>
                 <div className={styles.regionLine}></div>
               </div> */}
-              
+
               <div className={styles.destinationsGrid}>
-                {selectedRegion[itemKeyName]?.sort((itemA, itemB) => itemA.title.localeCompare(itemB.title)).map((item, itemIndex) => (
-                  <motion.div
-                    key={item.slug || itemIndex} 
-                    className={styles.destinationItem}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: itemIndex * 0.05, duration: 0.4 }}
-                    onMouseEnter={() => setHoveredItem(item)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    onMouseMove={handleMouseMove}
-                  >
-                    <Link 
-                      href={`${itemBasePath}/${item.slug}`}
-                      className={styles.destinationLink}
+                {selectedRegion[itemKeyName]
+                  ?.sort((itemA, itemB) =>
+                    itemA.title.localeCompare(itemB.title)
+                  )
+                  .map((item, itemIndex) => (
+                    <motion.div
+                      key={item.slug || itemIndex}
+                      className={styles.destinationItem}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: itemIndex * 0.05, duration: 0.4 }}
+                      onMouseEnter={() => setHoveredItem(item)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                      onMouseMove={handleMouseMove}
                     >
-                      <motion.span
-                        className={styles.destinationText}
+                      <Link
+                        href={`${itemBasePath}/${item.slug}`}
+                        className={styles.destinationLink}
                       >
-                        {item.title}
-                      </motion.span>
-                      <motion.div 
-                        className={styles.linkIndicator}
-                        initial={{ width: 0 }} 
-                        whileHover={{ width: "20px" }} 
-                        transition={{ duration: 0.2 }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                        </svg>
-                      </motion.div>
-                    </Link>
-                  </motion.div>
-                ))}
+                        <motion.span className={styles.destinationText}>
+                          {item.title}
+                        </motion.span>
+                        <motion.div
+                          className={styles.linkIndicator}
+                          initial={{ width: 0 }}
+                          whileHover={{ width: "20px" }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M7 17L17 7M17 7H7M17 7V17" />
+                          </svg>
+                        </motion.div>
+                      </Link>
+                    </motion.div>
+                  ))}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-
       <AnimatePresence>
-        {hoveredItem && hoveredItem.imgUrl && (
+        {hoveredItem && hoveredItem.heroImg && (
           <motion.div
             className={styles.imagePreview}
             style={{
               left: mousePosition.x + 20,
-              top: mousePosition.y - 100, 
+              top: mousePosition.y - 100,
             }}
             initial={{ opacity: 0, scale: 0.85, rotate: -3 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -124,8 +142,8 @@ const TextList = ({ data, itemBasePath, itemKeyName }) => {
           >
             <div className={styles.imageContainer}>
               <Image
-                src={hoveredItem.imgUrl}
-                alt={hoveredItem.title || 'Preview'}
+                src={hoveredItem.heroImg}
+                alt={hoveredItem.title || "Preview"}
                 width={280}
                 height={200}
                 className={styles.previewImage}

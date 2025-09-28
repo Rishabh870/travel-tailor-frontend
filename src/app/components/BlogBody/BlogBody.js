@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { slugify, getNodeText } from "../../../util/slugify";
+import { slugify, getNodeText } from "../../util/slugify";
 import TableOfContents from "../BlogTOC/TOC";
 import styles from "./styles.module.css";
 import Image from "next/image";

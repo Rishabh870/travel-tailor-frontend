@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import List from '@/app/components/List/List';
-import Spinner from '@/app/components/CustomUI/Spinner/Spinner';
+import List from '../../components/List/List';
+import Spinner from '../../components/CustomUI/Spinner/Spinner';
 import styles from './styles.module.css';
 
 export default function ToursPage() {

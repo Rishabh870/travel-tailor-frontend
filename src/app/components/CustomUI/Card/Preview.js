@@ -18,6 +18,8 @@ function Preview({
     return null;
   }
 
+  console.log("url", url);
+
   return (
     <Link className={`${className} ${styles.preview}`} href={url}>
       <div className={styles.previewImgBox}>

@@ -3,45 +3,6 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Clock, ArrowRight } from "lucide-react";
 
-const blogPosts = [
-  {
-    id: 1,
-    title: "10 Hidden Gems in Kerala You Must Visit",
-    excerpt:
-      "Discover the untouched beauty of Kerala beyond the popular tourist spots. From secret beaches to hidden waterfalls...",
-    image:
-      "https://images.musement.com/cover/0003/14/koh-samui-xxl-jpg_header-213595.jpeg",
-    category: "Destinations",
-    readTime: "5 min read",
-    publishDate: "Dec 15, 2024",
-    author: "Priya Sharma",
-  },
-  {
-    id: 2,
-    title: "Best Time to Visit Goa: A Month-by-Month Guide",
-    excerpt:
-      "Planning your Goa trip? Learn about the best times to visit based on weather, events, and crowd levels...",
-    image:
-      "https://images.musement.com/cover/0003/14/koh-samui-xxl-jpg_header-213595.jpeg",
-    category: "Travel Tips",
-    readTime: "7 min read",
-    publishDate: "Dec 12, 2024",
-    author: "Arjun Patel",
-  },
-  {
-    id: 3,
-    title: "Budget Travel: How to Explore India Under ₹30,000",
-    excerpt:
-      "Traveling on a budget doesn't mean compromising on experiences. Here's how to make the most of your India trip...",
-    image:
-      "https://images.musement.com/cover/0003/14/koh-samui-xxl-jpg_header-213595.jpeg",
-    category: "Budget Travel",
-    readTime: "6 min read",
-    publishDate: "Dec 10, 2024",
-    author: "Rahul Kumar",
-  },
-];
-
 const BlogSection = () => {
   return (
     <section id="blog" className="py-16 bg-background">

@@ -37,7 +37,7 @@ function HomeHero({ heroData }) {
         const img = document.createElement("link");
         img.rel = "preload";
         img.as = "image";
-        img.href = parseUrl(item.imgUrl);
+        img.href = parseUrl(item.heroImg);
         document.head.appendChild(img);
       });
       imagesPreloaded.current = true;
@@ -65,14 +65,14 @@ function HomeHero({ heroData }) {
         <AnimatePresence mode="wait">
           <motion.div
             className={styles.heroHomeImgContainer}
-            key={hero.imgUrl}
+            key={hero.heroImg}
             initial={{ opacity: 0, filter: "brightness(0.2)" }}
             animate={{ opacity: 1, filter: "brightness(0.8)" }}
             exit={{ opacity: 0, filter: "brightness(0.2)" }}
             transition={{ duration: 0.6 }}
           >
             <Image
-              src={parseUrl(hero.imgUrl)}
+              src={parseUrl(hero.heroImg)}
               alt={hero.title}
               width={1400}
               height={1000}

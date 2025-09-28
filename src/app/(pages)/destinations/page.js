@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import List from '@/app/components/List/List';
-import TextList from '@/app/components/TextList/TextList';
-import Spinner from '@/app/components/CustomUI/Spinner/Spinner';
+import { useState, useEffect } from "react";
+import List from "../../components/List/List";
+import TextList from "../../components/TextList/TextList";
+import Spinner from "../../components/CustomUI/Spinner/Spinner";
 
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
 export default function DestinationsPage() {
   const [destinationData, setDestinationData] = useState(null);
@@ -20,12 +20,12 @@ export default function DestinationsPage() {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL_PREFIX}/api/apihome/destinations/`,
+          `${process.env.NEXT_PUBLIC_URL_PREFIX}/api/site_destinationslist/`,
           {
             headers: {
               Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
             },
-          },
+          }
         );
 
         if (!response.ok) {
@@ -34,10 +34,13 @@ export default function DestinationsPage() {
 
         // Parse the JSON response
         const data = await response.json();
-        setDestinationData(data);
+
+        const destinationsArray = data.data;
+
+        setDestinationData(destinationsArray);
       } catch (err) {
-        console.error('Failed to fetch destinations:', err);
-        setError(err.message || 'Failed to fetch destination data.');
+        console.error("Failed to fetch destinations:", err);
+        setError(err.message || "Failed to fetch destination data.");
       } finally {
         setIsLoading(false);
       }
@@ -45,6 +48,8 @@ export default function DestinationsPage() {
 
     fetchData();
   }, []);
+
+  console.log(destinationData);
 
   return (
     <section className={styles.destinations}>
@@ -54,34 +59,36 @@ export default function DestinationsPage() {
         // Display error message
         <div
           style={{
-            padding: 'var(--pd-page)',
-            color: 'red',
-            textAlign: 'center',
-          }}>
+            padding: "var(--pd-page)",
+            color: "red",
+            textAlign: "center",
+          }}
+        >
           Error: {error}
         </div>
-      ) : !destinationData ||
-        !destinationData.list ||
-        destinationData.list.length === 0 ? (
+      ) : !destinationData || destinationData.group.length === 0 ? (
         <div
           style={{
-            padding: 'var(--pd-page)',
-            textAlign: 'center',
-            color: 'var(--color-grey)',
-          }}>
+            padding: "var(--pd-page)",
+            textAlign: "center",
+            color: "var(--color-grey)",
+          }}
+        >
           No destinations found.
         </div>
       ) : (
-        // <List
-        //   data={destinationData}
-        //   itemBasePath="/destinations"
-        //   itemKeyName="destinations"
-        // />
-        <TextList
-          data={destinationData}
-          itemBasePath='/destinations'
-          itemKeyName='destinations'
-        />
+        <>
+          {/* <List
+            data={destinationData}
+            itemBasePath="/destinations"
+            itemKeyName="destinations"
+          /> */}
+          <TextList
+            data={destinationData}
+            itemBasePath="/destinations"
+            itemKeyName="destinations"
+          />
+        </>
       )}
     </section>
   );

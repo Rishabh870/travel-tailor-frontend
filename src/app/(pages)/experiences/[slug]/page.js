@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
-import MonthHero from "@/app/components/Hero/MonthHero";
-import Highlights from "@/app/components/Sections/Highlights";
-import Spotlights from "@/app/components/Sections/Spotlights";
-import Destinations from "@/app/components/Sections/Destinations";
-import Blogs from "@/app/components/Featured/Blogs";
-import Banner from "@/app/components/Banner/Banner";
+import MonthHero from "../../../components/Hero/MonthHero";
+import Highlights from "../../../components/Sections/Highlights";
+import Spotlights from "../../../components/Sections/Spotlights";
+import Destinations from "../../../components/Sections/Destinations";
+import Blogs from "../../../components/Featured/Blogs";
+import Banner from "../../../components/Banner/Banner";
 
 import parseUrl from "../../../util/parseUrl";
 
@@ -14,11 +14,15 @@ export const revalidate = false; // Rebuild to update content
 
 // Separate function to fetch experience type data
 async function fetchExperienceData(slug) {
+  const url = `${process.env.API_URL}/api/experiences/${slug}`;
+  console.log("👉 Fetching:", url);
+
   try {
+    console.log(`Fetching experience data for ${slug}`);
+
     const response = await fetch(
-      `${process.env.API_URL}/apihome/experience/${slug}`,
+      `${process.env.API_URL}/api/experiences/${slug}`,
       {
-        cache: "force-cache", // Cache for static build
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`, // If auth is needed
         },
@@ -32,7 +36,9 @@ async function fetchExperienceData(slug) {
       return null; // Indicate failure
     }
 
-    return response.json();
+    const expData = await response.json();
+
+    return expData.data;
   } catch (error) {
     console.error(`Error fetching experience data for ${slug}:`, error);
     return null; // Indicate failure
@@ -63,7 +69,10 @@ export async function generateMetadata({ params }) {
     experienceData.description ||
     `Discover the best ${resolvedParams.slug} experiences and destinations.`;
   // Use hero image or a specific display image for meta
-  const imageUrl = parseUrl(experienceData.heroImg);
+  // const imageUrl = parseUrl(experienceData.heroImg);
+  const imageUrl = parseUrl(
+    `https://storage.googleapis.com/tt-media/photo_1527824404775_dce343118ebc_9e67a75db2/photo_1527824404775_dce343118ebc_9e67a75db2.jpeg`
+  );
 
   return {
     title: `${title} | Travel Tailor`,
@@ -87,7 +96,7 @@ export async function generateStaticParams() {
   try {
     // *** Adjust API endpoint for experience type slugs ***
     const response = await fetch(
-      `${process.env.API_URL}/apihome/slugs/experience`,
+      `${process.env.API_URL}/api/slugs/experience`,
       {
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`, // If auth is needed
@@ -124,6 +133,7 @@ export async function generateStaticParams() {
 export default async function ExperiencePage({ params }) {
   const resolvedParams = await params;
   const experienceData = await fetchExperienceData(resolvedParams.slug);
+  console.log("experienceData", experienceData);
 
   // Handle case where data isn't found
   if (!experienceData) {
@@ -152,7 +162,7 @@ export default async function ExperiencePage({ params }) {
       {experienceData.highlight && (
         <Highlights
           title={experienceData.highlight.title || `Enjoy your /n journey with`}
-          imgUrl={experienceData.highlight.imgUrl}
+          img={experienceData.highlight.img}
           url={`/contact?src=${resolvedParams.slug}`}
           brief={experienceData.highlight.brief}
         />

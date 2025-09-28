@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import BlogsList from '@/app/components/BlogsList/BlogsList';
-import Spinner from '@/app/components/CustomUI/Spinner/Spinner';
+import BlogsList from "../../components/BlogsList/BlogsList";
+import Spinner from "../../components/CustomUI/Spinner/Spinner";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 function Blogs() {
   const [data, setData] = useState(null);
@@ -17,7 +17,7 @@ function Blogs() {
             headers: {
               Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
             },
-          },
+          }
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -25,14 +25,14 @@ function Blogs() {
         const data = await response.json();
         setData(data);
       } catch (err) {
-        console.error('Failed to fetch data:', err);
+        console.error("Failed to fetch data:", err);
       }
     };
     fetchData();
   }, []);
 
   return (
-    <section style={{ minHeight: '500px' }}>
+    <section style={{ minHeight: "500px" }}>
       {data ? <BlogsList data={data} /> : <Spinner />}
     </section>
   );

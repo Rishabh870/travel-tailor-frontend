@@ -134,7 +134,7 @@ const advisors = [
   },
 ];
 
-const AdvisorCarousel = () => {
+const AdvisorCarousel = ({ data }) => {
   return (
     <section className="py-16 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
@@ -167,9 +167,9 @@ const AdvisorCarousel = () => {
           ]}
         >
           <CarouselContent className="-ml-6">
-            {advisors.map((advisor, index) => (
+            {data.map((advisor, index) => (
               <CarouselItem
-                key={advisor.id}
+                key={advisor._id}
                 className="pl-6 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6 "
               >
                 <Card className="group p-0 overflow-hidden  hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in border-0">

@@ -25,19 +25,19 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         <div className="max-w-4xl mx-auto animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight">
+          <h1 className="text-5xl xl:text-7xl font-bold mb-6 text-white leading-tight">
             Personalized travel for those who
-            <span className="text-orange-600 font-handwriting block mt-2">
+            <span className="text-orange-600 font-handwriting text-6xl xl:text-7xl block mt-2">
               seek more.
             </span>
           </h1>
-          <p className="text-md md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg xl:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Crafted by travellers. Designed for depth. Made only for you.
           </p>
 
           {/* Search Bar */}
           <div className="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto animate-slide-up">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               <div className="relative">
                 <MapPin className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -63,21 +63,11 @@ const HeroSection = () => {
                 </SelectContent>
               </Select>
 
-              <Button className="h-12 bg-primary hover:bg-primary/90">
+              <Button className="h-12 col-span-2 xl:col-span-1 bg-primary hover:bg-primary/90">
                 <Search className="mr-2 h-5 w-5" />
                 Search Trips
               </Button>
             </div>
-          </div>
-
-          <div className="mt-8">
-            <Button
-              variant="outline"
-              size="lg"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
-            >
-              Let's Craft Your Journey
-            </Button>
           </div>
         </div>
       </div>

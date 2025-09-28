@@ -5,6 +5,8 @@ import Image from "next/image";
 import parseUrl from "../../util/parseUrl";
 
 function Experiences({ expereinces }) {
+  console.log("expereinces", expereinces);
+
   const ExperienceCard = ({ title, slug, imgUrl }) => {
     return (
       <Link
@@ -30,7 +32,12 @@ function Experiences({ expereinces }) {
     <div className={styles.experiences}>
       <div className={styles.experiencesBox}>
         {expereinces.map((experience) => (
-          <ExperienceCard key={experience.title} {...experience} />
+          <ExperienceCard
+            key={experience.title}
+            title={experience.title}
+            slug={experience.slug}
+            imgUrl={experience.heroImg}
+          />
         ))}
       </div>
     </div>

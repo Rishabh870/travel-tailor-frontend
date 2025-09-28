@@ -21,7 +21,7 @@ function Calender({ months }) {
   return (
     <div className={styles.calender}>
       {months.map((month, index) => (
-        <MonthCard key={index} month={month.month} imgUrl={month.imgUrl} />
+        <MonthCard key={index} month={month.month} imgUrl={month.heroImg} />
       ))}
     </div>
   );

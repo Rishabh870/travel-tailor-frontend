@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
-import ToursHero from "@/app/components/Hero/ToursHero";
-import ToursInfo from "@/app/components/Features/TourInfo";
-import Brief from "@/app/components/CustomUI/Card/Brief";
-import TripDays from "@/app/components/Featured/TripDays";
-import Inclusions from "@/app/components/Featured/Inclusions";
-import RollingCarousel from "@/app/components/CustomUI/Rolling/ImgCarousal";
-import ToursComponet from "@/app/components/Sections/Tours";
-import Blogs from "@/app/components/Featured/Blogs";
-import Banner from "@/app/components/Banner/Banner";
+import ToursHero from "../../../components/Hero/ToursHero";
+import ToursInfo from "../../../components/Features/TourInfo";
+import Brief from "../../../components/CustomUI/Card/Brief";
+import TripDays from "../../../components/Featured/TripDays";
+import Inclusions from "../../../components/Featured/Inclusions";
+import RollingCarousel from "../../../components/CustomUI/Rolling/ImgCarousal";
+import ToursComponet from "../../../components/Sections/Tours";
+import Blogs from "../../../components/Featured/Blogs";
+import Banner from "../../../components/Banner/Banner";
 
 import parseUrl from "../../../util/parseUrl";
 

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Calender from '@/app/components/Featured/Calender';
-import Spinner from '@/app/components/CustomUI/Spinner/Spinner';
-import { useState, useEffect } from 'react';
+import Calender from "../../components/Featured/Calender";
+import Spinner from "../../components/CustomUI/Spinner/Spinner";
+import { useState, useEffect } from "react";
 
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
 export default function CalenderPage() {
   const [months, setMonths] = useState([]);
@@ -12,15 +12,16 @@ export default function CalenderPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_URL_PREFIX}/api/apihome/months`,
+        `${process.env.NEXT_PUBLIC_URL_PREFIX}/api/months`,
         {
           headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
           },
-        },
+        }
       );
       const data = await response.json();
-      setMonths(data.list);
+      console.log(data);
+      setMonths(data.data.items);
     };
     fetchData();
   }, []);

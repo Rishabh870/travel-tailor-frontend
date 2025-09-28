@@ -1,5 +1,5 @@
 'use client';
-import Preview from '@/app/components/CustomUI/Card/Preview';
+import Preview from '../../../../components/CustomUI/Card/Preview';
 import React from 'react';
 import styles from './styles.module.css';
 import { useParams } from 'next/navigation';

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { slugify } from "../../../util/slugify";
+import { slugify } from "../../util/slugify";
 import styles from "./toc.module.css";
 
 const PolicyTOC = ({ sections }) => {

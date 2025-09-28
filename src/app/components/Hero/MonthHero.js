@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import Image from "next/image";
 
-import parseUrl from "../../../util/parseUrl";
+import parseUrl from "../../util/parseUrl";
 
 function MonthHero({
   month = "January",

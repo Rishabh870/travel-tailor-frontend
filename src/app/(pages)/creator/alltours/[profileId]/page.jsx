@@ -1,8 +1,8 @@
 'use client';
-import Preview from '@/app/components/CustomUI/Card/Preview';
+import Preview from '../../../../components/CustomUI/Card/Preview';
 import React from 'react';
 import styles from './styles.module.css';
-import Tour from '@/app/components/CustomUI/Card/Tour';
+import Tour from '../../../../components/CustomUI/Card/Tour';
 import { useParams } from 'next/navigation';
 export const tourData = [
   {
