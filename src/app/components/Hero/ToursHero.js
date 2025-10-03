@@ -7,7 +7,7 @@ import styles from "./styles.module.css";
 import ArrowBtn from "../CustomUI/Button/ArrowBtn";
 import Varients from "../../lib/varients";
 
-import parseUrl from "../../../util/parseUrl";
+import parseUrl from "../../util/parseUrl";
 
 function ToursHero({ heroData, varient }) {
   const [current, setCurrent] = useState(0);

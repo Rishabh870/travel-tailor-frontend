@@ -20,8 +20,7 @@ function Tour({
     return null;
   }
 
-  const url = `${type}/${slug}`;
-  console.log("url", url);
+  const url = type === "tours" ? `/creator/tour/${slug}` : `/${type}/${slug}`;
 
   return (
     <Link href={url} className={`${styles.tour} ${className}`}>

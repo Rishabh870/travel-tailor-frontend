@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 import USP from "../CustomUI/Card/USP";
 import SectionTitle from "../CustomUI/SectionTitle/SectionTitle";
 
-import parsePrice from "../../../util/parsePrice";
+import parsePrice from "../../util/parsePrice";
 function TourInfo({
   title = "Best of Goa in 4 unforgettable days",
   place = "Goa",

@@ -1,52 +1,65 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Card, CardHeader, CardContent } from "../../components/ui/card";
+import { useEffect, useState } from "react";
+import { CalendarIcon, Users, Plus, Minus } from "lucide-react";
+import { format, addDays } from "date-fns";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Calendar } from "../../components/ui/calendar";
 import {
   Popover,
-  PopoverTrigger,
   PopoverContent,
+  PopoverTrigger,
 } from "../../components/ui/popover";
-import { Calendar as CalendarIcon, Users, Plus, Minus } from "lucide-react";
-import { format, addDays } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../../components/ui/dialog";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Tabs, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { cn } from "../../lib/utils";
 
 export default function EnquireNow({
   basePrice,
   currency,
   tourDuration = 3,
   tagMonths = [],
-  tourType = "fixed_date", // Pass tourType prop
-  getDateRange, // getDateRange is expected to be an object containing { startDate, endDate }
+  tourType = "fixed_date",
+  tourId,
+  getDateRange,
+  creatorId,
 }) {
-  const [dateRange, setDateRange] = useState({
-    startDate: null,
-    endDate: null,
-  });
-
+  const [dateRange, setDateRange] = useState(getDateRange);
   const [guests, setGuests] = useState({ adults: 2, children: 0 });
   const [selectedTab, setSelectedTab] = useState("fixed_date");
+  const [showGuestDetails, setShowGuestDetails] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
-  // Utility function to check if a date is valid
+  // Contact form state
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
   const isValidDate = (date) => date instanceof Date && !isNaN(date);
 
-  // Set date range from getDateRange if tourType is fixed_date
   useEffect(() => {
     if (tourType === "fixed_date" && getDateRange) {
       const { startDate, endDate } = getDateRange;
-
-      // Check if the dates are valid Date objects
       const validStartDate = isValidDate(startDate) ? startDate : null;
       const validEndDate = isValidDate(endDate) ? endDate : null;
-
-      setDateRange({
-        startDate: validStartDate,
-        endDate: validEndDate,
-      });
+      setDateRange({ startDate: validStartDate, endDate: validEndDate });
     }
   }, [tourType, getDateRange]);
 
-  // Auto adjust range based on duration (used only for selectable_date)
   const handleSelect = (day) => {
     if (!day) return;
     const end = addDays(day, tourDuration - 1);
@@ -59,116 +72,100 @@ export default function EnquireNow({
 
   const totalGuests = guests.adults + guests.children;
 
-  // Handle tab switch
   const handleTabChange = (type) => {
     setSelectedTab(type);
     if (type === "fixed_date") {
-      // Reset date range for fixed date
-      setDateRange({ startDate: null, endDate: null });
+      setDateRange(getDateRange);
     }
   };
 
-  const handleSendEnquiry = () => {
-    // Handle sending enquiry logic here
-    const date = selectedTab === "fixed_date" ? getDateRange : dateRange;
-    console.log("Enquiry sent:", date, guests);
+  const handleSendEnquiry = (e) => {
+    e.preventDefault();
+    const payload = {
+      name,
+      email,
+      phone,
+      startDate: dateRange?.startDate
+        ? format(dateRange.startDate, "yyyy-MM-dd")
+        : "",
+      endDate: dateRange?.endDate
+        ? format(dateRange.endDate, "yyyy-MM-dd")
+        : "",
+      adults: guests.adults,
+      children: guests.children,
+      totalPeople: totalGuests,
+      totalPrice: basePrice * totalGuests,
+      tour: tourId,
+      tourCreatedBy: creatorId,
+    };
+    console.log("Enquiry Payload:", payload);
+
+    const res = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/enquiries`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      console.error("Failed to send enquiry:", res);
+
+      return;
+    }
+
+    setShowDialog(false);
+    setName("");
+    setEmail("");
+    setPhone("");
   };
 
   return (
-    <Card className="p-0 border border-card-border shadow-md hover:shadow-lg transition-shadow duration-300 border-gray-100  bg-white">
-      <CardHeader className="p-4 pb-0 text-2xl font-semibold ">
-        Enquire Now
-      </CardHeader>
-      <CardContent className="p-4 pt-0 space-y-4">
-        {/* Show tabs only if the tourType is 'both' */}
-        {tourType === "both" && (
-          <div className="mb-4 flex gap-3">
-            <div className="w-full">
-              <Button
-                onClick={() => handleTabChange("fixed_date")}
-                className={`w-full ${
-                  selectedTab === "fixed_date"
-                    ? "bg-orange-500 text-white"
-                    : "  bg-white text-gray-700 hover:bg-orange-500 hover:text-white"
-                }`}
-              >
-                Fixed Date
-              </Button>
-            </div>
-            <div className="w-full">
-              <Button
-                onClick={() => handleTabChange("selectable_date")}
-                className={`w-full ${
-                  selectedTab === "selectable_date"
-                    ? "bg-orange-500 text-white"
-                    : "  bg-white text-gray-700 hover:bg-orange-500 hover:text-white"
-                }`}
-              >
-                Selectable Date
-              </Button>
-            </div>
-          </div>
-        )}
+    <>
+      <Card className="w-full max-w-2xl shadow-lg border-border">
+        <CardHeader className="flex flex-col gap-1">
+          <CardTitle className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground">
+            Plan Your Journey
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-base text-muted-foreground">
+            Select your travel dates and number of guests
+          </CardDescription>
+        </CardHeader>
 
-        {/* Date Picker - Fixed Date */}
-        {tourType === "fixed_date" || selectedTab === "fixed_date" ? (
-          <div className="mb-4">
-            <label className="block mb-3 font-medium text-gray-700">
-              Select Date
-            </label>
+        <CardContent className="flex flex-col gap-4">
+          {/* Tab Selector */}
+          <Tabs
+            value={selectedTab}
+            onValueChange={handleTabChange}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2 text-sm sm:text-base">
+              <TabsTrigger value="fixed_date">Fixed Date</TabsTrigger>
+              <TabsTrigger value="flexible_date">Flexible Date</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* Date Range Picker */}
+          <div className="flex flex-col gap-2">
+            <Label
+              htmlFor="dates"
+              className="text-sm sm:text-base font-medium text-muted-foreground"
+            >
+              Travel Dates
+            </Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  id="dates"
+                  disabled={selectedTab === "fixed_date"}
                   variant="outline"
-                  className="w-full justify-start text-left font-normal border-orange-200"
-                  disabled
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4 text-orange-500" />
-                  {getDateRange?.startDate ? (
-                    getDateRange?.endDate ? (
-                      <>
-                        {format(getDateRange.startDate, "MMM d, yyyy")} -{" "}
-                        {format(getDateRange.endDate, "MMM d, yyyy")}
-                      </>
-                    ) : (
-                      format(getDateRange.startDate, "MMM d, yyyy")
-                    )
-                  ) : (
-                    <span>Pick a date</span>
+                  className={cn(
+                    "w-full justify-start text-left font-normal h-12 border-input hover:bg-secondary transition-colors text-sm sm:text-base",
+                    !dateRange && "text-muted-foreground"
                   )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  className="bg-orange-500"
-                  mode="single"
-                  classNames={{
-                    day_selected:
-                      "bg-orange-500 text-white hover:bg-orange-500 focus:bg-orange-500",
-                    day_today: "border border-orange-300", // today highlight
-                    day: "hover:bg-orange-100 ", // every cell light border
-                  }}
-                  selected={getDateRange?.startDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-        ) : null}
-
-        {/* Date Picker - Selectable Date */}
-        {tourType === "selectable_date" || selectedTab === "selectable_date" ? (
-          <div className=" mb-4">
-            <label className="block mb-3 font-medium text-gray-700">
-              Select Date
-            </label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal border-orange-200"
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4 text-orange-500" />
+                  <CalendarIcon className="mr-2 h-4 w-4 text-orange-600" />
                   {dateRange?.startDate ? (
                     dateRange.endDate ? (
                       <>
@@ -179,110 +176,245 @@ export default function EnquireNow({
                       format(dateRange.startDate, "MMM d, yyyy")
                     )
                   ) : (
-                    <span>Pick a date</span>
+                    <span>Pick your dates</span>
                   )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
-                  className="bg-orange-500"
+                  initialFocus
                   mode="single"
-                  classNames={{
-                    day_selected:
-                      "bg-orange-500 text-white hover:bg-orange-500 focus:bg-orange-500",
-                    day_today: "border border-orange-300", // today highlight
-                    day: "hover:bg-orange-100 ", // every cell light border
-                  }}
+                  defaultMonth={dateRange?.startDate}
                   selected={dateRange?.startDate}
                   onSelect={handleSelect}
-                  disabled={(date) => {
-                    // Disable past dates
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0); // Remove time part, set to midnight for comparison
-                    return date < today;
+                  disabled={(date) => date < new Date()}
+                  className="pointer-events-auto"
+                  classNames={{
+                    day_selected:
+                      "bg-orange-600 text-white hover:bg-orange-700 focus:bg-orange-700",
+                    day_today: "border border-orange-600",
+                    day: "hover:bg-orange-100",
                   }}
-                  initialFocus
                 />
               </PopoverContent>
             </Popover>
           </div>
-        ) : null}
 
-        {/* Guests */}
-        <div className="mb-4">
-          <label className="block mb-3 font-medium text-gray-700">Guests</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start border-orange-200"
-              >
-                <Users className="mr-2 h-4 w-4 text-orange-500" />
-                {totalGuests > 0 ? `${totalGuests} Guests` : "Add Guests"}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-60 p-4 flex flex-col gap-4 border border-gray-100 space-y-3">
-              {/* Adults */}
-              <div className="flex items-center justify-between">
-                <span>Adults</span>
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-7 w-7 border-gray-200"
-                    onClick={() => decrement("adults")}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span>{guests.adults}</span>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-7 w-7 border-gray-200"
-                    onClick={() => increment("adults")}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+          {/* Guests Selector */}
+          <div className="flex flex-col gap-2">
+            <Label
+              htmlFor="guests"
+              className="text-sm sm:text-base font-medium text-muted-foreground"
+            >
+              Guests
+            </Label>
+            <Button
+              id="guests"
+              variant="outline"
+              onClick={() => setShowGuestDetails(!showGuestDetails)}
+              className="w-full justify-start text-left font-normal h-12 border-input hover:bg-secondary transition-colors text-sm sm:text-base"
+            >
+              <Users className="mr-2 h-4 w-4 text-orange-600" />
+              {totalGuests} {totalGuests === 1 ? "Guest" : "Guests"}
+            </Button>
+
+            {showGuestDetails && (
+              <div className="mt-3 p-4 border border-border rounded-lg bg-card flex flex-col gap-4">
+                {/* Adults */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-foreground text-sm sm:text-base">
+                      Adults
+                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      Ages 13+
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => decrement("adults")}
+                      disabled={guests.adults <= 1}
+                      className="h-8 w-8 sm:h-9 sm:w-9 rounded-full border-input hover:bg-secondary"
+                    >
+                      <Minus className="h-4 w-4 text-orange-600" />
+                    </Button>
+                    <span className="w-6 sm:w-8 text-center font-medium text-foreground text-sm sm:text-base">
+                      {guests.adults}
+                    </span>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => increment("adults")}
+                      disabled={guests.adults >= 10}
+                      className="h-8 w-8 sm:h-9 sm:w-9 rounded-full border-input hover:bg-secondary"
+                    >
+                      <Plus className="h-4 w-4 text-orange-600" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Children */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-foreground text-sm sm:text-base">
+                      Children
+                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      Ages 0–12
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => decrement("children")}
+                      disabled={guests.children <= 0}
+                      className="h-8 w-8 sm:h-9 sm:w-9 rounded-full border-input hover:bg-secondary"
+                    >
+                      <Minus className="h-4 w-4 text-orange-600" />
+                    </Button>
+                    <span className="w-6 sm:w-8 text-center font-medium text-foreground text-sm sm:text-base">
+                      {guests.children}
+                    </span>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => increment("children")}
+                      disabled={guests.children >= 10}
+                      className="h-8 w-8 sm:h-9 sm:w-9 rounded-full border-input hover:bg-secondary"
+                    >
+                      <Plus className="h-4 w-4 text-orange-600" />
+                    </Button>
+                  </div>
                 </div>
               </div>
+            )}
+          </div>
 
-              {/* Children */}
-              <div className="flex items-center justify-between">
-                <span>Children</span>
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-7 w-7 border-gray-200"
-                    onClick={() => decrement("children")}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span>{guests.children}</span>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-7 w-7 border-gray-200"
-                    onClick={() => increment("children")}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        {/* Submit Button */}
-        <div className="pt-3">
+          {/* Submit */}
           <Button
-            onClick={handleSendEnquiry}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+            onClick={() => setShowDialog(true)}
+            className="w-full h-11 sm:h-12 bg-orange-600 hover:bg-orange-700 text-white font-medium text-sm sm:text-base transition-colors"
           >
-            Send Enquiry
+            Continue
           </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      {/* Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl sm:text-2xl font-semibold text-orange-600">
+              Send Enquiry
+            </DialogTitle>
+            <DialogDescription className="text-sm sm:text-base text-muted-foreground">
+              Enter your contact details to receive a personalized quote
+            </DialogDescription>
+          </DialogHeader>
+
+          <form
+            onSubmit={handleSendEnquiry}
+            className="flex flex-col gap-4 mt-4"
+          >
+            <div className="flex flex-col gap-2">
+              <Label
+                htmlFor="name"
+                className="text-sm sm:text-base text-muted-foreground"
+              >
+                Full Name
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="text-sm sm:text-base"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label
+                htmlFor="email"
+                className="text-sm sm:text-base text-muted-foreground"
+              >
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="text-sm sm:text-base"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label
+                htmlFor="phone"
+                className="text-sm sm:text-base text-muted-foreground"
+              >
+                Phone
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+91 00000-00000"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                className="text-sm sm:text-base"
+              />
+            </div>
+
+            {/* Summary */}
+            <div className="pt-4 pb-2 border-t border-border flex flex-col gap-2 text-sm sm:text-base">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Travel Dates:</span>
+                <span className="font-medium text-foreground">
+                  {dateRange?.startDate &&
+                    dateRange?.endDate &&
+                    `${format(dateRange.startDate, "MMM dd")} - ${format(
+                      dateRange.endDate,
+                      "MMM dd, yyyy"
+                    )}`}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Total Guests:</span>
+                <span className="font-medium text-foreground">
+                  {totalGuests} {totalGuests === 1 ? "person" : "people"} (
+                  {guests.adults} {guests.adults === 1 ? "adult" : "adults"}
+                  {guests.children > 0 &&
+                    `, ${guests.children} ${
+                      guests.children === 1 ? "child" : "children"
+                    }`}
+                  )
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Total Price:</span>
+                <span className="font-medium text-foreground">
+                  ₹{totalGuests * basePrice}
+                </span>
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full h-11 sm:h-12 bg-orange-600 hover:bg-orange-700 text-white font-medium text-sm sm:text-base transition-colors"
+            >
+              Send Enquiry
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

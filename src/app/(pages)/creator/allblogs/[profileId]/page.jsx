@@ -1,92 +1,153 @@
-'use client';
-import Preview from '../../../../components/CustomUI/Card/Preview';
-import React from 'react';
-import styles from './styles.module.css';
-import { useParams } from 'next/navigation';
-export const blogData = [
-  {
-    title: 'Bali Island Retreat',
-    description:
-      'Experience the tropical paradise of Bali with serene beaches, waterfalls, and spiritual temples.',
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1699626665487-12e6eb2c5c35?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww',
-    url: '/blogs/bali-island-retreat',
-    className: '',
-    btn: 'Read more',
-  },
-  {
-    title: 'Himalayan Trek Adventure',
-    description:
-      'Conquer the trails of the Himalayas with guided treks and breathtaking mountain views.',
-    imgUrl:
-      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww',
-    url: '/blogs/himalayan-trek',
-    className: '',
-    btn: 'Read more',
-  },
-  {
-    title: 'Venice Romantic Escape',
-    description:
-      'Glide through the canals of Venice, enjoy Italian cuisine, and embrace timeless romance.',
-    imgUrl:
-      'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww',
-    url: '/blogs/venice-romantic-escape',
-    className: '',
-    btn: 'Read more',
-  },
-  {
-    title: 'Dubai Desert Safari',
-    description:
-      'Dune bashing, camel rides, and a magical desert sunset with a BBQ dinner experience.',
-    imgUrl: '/images/tours/dubai.jpg',
-    url: '/blogs/dubai-desert-safari',
-    className: '',
-    btn: 'Read more',
-  },
-  {
-    title: 'Tokyo Culture Tour',
-    description:
-      'Immerse yourself in Japanese traditions, temples, sushi experiences, and city vibes.',
-    imgUrl: '/images/tours/tokyo.jpg',
-    url: '/blogs/tokyo-culture-tour',
-    className: '',
-    btn: 'Read more',
-  },
-  {
-    title: 'South Africa Safari',
-    description:
-      'Explore wildlife in Kruger National Park and experience Africa’s stunning nature.',
-    imgUrl: '/images/tours/safari.jpg',
-    url: '/blogs/south-africa-safari',
-    className: '',
-    btn: 'Read more',
-  },
-  {
-    title: 'Santorini Sunsets',
-    description:
-      'Whitewashed houses, blue domes, and the best sunset views in the Aegean Sea.',
-    imgUrl: '/images/tours/santorini.jpg',
-    url: '/blogs/santorini-sunsets',
-    className: '',
-    btn: 'Read more',
-  },
-];
+"use client";
+import Preview from "../../../../components/CustomUI/Card/Preview";
+import React from "react";
+import styles from "./styles.module.css";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Spinner from "../../../../components/CustomUI/Spinner/Spinner";
+
 const page = () => {
-  const { id } = useParams(params); // ✅ unwraps the Promise
-  useEffect(() => {}, []);
+  const params = useParams();
+  const profileId = params?.profileId; // ✅ matches folder name [profileId]
+
+  const [blogs, setBlogs] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Guards for aborting/race conditions
+  const requestKeyRef = useRef("");
+  const sentinelRef = useRef(null);
+
+  const fetchPage = useCallback(
+    async (pageToFetch) => {
+      if (!profileId) return;
+
+      const controller = new AbortController();
+      const key = `${profileId}:${pageToFetch}:${Date.now()}`;
+      requestKeyRef.current = key;
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/blog?id=${profileId}&page=${pageToFetch}&limit=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+            },
+            signal: controller.signal,
+            // cache: "force-cache",
+          }
+        );
+        if (!res.ok) throw new Error(`Failed (${res.status})`);
+
+        const { data } = await res.json();
+
+        console.log("data", data);
+
+        const items = Array.isArray(data?.items) ? data.items : [];
+        const pages = data?.totalPages ?? 1;
+
+        // stale response guard
+        if (requestKeyRef.current !== key) return;
+
+        setTotalPages(pages);
+
+        setBlogs((prev) => {
+          // de-dupe by id/_id
+          const base = pageToFetch === 1 ? [] : prev;
+          const seen = new Set(base.map((b) => b._id ?? b.id));
+          const merged = [
+            ...base,
+            ...items.filter((b) => {
+              const id = b._id ?? b.id;
+              if (!id || seen.has(id)) return false;
+              seen.add(id);
+              return true;
+            }),
+          ];
+          return merged;
+        });
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error(err);
+          setError(err.message || "Unable to fetch blogs.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+
+      return () => controller.abort();
+    },
+    [profileId]
+  );
+
+  // Reset when profileId changes
+  useEffect(() => {
+    setBlogs([]);
+    setPage(1);
+    setTotalPages(1);
+  }, [profileId]);
+
+  // Fetch whenever page or profileId changes
+  useEffect(() => {
+    fetchPage(page);
+  }, [fetchPage, page]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    const el = sentinelRef.current;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        const hasMore = page < totalPages;
+        if (first.isIntersecting && !isLoading && hasMore) {
+          setPage((p) => p + 1);
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    );
+
+    observer.observe(el);
+    return () => observer.unobserve(el);
+  }, [isLoading, page, totalPages]);
+
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>
         All <span>Blogs</span>
       </h2>
 
+      {error && <p className={styles.error}>{error}</p>}
+
       <div className={styles.grid}>
-        {blogData.map((blog, index) => (
-          <div className={styles.gridItem} key={index}>
-            <Preview {...blog} className={styles.preview} />
+        {blogs.map((blog) => (
+          <div className={styles.gridItem} key={blog._id ?? blog.id}>
+            <Preview
+              title={blog.title}
+              description={blog.excerpt ?? blog.description}
+              imgUrl={blog.displayImg ?? blog.imgUrl}
+              url={`/blogs/${blog.slug ?? blog._id ?? blog.id}`}
+              btn="Read more"
+              className={styles.preview}
+            />
           </div>
         ))}
       </div>
+
+      {/* Sentinel for infinite scroll */}
+      <div ref={sentinelRef} className={styles.sentinel} />
+
+      {isLoading && (
+        <div className={styles.loaderWrap}>
+          <Spinner />
+        </div>
+      )}
     </div>
   );
 };

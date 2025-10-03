@@ -135,6 +135,8 @@ const advisors = [
 ];
 
 const AdvisorCarousel = ({ data }) => {
+  console.log(data);
+
   return (
     <section className="py-16 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
@@ -155,7 +157,7 @@ const AdvisorCarousel = ({ data }) => {
 
         {/* Advisor Cards */}
         <Carousel
-          className="w-full"
+          className="w-full "
           opts={{
             align: "start",
             loop: true,
@@ -172,27 +174,31 @@ const AdvisorCarousel = ({ data }) => {
                 key={advisor._id}
                 className="pl-6 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6 "
               >
-                <Card className="group p-0 overflow-hidden  hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in border-0">
+                <Card className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in border-0">
                   <CardContent className="p-0 relative h-80">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                      style={{ backgroundImage: `url(${advisor.image})` }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    </div>
-
-                    <div className="relative z-10 h-full flex flex-col justify-end p-6 text-white">
-                      <h3 className="text-xl font-semibold mb-2">
-                        {advisor.name}
-                      </h3>
-
-                      <div className="flex items-center gap-2  ">
-                        <MapPin className="h-4 w-4 text-white/70" />
-                        <span className="text-sm text-white/70">
-                          {advisor.location}
-                        </span>
+                    <a href={`/creator/${advisor._id}`}>
+                      <div className="absolute inset-0 overflow-hidden">
+                        <img
+                          src={advisor.profileImg}
+                          alt={advisor.name}
+                          className="w-full h-full object-cover transition-transform scale-110 duration-700 ease-in-out group-hover:scale-100 group-hover:origin-center"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       </div>
-                    </div>
+
+                      <div className="relative z-10 h-full flex flex-col justify-end p-6 text-white">
+                        <h3 className="text-xl font-semibold mb-2">
+                          {advisor.name}
+                        </h3>
+
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-white/70" />
+                          <span className="text-sm text-white/70">
+                            {advisor.location}
+                          </span>
+                        </div>
+                      </div>
+                    </a>
                   </CardContent>
                 </Card>
               </CarouselItem>

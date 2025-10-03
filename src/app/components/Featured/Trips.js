@@ -63,7 +63,6 @@ function Trips({ trips }) {
   //         "imgUrl": "/uploads/bernardo_lorena_ponte_ddcb_YY_4t_Ly_U_unsplash_9a0b877464.jpg"
   //     }
   // ]
-  console.log("trips", trips);
   return (
     <section id={styles.featuredTrips}>
       <div className={styles.tripsBox}>

@@ -1,39 +1,47 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePathname } from 'next/navigation';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
-import styles from './styles.module.css';
-import Link from 'next/link';
-import Image from 'next/image';
+import styles from "./styles.module.css";
+import Link from "next/link";
+import Image from "next/image";
 
-import Button from '../CustomUI/Button/Button';
+import Button from "../CustomUI/Button/Button";
 
 function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
     {
-      name: 'Search',
-      href: '/search',
-      icon: '/images/search.png',
+      name: "Search",
+      href: "/search",
+      icon: "/images/search.png",
     },
     {
-      name: 'Destinations',
-      href: '/destinations',
+      name: "Destinations",
+      href: "/destinations",
     },
     {
-      name: 'Travel Calender',
-      href: '/calendar',
+      name: "Blogs",
+      href: "/blogs",
     },
     {
-      name: 'Experiences',
-      href: '/experiences',
+      name: "Tours",
+      href: "/tours",
     },
     {
-      name: 'About Us',
-      href: '/about',
+      name: "Calender",
+      href: "/calendar",
+    },
+    {
+      name: "Experiences",
+      href: "/experiences",
+    },
+    {
+      name: "About",
+      href: "/about",
     },
   ];
 
@@ -52,10 +60,10 @@ function Navbar() {
     <nav className={styles.navbar}>
       <div className={styles.navBox}>
         <div className={styles.navLogo}>
-          <Link href='/'>
+          <Link href="/">
             <Image
-              src='/images/logo.png'
-              alt='Travel Tailor Logo'
+              src="/images/logo.png"
+              alt="Travel Tailor Logo"
               width={100}
               height={50}
             />
@@ -69,8 +77,9 @@ function Navbar() {
               key={index}
               href={item.href}
               className={`${styles.navItem} ${
-                pathname.startsWith(item.href) ? styles.active : ''
-              }`}>
+                pathname.startsWith(item.href) ? styles.active : ""
+              }`}
+            >
               {item.icon && (
                 <Image src={item.icon} alt={item.name} width={24} height={24} />
               )}
@@ -80,7 +89,7 @@ function Navbar() {
         </div>
 
         <div className={styles.navCta}>
-          <Button varient='color' href='/contact'>
+          <Button varient="color" href="/contact">
             Start Planning
           </Button>
         </div>
@@ -88,8 +97,8 @@ function Navbar() {
         <div className={styles.navMenuIcon}>
           <button onClick={handleClick} className={styles.navMenuIconBtn}>
             <Image
-              src='/images/menu.png'
-              alt='Menu Icon'
+              src="/images/menu.png"
+              alt="Menu Icon"
               width={24}
               height={24}
             />
@@ -98,20 +107,22 @@ function Navbar() {
       </div>
 
       {/* Nav Items Mobile */}
-      <AnimatePresence mode='wait'>
+      <AnimatePresence mode="wait">
         <motion.div
           className={`${styles.navItemsMobile} ${isOpen && styles.active}`}
           key={isOpen}
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
-          transition={{ duration: 0.3 }}>
+          transition={{ duration: 0.3 }}
+        >
           {navItems.map((item, index) => (
             <Link
               key={index}
               href={item.href}
               className={styles.navItem}
-              onClick={closeMenu}>
+              onClick={closeMenu}
+            >
               {item.icon && (
                 <Image src={item.icon} alt={item.name} width={24} height={24} />
               )}

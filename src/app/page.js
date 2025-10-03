@@ -36,7 +36,7 @@ const Hero = () => {
         </div>
 
         {/* Main Heading */}
-        <h2 className="text-6xl mb-4 xl:text-8xl font-light text-orange-600 tracking-tight font-handwriting">
+        <h2 className="text-6xl mb-4 xl:text-7xl font-light text-orange-600 tracking-tight leading-tight font-handwriting">
           Every Step,
           <br />
           <span className="text-white font-sans text-5xl xl:text-7xl ">

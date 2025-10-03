@@ -6,7 +6,7 @@ import styles from "./styles.module.css";
 import Day from "../CustomUI/Card/Day";
 import Button from "../CustomUI/Button/Button";
 
-import parseUrl from "../../../util/parseUrl";
+import parseUrl from "../../util/parseUrl";
 
 function TripDays({
   days = [

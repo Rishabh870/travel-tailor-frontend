@@ -1,6 +1,11 @@
 "use client";
-import { Card, CardHeader, CardContent } from "../../components/ui/card";
-import { Calendar as CalendarIcon, Info } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from "../../components/ui/card";
+import { Calendar, IndianRupee, Users, User } from "lucide-react";
 
 export default function OverviewCard({
   duration = "12 Days",
@@ -8,49 +13,52 @@ export default function OverviewCard({
   suggestedAges = "Any",
   maxGroupSize = "Any",
 }) {
+  const overviewItems = [
+    {
+      icon: Calendar,
+      label: "Duration",
+      value: duration,
+    },
+    {
+      icon: IndianRupee,
+      label: "Price per person",
+      value: price,
+    },
+    {
+      icon: User,
+      label: "Suggested Ages",
+      value: suggestedAges,
+    },
+    {
+      icon: Users,
+      label: "Maximum Group Size",
+      value: maxGroupSize,
+    },
+  ];
   return (
-    <Card className="p-0 mb-6 border border-card-border border-gray-100 bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
-      <CardHeader className="p-4 pb-0 text-2xl font-semibold text-gray-800">
-        Tour Overview
+    <Card className="w-full gap-2 p-0 py-4 h-fit mb-4 max-w-4xl border-border shadow-md bg-card">
+      <CardHeader>
+        <CardTitle className="text-2xl py-0 font-semibold text-foreground">
+          Tour Overview
+        </CardTitle>
       </CardHeader>
-      <CardContent className="p-4 pt-0 space-y-4 grid grid-cols-2 gap-y-4">
-        {/* Duration */}
-        <div className="flex flex-col space-y-1">
-          <span className="  text-sm text-gray-500">Duration: </span>
-          <div className="flex items-center  ">
-            <CalendarIcon className="mr-2 h-5 w-5 text-orange-500" />
-            <span className="text-gray-600 font-semibold">{duration}</span>
-          </div>
-        </div>
-
-        {/* Price */}
-        <div className="flex flex-col space-y-1">
-          <span className="  text-sm text-gray-500">Price per person: </span>
-          <div className="flex items-center ">
-            <Info className="mr-2 h-5 w-5 text-orange-500" />
-            <span className="text-gray-600 font-semibold">
-              <span className="text-orange-500">₹{price}</span>{" "}
-              <span className="text-[13px] text-gray-500">onwards</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Suggested Ages */}
-        <div className="flex flex-col space-y-1">
-          <span className="  text-sm text-gray-500">Suggested Ages: </span>
-          <div className="flex items-center ">
-            <Info className="mr-2 h-5 w-5 text-orange-500" />
-            <span className="text-gray-600 font-semibold">{suggestedAges}</span>
-          </div>
-        </div>
-
-        {/* Maximum Group Size */}
-        <div className="flex flex-col space-y-1">
-          <span className="  text-sm text-gray-500">Maximum Group Size: </span>
-          <div className="flex items-center  ">
-            <Info className="mr-2 h-5 w-5 text-orange-500" />
-            <span className="text-gray-600 font-semibold">{maxGroupSize}</span>
-          </div>
+      <CardContent className={"p-0 px-6"}>
+        <div className="grid grid-cols-1 py-2 sm:grid-cols-2 gap-2">
+          {overviewItems.map((item, index) => (
+            <div key={index} className="flex items-start gap-3">
+              <div className="mt-1 p-2 rounded-lg bg-orange-500/10">
+                <item.icon className="h-5 w-5 text-orange-500" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-muted-foreground mb-1">
+                  {item.label}:
+                </p>
+                <p className="text-base font-semibold text-foreground">
+                  {item.value}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

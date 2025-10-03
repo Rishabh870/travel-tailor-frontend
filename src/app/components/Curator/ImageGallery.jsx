@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "../../components/ui/dialog";
 import { ChevronLeft, ChevronRight, X, Expand } from "lucide-react";
@@ -160,14 +161,14 @@ export default function ImageGallery({ images = [] }) {
           </Button>
         </DialogTrigger>
 
-        <DialogContent
-          className=" fixed z-50 p-0 bg-black border-0 w-screen h-[100dvh] max-w-none sm:max-w-none rounded-none transform-none overflow-hidden  "
-        >
+        <DialogContent className=" fixed z-50 p-0 bg-black border-0 w-screen h-[100dvh] max-w-none sm:max-w-none rounded-none transform-none overflow-hidden  ">
+          <DialogTitle className="sr-only">View full image</DialogTitle>
           <div className="relative w-full h-full flex items-center justify-center">
             {/* Close button (uses DialogClose) */}
             <DialogClose asChild>
               <Button
                 variant="ghost"
+                type="button"
                 size="icon"
                 className="absolute top-25 left-6 z-50 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-sm transition-all duration-200"
                 aria-label="Close"

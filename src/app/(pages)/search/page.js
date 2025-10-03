@@ -1,26 +1,32 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import SearchResult from '../../components/SearchResult/SearchResult';
-import styles from './styles.module.css';
-import Spinner from '../../components/CustomUI/Spinner/Spinner';
-import Image from 'next/image';
-import { Suspense } from 'react';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import SearchResult from "../../components/SearchResult/SearchResult";
+import styles from "./styles.module.css";
+import Spinner from "../../components/CustomUI/Spinner/Spinner";
+import Image from "next/image";
+import { Suspense } from "react";
 
 // Base paths and titles
 const BASE_PATHS = {
-  blogs: '/blogs',
-  destinations: '/destinations',
-  experiences: '/experiences',
-  tours: '/tours',
+  blogs: "/blogs",
+  destinations: "/destinations",
+  experiences: "/experiences",
+  tours: "/tours",
+  creators: "/creator",
+  creatorBlogs: "/blogs",
+  creatorTours: "/creator/tour",
 };
 
 const CATEGORY_TITLES = {
-  blogs: 'Blog Posts',
-  destinations: 'Destinations',
-  experiences: 'Experiences',
-  tours: 'Tours',
+  blogs: "Blog Posts",
+  destinations: "Destinations",
+  experiences: "Experiences",
+  tours: "Tours",
+  creators: "Creators",
+  creatorBlogs: "Creator Posts",
+  creatorTours: "Creator Tours",
 };
 
 // Custom hook for debouncing
@@ -44,9 +50,9 @@ function useDebounce(value, delay) {
 function SearchPageContent() {
   const router = useRouter();
 
-  const { useSearchParams } = require('next/navigation');
+  const { useSearchParams } = require("next/navigation");
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get('q') || '';
+  const initialQuery = searchParams.get("q") || "";
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [submittedQuery, setSubmittedQuery] = useState(initialQuery);
@@ -83,9 +89,9 @@ function SearchPageContent() {
       setSearchResults(null);
       setError(null);
       setIsLoading(false);
-      setSubmittedQuery('');
+      setSubmittedQuery("");
 
-      router.push('/search');
+      router.push("/search");
       return;
     }
 
@@ -96,27 +102,27 @@ function SearchPageContent() {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/search/${encodeURIComponent(
-          trimmedQuery,
+          trimmedQuery
         )}`,
         {
           headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
           },
-        },
+        }
       );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Search results:', data);
+      console.log("Search results:", data);
       setSearchResults(data.data);
 
       router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
     } catch (err) {
-      console.error('Failed to fetch search results:', err);
+      console.error("Failed to fetch search results:", err);
       setError(
-        "Sorry, we couldn't perform the search. Please try again later.",
+        "Sorry, we couldn't perform the search. Please try again later."
       );
       setSearchResults(null);
     } finally {
@@ -148,26 +154,27 @@ function SearchPageContent() {
       <form onSubmit={handleSubmit} className={styles.formWrapper}>
         <div className={styles.searchIcon}>
           <Image
-            src='/images/search.png'
-            alt=''
+            src="/images/search.png"
+            alt=""
             width={20}
             height={20}
-            aria-hidden='true'
+            aria-hidden="true"
           />
         </div>
         <input
-          type='search'
+          type="search"
           value={searchQuery}
           onChange={handleInputChange}
-          placeholder='Search destinations, blogs, tours...'
+          placeholder="Search destinations, blogs, tours..."
           className={styles.searchInput}
-          aria-label='Search query'
+          aria-label="Search query"
         />
         <button
-          type='submit'
+          type="submit"
           className={styles.searchButton}
-          disabled={isLoading}>
-          {isLoading ? 'Searching...' : 'Search'}
+          disabled={isLoading}
+        >
+          {isLoading ? "Searching..." : "Search"}
         </button>
       </form>
 
@@ -197,7 +204,7 @@ function SearchPageContent() {
             const title = CATEGORY_TITLES[key];
             const basePath = BASE_PATHS[key];
 
-            console.log('items', items, 'title', title, 'basePath', basePath);
+            console.log("items", items, "title", title, "basePath", basePath);
 
             if (items && items.length > 0) {
               return (

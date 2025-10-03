@@ -1,5 +1,5 @@
 // components/StickyContact/StickyContact
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 
 const PhoneIcon = () => (
@@ -33,6 +33,30 @@ const ClockIcon = () => (
 );
 
 const StickyContact = () => {
+  const [contact, setContact] = useState(null);
+  useEffect(() => {
+    async function fetchContact() {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/settings`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+            },
+          }
+        );
+        const { data } = await response.json();
+        console.log(data.footerContact);
+        setContact(data.footerContact);
+      } catch (error) {
+        console.error("Error fetching contact:", error);
+      }
+    }
+
+    fetchContact();
+  }, []);
   return (
     <div className={styles.stickyContainer}>
       <div className={styles.contactSection}>
@@ -40,8 +64,8 @@ const StickyContact = () => {
           <PhoneIcon />
         </span>
         <h3 className={styles.title}>CALL US TODAY</h3>
-        <a href="tel:+919165070409" className={styles.phoneNumber}>
-          +91 9165070409
+        <a href={`tel: ${contact?.contact1}`} className={styles.phoneNumber}>
+          {contact?.contact1}
         </a>
         <p className={styles.subText}>Call us today until 10pm</p>
       </div>

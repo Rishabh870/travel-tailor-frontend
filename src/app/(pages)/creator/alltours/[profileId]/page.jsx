@@ -1,73 +1,121 @@
-'use client';
-import Preview from '../../../../components/CustomUI/Card/Preview';
-import React from 'react';
-import styles from './styles.module.css';
-import Tour from '../../../../components/CustomUI/Card/Tour';
-import { useParams } from 'next/navigation';
-export const tourData = [
-  {
-    title: 'Bali Island Retreat',
-    description:
-      'Experience the tropical paradise of Bali with serene beaches, waterfalls, and spiritual temples.',
-    slug: 'bali-island-retreat',
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1699626665487-12e6eb2c5c35?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww',
-    tag: '6 Night',
-  },
-  {
-    title: 'Himalayan Trek Adventure',
-    description:
-      'Conquer the trails of the Himalayas with guided treks and breathtaking mountain views.',
-    slug: 'himalayan-trek',
-    imgUrl:
-      'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww',
-    tag: '9 Night',
-  },
-  {
-    title: 'Venice Romantic Escape',
-    description:
-      'Glide through the canals of Venice, enjoy Italian cuisine, and embrace timeless romance.',
-    slug: 'venice-romantic-escape',
-    imgUrl:
-      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww',
-    tag: '7 Night',
-  },
-  {
-    title: 'Dubai Desert Safari',
-    description:
-      'Dune bashing, camel rides, and a magical desert sunset with a BBQ dinner experience.',
-    slug: 'dubai-desert-safari',
-    imgUrl:
-      'https://plus.unsplash.com/premium_photo-1690749740484-89660d6003f9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww',
-    tag: '4 Night',
-  },
-  {
-    title: 'Tokyo Culture Tour',
-    description:
-      'Immerse yourself in Japanese traditions, temples, sushi experiences, and city vibes.',
-    slug: 'tokyo-culture-tour',
-    imgUrl: '/images/spider.png',
-    tag: '5 Night',
-  },
-  {
-    title: 'South Africa Safari',
-    description:
-      'Explore wildlife in Kruger National Park and experience Africa’s stunning nature.',
-    slug: 'south-africa-safari',
-    imgUrl: '/images/spider.png',
-    tag: '8 Night',
-  },
-  {
-    title: 'Santorini Sunsets',
-    description:
-      'Whitewashed houses, blue domes, and the best sunset views in the Aegean Sea.',
-    slug: 'santorini-sunsets',
-    imgUrl: '/images/spider.png',
-    tag: '6 Night',
-  },
-];
-const page = () => {
-  const { id } = useParams(params); // ✅ unwraps the Promise
+"use client";
+
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import Tour from "../../../../components/CustomUI/Card/Tour";
+import Spinner from "../../../../components/CustomUI/Spinner/Spinner";
+import styles from "./styles.module.css";
+import parseUrl from "../../../../util/parseUrl";
+
+const Page = () => {
+  const params = useParams();
+  const profileId = params?.profileId; // ✅ matches folder name
+
+  const [tours, setTours] = useState([]);
+  const [pageNum, setPageNum] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Guards for race conditions
+  const requestKeyRef = useRef("");
+  const sentinelRef = useRef(null);
+
+  const fetchPage = useCallback(
+    async (pageToFetch) => {
+      if (!profileId) return;
+
+      const controller = new AbortController();
+      const key = `${profileId}:${pageToFetch}:${Date.now()}`;
+      requestKeyRef.current = key;
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const res = await fetch(
+          // ⬇️ If your API uses another param (e.g. creatorId), adjust here
+          `${process.env.NEXT_PUBLIC_API_URL}/api/tour?id=${profileId}&page=${pageToFetch}&limit=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+            },
+            signal: controller.signal,
+            cache: "no-store",
+          }
+        );
+        if (!res.ok) throw new Error(`Failed (${res.status})`);
+
+        const { data } = await res.json();
+        console.log("data", data);
+
+        const items = Array.isArray(data?.items) ? data.items : [];
+        const pages = data?.totalPages ?? 1;
+
+        if (requestKeyRef.current !== key) return; // stale response
+
+        setTotalPages(pages);
+
+        setTours((prev) => {
+          const base = pageToFetch === 1 ? [] : prev;
+          const seen = new Set(base.map((t) => t._id ?? t.id));
+          return [
+            ...base,
+            ...items.filter((t) => {
+              const id = t._id ?? t.id;
+              if (!id || seen.has(id)) return false;
+              seen.add(id);
+              return true;
+            }),
+          ];
+        });
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error(err);
+          setError(err.message || "Unable to fetch tours.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+
+      return () => controller.abort();
+    },
+    [profileId]
+  );
+
+  // Reset on profile change
+  useEffect(() => {
+    setTours([]);
+    setPageNum(1);
+    setTotalPages(1);
+  }, [profileId]);
+
+  // Fetch on page/profile change
+  useEffect(() => {
+    fetchPage(pageNum);
+  }, [fetchPage, pageNum]);
+
+  // Infinite scroll
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        const hasMore = pageNum < totalPages;
+        if (first.isIntersecting && !isLoading && hasMore) {
+          setPageNum((p) => p + 1);
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isLoading, pageNum, totalPages]);
+
+  const isEmpty = !isLoading && tours.length === 0 && !error;
 
   return (
     <div className={styles.container}>
@@ -75,15 +123,43 @@ const page = () => {
         All <span>Tours</span>
       </h2>
 
-      <div className={styles.grid}>
-        {tourData.map((tour, index) => (
-          <div className={styles.gridItem} key={index}>
-            <Tour {...tour} />
-          </div>
-        ))}
-      </div>
+      {error && <p className={styles.error}>{error}</p>}
+      {isEmpty && <p className={styles.empty}>No tours found.</p>}
+
+      {tours.length > 0 && (
+        <div className={styles.grid}>
+          {tours.map((tour) => (
+            <div className={styles.gridItem} key={tour._id ?? tour.id}>
+              <Tour
+                type="tours"
+                description={tour?.description}
+                title={tour?.title}
+                slug={tour?.slug}
+                url={`/tours/${tour?.slug}`}
+                imgUrl={
+                  tour?.heroImg
+                    ? parseUrl(tour?.heroImg)
+                    : tour.image
+                    ? parseUrl(tour?.image)
+                    : null
+                }
+                tag={`${tour?.details?.totalDays} days`}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Sentinel for infinite scroll */}
+      <div ref={sentinelRef} className={styles.sentinel} />
+
+      {isLoading && (
+        <div className={styles.loaderWrap}>
+          <Spinner />
+        </div>
+      )}
     </div>
   );
 };
 
-export default page;
+export default Page;

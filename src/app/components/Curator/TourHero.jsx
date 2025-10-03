@@ -105,7 +105,7 @@ export default function TourHero({
                   <div className="flex items-center ">
                     {/* Curator image */}
                     <img
-                      src={image} // replace with actual curator image path or prop
+                      src={curatedBy.profileImg} // replace with actual curator image path or prop
                       alt={curatedBy}
                       className="w-12 h-12 mr-3 rounded-md object-cover border-2 border-white/30"
                     />

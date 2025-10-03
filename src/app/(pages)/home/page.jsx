@@ -40,7 +40,6 @@ export default async function Home() {
   const { data } = await getHomepageData();
 
   const { hero, months, destinations, reviews, features } = data || {};
-  console.log("data", data);
 
   const bannerTitle = "Dreaming of an Adventure? /n Let's Talk!";
   const bannerCta = "Enquire now";
