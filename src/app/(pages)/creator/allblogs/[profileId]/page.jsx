@@ -123,6 +123,10 @@ const page = () => {
         All <span>Blogs</span>
       </h2>
 
+      <p className={`text-center text-gray-400`}>
+        All the blogs created by this creator
+      </p>
+
       {error && <p className={styles.error}>{error}</p>}
 
       <div className={styles.grid}>

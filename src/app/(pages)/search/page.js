@@ -13,7 +13,7 @@ const BASE_PATHS = {
   blogs: "/blogs",
   destinations: "/destinations",
   experiences: "/experiences",
-  tours: "/tours",
+  tours: "/creator/tour",
   creators: "/creator",
   creatorBlogs: "/blogs",
   creatorTours: "/creator/tour",
@@ -213,13 +213,19 @@ function SearchPageContent() {
                     {title} <span>({items.length})</span>
                   </h2>
                   <div className={styles.resultsGrid}>
-                    {items.map((item) => (
-                      <SearchResult
-                        key={`${key}-${item.slug}`}
-                        item={item}
-                        href={`${basePath}/${item.slug}`}
-                      />
-                    ))}
+                    {items.map((item) => {
+                      const url = item.slug
+                        ? `${basePath}/${item.slug}`
+                        : `${basePath}/${item._id}`;
+
+                      return (
+                        <SearchResult
+                          key={`${key}-${item.slug}`}
+                          item={item}
+                          href={url}
+                        />
+                      );
+                    })}
                   </div>
                 </section>
               );

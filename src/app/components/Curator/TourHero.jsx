@@ -2,6 +2,7 @@
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { MapPin, Share2, Star, Clock, IndianRupee } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function TourHero({
   title,
@@ -18,7 +19,7 @@ export default function TourHero({
   const image =
     "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg";
 
-    console.log(curatedBy);
+  console.log(curatedBy);
 
   return (
     <div className="relative">
@@ -104,11 +105,20 @@ export default function TourHero({
                 <div className=" ">
                   <div className="flex items-center ">
                     {/* Curator image */}
-                    <img
-                      src={curatedBy.profileImg} // replace with actual curator image path or prop
-                      alt={curatedBy}
-                      className="w-12 h-12 mr-3 rounded-md object-cover border-2 border-white/30"
-                    />
+                    <Avatar className="w-12 h-12 mr-3 rounded-md object-cover border-2 border-white/30">
+                      <AvatarImage
+                        src={curatedBy?.profileImg}
+                        alt={curatedBy?.name}
+                      />
+                      <AvatarFallback
+                        className={
+                          "text-white rounded-sm bg-gray-800 w-full h-full"
+                        }
+                      >
+                        {curatedBy?.name?.charAt(0)?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+
                     {/* Curator name */}
                     <div>
                       <span className="flex flex-col text-xs uppercase tracking-wide opacity-70">

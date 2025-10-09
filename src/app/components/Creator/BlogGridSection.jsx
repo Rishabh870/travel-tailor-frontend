@@ -1,20 +1,20 @@
-'use client';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import styles from './styles.module.css';
-import Preview from '../CustomUI/Card/Preview';
+"use client";
+import { useRouter } from "next/navigation";
+import React from "react";
+import styles from "./styles.module.css";
+import Preview from "../CustomUI/Card/Preview";
 
 const ITEMS_PER_PAGE = 4;
 
 const BlogGridSection = ({
-  url = '/creator',
-  allUrl = '/creator',
+  url = "/creator",
+  allUrl = "/creator",
   title,
   description,
   data,
   visibleCount,
   setVisibleCount,
-  className = '',
+  className = "",
   CardComponent,
   type,
 }) => {
@@ -23,7 +23,7 @@ const BlogGridSection = ({
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
-        <span>{title.split(' ')[0]}</span> {title.split(' ').slice(1).join(' ')}
+        <span>{title.split(" ")[0]}</span> {title.split(" ").slice(1).join(" ")}
       </h2>
 
       {description && (
@@ -31,12 +31,14 @@ const BlogGridSection = ({
       )}
       <div
         className={
-          type === 'blogs' ? styles.blogGridWrapper : styles.gridWrapper
-        }>
+          styles.gridWrapper + ` justify-evenly w-full  max-w-[90rem] mx-auto `
+        }
+      >
         {data?.slice(0, visibleCount).map((item, index) => (
           <div
             key={index}
-            className={type === 'blogs' ? styles.blogItem : styles.gridItem}>
+            className={type === "blogs" ? styles.blogItem : styles.gridItem}
+          >
             <Preview
               description={item.description}
               imgUrl={item.heroImg || item.displayImg}
@@ -44,7 +46,7 @@ const BlogGridSection = ({
               url={`${url}/${item.slug}`}
               id={item._id}
               type={type}
-              className={type === 'blogs' ? styles.creatorBlogs : className}
+              className={type === "blogs" ? styles.creatorBlogs : className}
             />
           </div>
         ))}
@@ -54,8 +56,9 @@ const BlogGridSection = ({
         <div className={styles.centerBtn}>
           <button
             className={styles.customButton}
-            onClick={() => router.push(allUrl)}>
-            {'Show More'}
+            onClick={() => router.push(allUrl)}
+          >
+            {"Show More"}
           </button>
         </div>
       )}

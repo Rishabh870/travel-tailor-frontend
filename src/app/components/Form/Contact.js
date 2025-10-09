@@ -1,37 +1,37 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import styles from './styles.module.css';
+import React, { useState, useEffect } from "react";
+import styles from "./styles.module.css";
 
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-import Spinner from '../CustomUI/Spinner/Spinner';
+import Spinner from "../CustomUI/Spinner/Spinner";
 
 const Contact = () => {
   // Wrap serchParams in Suspense to prevent SSR errors
   const searchParams = useSearchParams();
-  const src = searchParams.get('src');
+  const src = searchParams.get("src");
 
   // ... (useState, handlers, validation logic - ALL SAME AS BEFORE) ...
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    contact: '',
-    countryCode: '+91', // Default country code
-    destination: '',
-    month: '',
-    year: '',
-    duration: '',
-    people: '',
+    name: "",
+    email: "",
+    contact: "",
+    countryCode: "+91", // Default country code
+    destination: "",
+    month: "",
+    year: "",
+    duration: "",
+    people: "",
     budget: 3000, // Default starting budget
-    comment: '',
+    comment: "",
   });
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [formMessage, setFormMessage] = useState({ type: '', text: '' });
-  const [budgetDisplay, setBudgetDisplay] = useState('₹10,000'); // For displaying the slider value
+  const [formMessage, setFormMessage] = useState({ type: "", text: "" });
+  const [budgetDisplay, setBudgetDisplay] = useState("₹10,000"); // For displaying the slider value
 
   // Budget slider settings
   const minBudget = 10000;
@@ -39,27 +39,27 @@ const Contact = () => {
 
   // Helper for country codes (expand as needed)
   const countryCodes = [
-    { code: '+91', name: 'India (+91)' },
-    { code: '+44', name: 'UK (+44)' },
-    { code: '+1', name: 'USA (+1)' },
-    { code: '+61', name: 'AUS (+61)' },
-    { code: '+244', name: 'Canada (+244)' },
+    { code: "+91", name: "India (+91)" },
+    { code: "+44", name: "UK (+44)" },
+    { code: "+1", name: "USA (+1)" },
+    { code: "+61", name: "AUS (+61)" },
+    { code: "+244", name: "Canada (+244)" },
   ];
 
   // Helper for months
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   // Helper for years (dynamic range)
@@ -86,18 +86,18 @@ const Contact = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Full name is required.';
+    if (!formData.name.trim()) newErrors.name = "Full name is required.";
     if (!formData.contact.trim())
-      newErrors.contact = 'Contact number is required.';
+      newErrors.contact = "Contact number is required.";
     else if (!/^\d+$/.test(formData.contact))
-      newErrors.contact = 'Please enter a valid phone number (digits only).';
+      newErrors.contact = "Please enter a valid phone number (digits only).";
     if (!formData.duration.trim())
-      newErrors.duration = 'Trip duration is required.';
+      newErrors.duration = "Trip duration is required.";
     if (!formData.people || parseInt(formData.people, 10) < 1)
-      newErrors.people = 'Please specify at least one traveller.';
+      newErrors.people = "Please specify at least one traveller.";
 
     if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address.';
+      newErrors.email = "Please enter a valid email address.";
     }
 
     setErrors(newErrors);
@@ -108,7 +108,7 @@ const Contact = () => {
       requestAnimationFrame(() => {
         const firstErrorKey = Object.keys(newErrors)[0];
         const firstErrorField = document.querySelector(
-          `[name="${firstErrorKey}"]`,
+          `[name="${firstErrorKey}"]`
         );
         firstErrorField?.focus();
       });
@@ -118,7 +118,7 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormMessage({ type: '', text: '' });
+    setFormMessage({ type: "", text: "" });
 
     if (!validateForm()) {
       return;
@@ -127,7 +127,7 @@ const Contact = () => {
     setIsLoading(true);
 
     // check ?src=website based on router
-    const source = src ? src : 'Website';
+    const source = src ? src : "Website";
     const apiData = {
       ...formData,
       comment: `${formData.comment}`,
@@ -138,47 +138,47 @@ const Contact = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/lead`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
           },
           body: JSON.stringify(apiData),
-        },
+        }
       );
 
       if (response.ok) {
         setFormMessage({
-          type: 'success',
-          text: 'Thank you! We will be in touch soon.',
+          type: "success",
+          text: "Thank you! We will be in touch soon.",
         });
         setFormData({
-          name: '',
-          email: '',
-          contact: '',
-          countryCode: '+91',
-          destination: '',
-          month: '',
-          year: '',
-          duration: '',
-          people: '',
+          name: "",
+          email: "",
+          contact: "",
+          countryCode: "+91",
+          destination: "",
+          month: "",
+          year: "",
+          duration: "",
+          people: "",
           budget: 3000,
-          comment: '',
+          comment: "",
         });
         setBudgetDisplay(`₹${minBudget.toLocaleString()}`);
         setErrors({});
       } else {
-        let errorText = 'An error occurred. Please try again.';
+        let errorText = "An error occurred. Please try again.";
         try {
           const errorData = await response.json();
           errorText = errorData.message || errorText;
         } catch (_) {}
-        setFormMessage({ type: 'error', text: errorText });
+        setFormMessage({ type: "error", text: errorText });
       }
     } catch (error) {
       setFormMessage({
-        type: 'error',
-        text: 'Network error. Please try again.',
+        type: "error",
+        text: "Network error. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -201,23 +201,23 @@ const Contact = () => {
         <div className={styles.formGrid}>
           {/* Full Name */}
           <div className={`${styles.formGroup} ${styles.span2}`}>
-            <label htmlFor='name' className={styles.label}>
+            <label htmlFor="name" className={styles.label}>
               Full Name <span className={styles.required}>*</span>
             </label>
             <input
-              type='text'
-              id='name'
-              name='name'
+              type="text"
+              id="name"
+              name="name"
               value={formData.name}
               onChange={handleInputChange}
               className={`${styles.input} ${
-                errors.name ? styles.inputError : ''
+                errors.name ? styles.inputError : ""
               }`}
               required
-              aria-describedby='name-error'
+              aria-describedby="name-error"
             />
             {errors.name && (
-              <p id='name-error' className={styles.errorMessage}>
+              <p id="name-error" className={styles.errorMessage}>
                 {errors.name}
               </p>
             )}
@@ -225,22 +225,22 @@ const Contact = () => {
 
           {/* Email Address */}
           <div className={`${styles.formGroup} ${styles.span2}`}>
-            <label htmlFor='email' className={styles.label}>
+            <label htmlFor="email" className={styles.label}>
               Email Address
             </label>
             <input
-              type='email'
-              id='email'
-              name='email'
+              type="email"
+              id="email"
+              name="email"
               value={formData.email}
               onChange={handleInputChange}
               className={`${styles.input} ${
-                errors.email ? styles.inputError : ''
+                errors.email ? styles.inputError : ""
               }`}
-              aria-describedby='email-error'
+              aria-describedby="email-error"
             />
             {errors.email && (
-              <p id='email-error' className={styles.errorMessage}>
+              <p id="email-error" className={styles.errorMessage}>
                 {errors.email}
               </p>
             )}
@@ -248,16 +248,17 @@ const Contact = () => {
 
           {/* Contact Number */}
           <div className={`${styles.formGroup} ${styles.span2}`}>
-            <label htmlFor='contact' className={styles.label}>
+            <label htmlFor="contact" className={styles.label}>
               Contact Number <span className={styles.required}>*</span>
             </label>
             <div className={styles.inputGroup}>
               <select
-                name='countryCode'
+                name="countryCode"
                 value={formData.countryCode}
                 onChange={handleInputChange}
                 className={`${styles.select} ${styles.countryCodeSelect}`}
-                aria-label='Country Code'>
+                aria-label="Country Code"
+              >
                 {countryCodes.map((c) => (
                   <option key={c.code} value={c.code}>
                     {c.name}
@@ -265,21 +266,21 @@ const Contact = () => {
                 ))}
               </select>
               <input
-                type='tel'
-                id='contact'
-                name='contact'
+                type="tel"
+                id="contact"
+                name="contact"
                 value={formData.contact}
                 onChange={handleInputChange}
                 className={`${styles.input} ${styles.contactInput} ${
-                  errors.contact ? styles.inputError : ''
+                  errors.contact ? styles.inputError : ""
                 }`}
                 required
-                placeholder='Your phone number'
-                aria-describedby='contact-error'
+                placeholder="Your phone number"
+                aria-describedby="contact-error"
               />
             </div>
             {errors.contact && (
-              <p id='contact-error' className={styles.errorMessage}>
+              <p id="contact-error" className={styles.errorMessage}>
                 {errors.contact}
               </p>
             )}
@@ -287,23 +288,23 @@ const Contact = () => {
 
           {/* Destination */}
           <div className={`${styles.formGroup} ${styles.span2}`}>
-            <label htmlFor='destination' className={styles.label}>
-              Where would you like to go?{' '}
+            <label htmlFor="destination" className={styles.label}>
+              Where would you like to go?{" "}
             </label>
             <input
-              type='text'
-              id='destination'
-              name='destination'
+              type="text"
+              id="destination"
+              name="destination"
               value={formData.destination}
               onChange={handleInputChange}
-              placeholder='e.g., Maldives, Italy, Safari'
+              placeholder="e.g., Maldives, Italy, Safari"
               className={`${styles.input} ${
-                errors.destination ? styles.inputError : ''
+                errors.destination ? styles.inputError : ""
               }`}
-              aria-describedby='destination-error'
+              aria-describedby="destination-error"
             />
             {errors.destination && (
-              <p id='destination-error' className={styles.errorMessage}>
+              <p id="destination-error" className={styles.errorMessage}>
                 {errors.destination}
               </p>
             )}
@@ -311,16 +312,17 @@ const Contact = () => {
 
           {/* Travel Dates */}
           <div className={styles.formGroup}>
-            <label htmlFor='month' className={styles.label}>
+            <label htmlFor="month" className={styles.label}>
               Preferred Month
             </label>
             <select
-              id='month'
-              name='month'
+              id="month"
+              name="month"
               value={formData.month}
               onChange={handleInputChange}
-              className={styles.select}>
-              <option value=''>Select month</option>
+              className={styles.select}
+            >
+              <option value="">Select month</option>
               {months.map((m) => (
                 <option key={m} value={m}>
                   {m}
@@ -329,16 +331,17 @@ const Contact = () => {
             </select>
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor='year' className={styles.label}>
+            <label htmlFor="year" className={styles.label}>
               Preferred Year
             </label>
             <select
-              id='year'
-              name='year'
+              id="year"
+              name="year"
               value={formData.year}
               onChange={handleInputChange}
-              className={styles.select}>
-              <option value=''>Select year</option>
+              className={styles.select}
+            >
+              <option value="">Select year</option>
               {years.map((y) => (
                 <option key={y} value={y}>
                   {y}
@@ -349,24 +352,24 @@ const Contact = () => {
 
           {/* Duration */}
           <div className={styles.formGroup}>
-            <label htmlFor='duration' className={styles.label}>
+            <label htmlFor="duration" className={styles.label}>
               How long for? <span className={styles.required}>*</span>
             </label>
             <input
-              type='text'
-              id='duration'
-              name='duration'
+              type="text"
+              id="duration"
+              name="duration"
               value={formData.duration}
               onChange={handleInputChange}
-              placeholder='e.g., 7 nights'
+              placeholder="e.g., 7 nights"
               className={`${styles.input} ${
-                errors.duration ? styles.inputError : ''
+                errors.duration ? styles.inputError : ""
               }`}
               required
-              aria-describedby='duration-error'
+              aria-describedby="duration-error"
             />
             {errors.duration && (
-              <p id='duration-error' className={styles.errorMessage}>
+              <p id="duration-error" className={styles.errorMessage}>
                 {errors.duration}
               </p>
             )}
@@ -374,25 +377,25 @@ const Contact = () => {
 
           {/* Number of People */}
           <div className={styles.formGroup}>
-            <label htmlFor='people' className={styles.label}>
+            <label htmlFor="people" className={styles.label}>
               How many people? <span className={styles.required}>*</span>
             </label>
             <input
-              type='number'
-              id='people'
-              name='people'
+              type="number"
+              id="people"
+              name="people"
               value={formData.people}
               onChange={handleInputChange}
-              min='1'
-              placeholder='e.g., 2'
+              min="1"
+              placeholder="e.g., 2"
               className={`${styles.input} ${
-                errors.people ? styles.inputError : ''
+                errors.people ? styles.inputError : ""
               }`}
               required
-              aria-describedby='people-error'
+              aria-describedby="people-error"
             />
             {errors.people && (
-              <p id='people-error' className={styles.errorMessage}>
+              <p id="people-error" className={styles.errorMessage}>
                 {errors.people}
               </p>
             )}
@@ -400,55 +403,57 @@ const Contact = () => {
 
           {/* Budget Per Person */}
           <div className={`${styles.formGroup} ${styles.span2}`}>
-            <label htmlFor='budget' className={styles.label}>
+            <label htmlFor="budget" className={styles.label}>
               Indicative budget per person ({budgetDisplay})
             </label>
             <input
-              type='range'
-              id='budget'
-              name='budget'
+              type="range"
+              id="budget"
+              name="budget"
               min={minBudget}
               max={maxBudget}
-              step='500'
+              step="500"
               value={formData.budget}
               onChange={handleBudgetChange}
               className={styles.slider}
             />
             <div className={styles.rangeLabels}>
-              <span>₹{minBudget.toLocaleString()}</span>
-              <span>₹{maxBudget.toLocaleString()}+</span>
+              <span>₹{minBudget?.toLocaleString()}</span>
+              <span>₹{maxBudget?.toLocaleString()}+</span>
             </div>
           </div>
 
           {/* Comments */}
           <div className={`${styles.formGroup} ${styles.span2}`}>
-            <label htmlFor='comment' className={styles.label}>
+            <label htmlFor="comment" className={styles.label}>
               Any other comments or requests?
             </label>
             <textarea
-              id='comment'
-              name='comment'
+              id="comment"
+              name="comment"
               value={formData.comment}
               onChange={handleInputChange}
-              rows='4'
-              placeholder='Tell us more...'
-              className={styles.textarea}></textarea>
+              rows="4"
+              placeholder="Tell us more..."
+              className={styles.textarea}
+            ></textarea>
           </div>
-        </div>{' '}
+        </div>{" "}
         {/* End formGrid */}
         <div className={styles.submitContainer}>
           {/* Make sure to use the correct global btn class */}
           <button
-            type='submit'
+            type="submit"
             className={`btn color ${styles.submitButton}`} // Using global .btn and .color classes
-            disabled={isLoading}>
+            disabled={isLoading}
+          >
             {isLoading ? (
               <>
                 <Spinner /> {/* Use CSS spinner */}
-                <span style={{ marginLeft: '8px' }}>Sending...</span>
+                <span style={{ marginLeft: "8px" }}>Sending...</span>
               </>
             ) : (
-              'Send Enquiry'
+              "Send Enquiry"
             )}
           </button>
         </div>

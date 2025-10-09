@@ -1,29 +1,28 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
-import { Chrome } from "lucide-react";
-import { useToast } from "../../hooks/use-toast";
+
+import CustomGoogleButton from "./GoogleBtn";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
-  const { toast } = useToast();
+  const router = useRouter();
 
   const [selectedTab, setSelectedTab] = useState("login"); // "login" | "signup"
   const [showOtp, setShowOtp] = useState(false);
-
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [profileImg, setProfileImg] = useState("");
-
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const [resendIn, setResendIn] = useState(0); // seconds until resend can happen
+  const [resendIn, setResendIn] = useState(0);
   const timerRef = useRef(null);
 
   const API_BASE = useMemo(
@@ -42,64 +41,67 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
     timerRef.current = null;
   };
 
-  useEffect(() => {
-    if (!open) resetForm();
-  }, [open]);
-
-  useEffect(() => {
-    const google = window.google;
-    if (!google) return;
-
-    // Initialize Google Sign-In client after loading the script
-    google.accounts.id.initialize({
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-      callback: handleGoogleResponse,
-    });
-
-    // Render Google One Tap (Optional, you can use either One Tap or button)
-    google.accounts.id.prompt();
-  }, []);
-
-  const handleGoogleResponse = async (response) => {
-    const idToken = response?.credential;
-    if (!idToken) {
-      toast({
-        title: "Error",
-        description: "Google sign-in failed: No credentials received",
-        variant: "destructive",
+  const startResendTimer = (seconds = 30) => {
+    setResendIn(seconds);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setResendIn((s) => {
+        if (s <= 1) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+          return 0;
+        }
+        return s - 1;
       });
-      return;
-    }
+    }, 1000);
+  };
 
-    setLoading(true);
+  // ---------- Google ----------
+  const handleGoogleSuccess = async (googleData) => {
     try {
-      // Send the Google ID token to the backend for verification and session creation
+      const accessToken = googleData?.access_token;
+      if (!accessToken) throw new Error("No access token received");
+
+      setLoading(true);
+
+      // 1️⃣ Get user info from Google
+      const profileRes = await fetch(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      const profile = await profileRes.json();
+
+      // 2️⃣ Send to backend
       const res = await fetch(`${API_BASE}/api/auth/google`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: idToken }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: accessToken }), // ✅ backend will verify this
       });
 
       const data = await res.json();
-
       if (!res.ok) {
-        throw new Error(data?.message || "Google sign-in failed");
+        toast.error(data.message || "Login failed");
+        return;
       }
 
-      localStorage.setItem("token", data.token); // Store token in localStorage
-      toast({
-        title: "Success",
-        description: data?.message || "Signed in successfully",
-      });
+      // 3️⃣ Save to local storage
+      if (data?.token) localStorage.setItem("token", data.token);
+      if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
 
+      toast.success({
+        title: "Success",
+        description: "Signed in successfully",
+      });
       onAuthSuccess?.({ token: data.token, user: data.user });
-      onOpenChange(false); // Close the authentication modal if it's open
-    } catch (error) {
+      onOpenChange(false);
+    } catch (err) {
+      console.error("Google sign-in error:", err);
       toast({
         title: "Error",
-        description: error.message || "Google sign-in failed",
+        description: err.message || "Login failed",
         variant: "destructive",
       });
     } finally {
@@ -107,28 +109,29 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
     }
   };
 
+  const handleGoogleError = () => {
+    toast({
+      title: "Error",
+      description: "Google login failed",
+      variant: "destructive",
+    });
+  };
+
+  // ---------- Email/OTP ----------
   const handleEmailSubmit = async () => {
     if (!email) {
-      toast({
-        title: "Error",
-        description: "Please enter your email",
-        variant: "destructive",
-      });
+      toast.error("Please enter your email");
       return;
     }
+
     if (selectedTab === "signup" && !name) {
-      toast({
-        title: "Error",
-        description: "Please enter your name",
-        variant: "destructive",
-      });
+      toast.error("Please enter your name");
       return;
     }
 
     try {
       setLoading(true);
 
-      // Check if email exists (optional step)
       const check = await fetch(`${API_BASE}/api/auth/check-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -136,25 +139,17 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
       }).then((r) => r.json());
 
       if (selectedTab === "login" && check?.exists === false) {
-        toast({
-          title: "Account not found",
-          description: "Please sign up first",
-          variant: "destructive",
-        });
-        setLoading(false);
-        return;
-      }
-      if (selectedTab === "signup" && check?.exists === true) {
-        toast({
-          title: "Account already exists",
-          description: "Switch to Login tab to continue",
-          variant: "destructive",
-        });
+        toast.error("Account not found. Please sign up first.");
         setLoading(false);
         return;
       }
 
-      // Request OTP for login/signup
+      if (selectedTab === "signup" && check?.exists === true) {
+        toast.warning("Account already exists. Switch to Login to continue.");
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch(`${API_BASE}/api/auth/request-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -162,22 +157,17 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
       });
 
       const payload = await res.json().catch(() => ({}));
-      if (!res.ok)
-        throw new Error(payload?.message || `Failed (${res.status})`);
+      if (!res.ok) {
+        toast.error(payload?.message || `OTP request failed (${res.status})`);
+        return;
+      }
 
       setShowOtp(true);
       startResendTimer(30);
-      toast({
-        title: "OTP sent",
-        description: "Check your email for the code",
-      });
+      toast.success("OTP sent! Check your email for the code.");
     } catch (err) {
       console.error(err);
-      toast({
-        title: "Error",
-        description: err?.message || "Failed to send OTP",
-        variant: "destructive",
-      });
+      toast.error(err?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
@@ -185,11 +175,7 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
 
   const handleOtpVerify = async () => {
     if (otp.length !== 6) {
-      toast({
-        title: "Error",
-        description: "Please enter the 6-digit code",
-        variant: "destructive",
-      });
+      toast.error("Please enter the 6-digit code");
       return;
     }
 
@@ -202,33 +188,41 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
         body: JSON.stringify({
           email,
           otp,
-          type: selectedTab, // "login" | "signup"
+          type: selectedTab,
           name: selectedTab === "signup" ? name : undefined,
         }),
       });
 
       const payload = await res.json().catch(() => ({}));
-      if (!res.ok)
+
+      if (!res.ok) {
+        // ✅ Detect Google-auth restriction (from backend)
+        if (
+          res.status === 403 ||
+          payload?.message?.includes("Google Sign-In")
+        ) {
+          toast.warning(
+            "This account was created using Google Sign-In. Please log in with Google instead."
+          );
+          return;
+        }
+
         throw new Error(
           payload?.message || `OTP verification failed (${res.status})`
         );
+      }
 
       if (payload?.token) localStorage.setItem("token", payload.token);
+      if (payload?.user)
+        localStorage.setItem("user", JSON.stringify(payload.user));
 
-      toast({
-        title: "Success",
-        description: payload?.message || "You're now logged in!",
-      });
+      toast.success(payload?.message || "You're now logged in!");
       onAuthSuccess?.({ token: payload.token, user: payload.user });
       resetForm();
       onOpenChange(false);
     } catch (err) {
-      console.error(err);
-      toast({
-        title: "Error",
-        description: err?.message || "OTP verification failed",
-        variant: "destructive",
-      });
+      console.error("OTP verification error:", err);
+      toast.error(err?.message || "OTP verification failed");
     } finally {
       setLoading(false);
     }
@@ -246,7 +240,13 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) resetForm();
+        onOpenChange(v);
+      }}
+    >
       <DialogContent className="sm:max-w-md animate-in fade-in-0 zoom-in-95 duration-300">
         <DialogHeader>
           <DialogTitle className="text-2xl font-semibold text-center">
@@ -255,16 +255,22 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
         </DialogHeader>
 
         <div className="flex flex-col gap-6 py-4">
-          {/* Google */}
-          <Button
-            variant="outline"
-            className="w-full gap-2 border-border hover:bg-accent transition-all duration-200 hover:scale-[1.02]"
-            onClick={() => google.accounts.id.prompt()} // Trigger the Google One Tap prompt
-            disabled={loading}
-          >
-            <Chrome className="h-5 w-5" />
-            Continue with Google
-          </Button>
+          <div className="w-full flex justify-center">
+            <div className="w-full flex justify-center">
+              <CustomGoogleButton
+                onSuccess={(data) => {
+                  handleGoogleSuccess(data);
+                }}
+                onError={() =>
+                  toast({
+                    title: "Error",
+                    description: "Google login failed",
+                    variant: "destructive",
+                  })
+                }
+              />
+            </div>
+          </div>
 
           {/* Divider */}
           <div className="relative">
@@ -278,9 +284,9 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
             </div>
           </div>
 
-          {/* Tabs for login/signup */}
+          {/* Tabs */}
           <Tabs value={selectedTab} onValueChange={handleTabChange}>
-            <TabsList className="grid  w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
@@ -313,20 +319,17 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
                 </>
               ) : (
                 <div className="flex flex-col gap-4 animate-in fade-in-0 duration-300">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="otp">Enter 6-digit code</Label>
-                    <div className="flex justify-center">
-                      <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                        <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
-                        </InputOTPGroup>
-                      </InputOTP>
-                    </div>
+                  <div className="flex justify-center">
+                    <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
                   </div>
                   <Button
                     className="w-full bg-orange-500 hover:bg-orange-600 transition-all duration-200 hover:scale-[1.02]"
@@ -385,19 +388,7 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }) {
                       className="transition-all duration-200 focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="signup-img">
-                      Profile Image URL (optional)
-                    </Label>
-                    <Input
-                      id="signup-img"
-                      type="url"
-                      placeholder="https://example.com/photo.jpg"
-                      value={profileImg}
-                      onChange={(e) => setProfileImg(e.target.value)}
-                      className="transition-all duration-200 focus:ring-2 focus:ring-orange-500"
-                    />
-                  </div>
+
                   <Button
                     className="w-full bg-orange-500 hover:bg-orange-600 transition-all duration-200 hover:scale-[1.02]"
                     onClick={handleEmailSubmit}

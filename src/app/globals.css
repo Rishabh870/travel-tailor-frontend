@@ -11,6 +11,11 @@
   margin: 0;
 }
 
+/* global.css */
+div[role="presentation"] iframe {
+  width: 100% !important;
+}
+
 body {
   background-color: var(--color-white);
   overflow-x: hidden;

@@ -1,34 +1,51 @@
-import React from 'react';
-import styles from './styles.module.css';
-import parseDate from '../../util/parseDate';
+import React from "react";
+import styles from "./styles.module.css";
+import parseDate from "../../util/parseDate";
 
 const ProfileHeader = ({
-  backgroundImg,
-  profileImage,
+  backgroundImg = "/images/main.jpeg",
+  profileImage = "/images/avatar.webp",
   name,
   bio,
   location,
   tripsCreated,
-  tripsHosted,
+  tripsHosted = 0,
   rating,
   socialLinks,
   badges,
-  stats,
+  stats = 0,
   createdAt,
 }) => {
+  const ICONS = {
+    instagram: "/images/instagram.png",
+    youtube: "/images/youtube.png",
+    facebook: "/images/facebook.png",
+  };
+
+  function normalizeUrl(u = "") {
+    if (!u) return "";
+    return /^https?:\/\//i.test(u) ? u : `https://${u}`;
+  }
+
+  const normalizedLinks = Array.isArray(socialLinks)
+    ? socialLinks
+    : Object.entries(socialLinks || {}).map(([platform, url]) => ({
+        platform,
+        url,
+      }));
+
+  const bgImg = backgroundImg == "" ? "/images/main.jpeg" : backgroundImg;
+
+  const profileImg = profileImage == "" ? "/images/avatar.webp" : profileImage;
   return (
     <div className={styles.profileContainer}>
       {/* Cover Image */}
       <div className={styles.coverImageWrapper}>
-        <img src={backgroundImg} alt='Cover' className={styles.coverImage} />
+        <img src={bgImg} alt="Cover" className={styles.coverImage} />
 
         <div className={styles.profileImageSection}>
           <div className={styles.profileImgWrapper}>
-            <img
-              src={profileImage}
-              alt='Profile'
-              className={styles.profileImg}
-            />
+            <img src={profileImg} alt="Profile" className={styles.profileImg} />
           </div>
         </div>
       </div>
@@ -56,33 +73,27 @@ const ProfileHeader = ({
           </div>
 
           <div className={styles.socialLinks}>
-            {socialLinks?.instagram && (
-              <a href={socialLinks.instagram} target='_blank' rel='noreferrer'>
-                <img
-                  src='/images/instagram.png'
-                  alt='Instagram'
-                  className={styles.socialIcon}
-                />
-              </a>
-            )}
-            {socialLinks?.youtube && (
-              <a href={socialLinks.youtube} target='_blank' rel='noreferrer'>
-                <img
-                  src='/images/youtube.png'
-                  alt='YouTube'
-                  className={styles.socialIcon}
-                />
-              </a>
-            )}
-            {socialLinks?.facebook && (
-              <a href={socialLinks.facebook} target='_blank' rel='noreferrer'>
-                <img
-                  src='/images/facebook.png'
-                  alt='Facebook'
-                  className={styles.socialIcon}
-                />
-              </a>
-            )}
+            {normalizedLinks
+              .filter((it) => it?.url && ICONS[it.platform?.toLowerCase()])
+              .map((it) => {
+                const platform = String(it.platform).toLowerCase();
+                const href = normalizeUrl(it.url);
+                return (
+                  <a
+                    key={`${platform}-${href}`}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={platform}
+                  >
+                    <img
+                      src={ICONS[platform]}
+                      alt={platform.charAt(0).toUpperCase() + platform.slice(1)}
+                      className={styles.socialIcon}
+                    />
+                  </a>
+                );
+              })}
           </div>
         </div>
 

@@ -34,9 +34,9 @@ export default async function Creator() {
           <div className="mt-20 w-full max-w-[95rem] mx-auto">
             <TourGridSection
               title="Featured Tours"
-              allUrl={`/creator/home`}
+              allUrl={`/tours`}
               type={`tours`}
-              url={`/creator/tour`}
+              url={`/tours`}
               description="Curated group trips that connect people, cultures, and unforgettable memories—shared by real travelers like you."
               data={tours}
               visibleCount={4}
@@ -51,9 +51,9 @@ export default async function Creator() {
           <div className="w-full max-w-[95rem] mx-auto">
             <BlogGridSection
               title="Blog Highlights"
-              allUrl={`/creator/blog`}
+              allUrl={`/blogs`}
               type={`blogs`}
-              url={`/creator/blog`}
+              url={`/blogs`}
               description="Curated group trips that connect people, cultures, and unforgettable memories—shared by real travelers like you."
               data={blogs}
               visibleCount={3}

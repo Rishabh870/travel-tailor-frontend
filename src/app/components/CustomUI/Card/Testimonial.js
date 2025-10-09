@@ -15,15 +15,17 @@ function Testimonial({
 }) {
   return (
     <div className={`${styles.testimonial} ${className}`}>
-      <div className={styles.imageWrapper}>
-        <Image
-          src={parseUrl(imgUrl)}
-          alt={`Testimonial from ${name}`}
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-        />
-      </div>
+      {imgUrl && typeof imgUrl === "string" && imgUrl !== "" && (
+        <div className={styles.imageWrapper}>
+          <Image
+            src={parseUrl(imgUrl)}
+            alt={`Testimonial from ${name}`}
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+          />
+        </div>
+      )}
 
       {/* Gradient Overlay for text readability */}
       <div className={styles.overlay}></div>

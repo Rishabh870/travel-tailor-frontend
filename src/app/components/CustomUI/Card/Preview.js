@@ -18,7 +18,7 @@ function Preview({
     return null;
   }
 
-  console.log("url", url);
+  // console.log("url", url);
 
   return (
     <Link className={`${className} ${styles.preview}`} href={url}>

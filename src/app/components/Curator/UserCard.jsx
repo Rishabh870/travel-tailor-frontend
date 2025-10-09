@@ -1,15 +1,24 @@
 import { Card, CardContent } from "../../components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function UserCard({ avatar, name, description, id }) {
   return (
     <Card className="w-full   border border-gray-100 rounded-lg shadow-sm my-6 py-4  ">
       <CardContent className="flex  gap-3 space-y-3 justify-center items-center">
         {/* Avatar */}
-        <img
-          src={avatar}
-          alt={name}
-          className="w-30 h-30 mr-3 rounded-md object-cover"
-        />
+
+        <Avatar className="w-25 h-25 rounded-sm mr-3 object-cover border-2 border-white/30">
+          <AvatarImage
+            className={" rounded-sm w-full h-full"}
+            src={avatar}
+            alt={name}
+          />
+          <AvatarFallback
+            className={"text-white rounded-sm bg-gray-800 w-full h-full"}
+          >
+            {name?.charAt(0)?.toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
 
         <div className="flex-1 flex flex-col gap-2 ">
           <h3 className="text-lg font-semibold">{name}</h3>

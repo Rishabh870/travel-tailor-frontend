@@ -16,6 +16,8 @@ function HomeHero({ heroData }) {
   const [hero, setHero] = useState(heroData[0]);
   const imagesPreloaded = useRef(false);
 
+  console.log(hero);
+
   const handleClick = (index) => {
     setCurrent(index);
     setHero(heroData[index]);
@@ -104,7 +106,7 @@ function HomeHero({ heroData }) {
 
               <motion.div variants={Varients.heroHomeContentChildFinal}>
                 <Button
-                  href={`${process.env.NEXT_PUBLIC_DOMAIN}${hero.url}`}
+                  href={`${process.env.NEXT_PUBLIC_URL_PREFIX}${hero.url}`}
                   className="md"
                 >
                   {hero.CTA || "Explore"}

@@ -1,20 +1,20 @@
-import BlogBody from '../../../components/BlogBody/BlogBody';
-import BlogHero from '../../../components/Hero/BlogHero';
-import Tours from '../../../components/Sections/Tours';
-import Blogs from '../../../components/Featured/Blogs';
-import Banner from '../../../components/Banner/Banner';
+import BlogBody from "../../../components/BlogBody/BlogBody";
+import BlogHero from "../../../components/Hero/BlogHero";
+import Tours from "../../../components/Sections/Tours";
+import Blogs from "../../../components/Featured/Blogs";
+import Banner from "../../../components/Banner/Banner";
 
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
 // Configure the page to be statically generated
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 export const revalidate = false;
 
 // Fetch Blog Data
 async function fetchBlogData(slug) {
   try {
     const response = await fetch(`${process.env.API_URL}/api/blog/${slug}`, {
-      cache: 'force-cache',
+      // cache: 'force-cache',
       headers: {
         Authorization: `Bearer ${process.env.API_TOKEN}`,
       },
@@ -25,7 +25,7 @@ async function fetchBlogData(slug) {
     }
 
     const blog = await response.json();
-    console.log('👉 Blog Data:', blog.data);
+    console.log("👉 Blog Data:", blog.data);
 
     return blog;
   } catch (error) {
@@ -38,25 +38,25 @@ function generateKeywords(title, description) {
   const titleWords = title?.toLowerCase().split(/\s+/);
   const descWords = description?.toLowerCase().split(/\s+/);
   const commonWords = new Set([
-    'a',
-    'an',
-    'the',
-    'is',
-    'in',
-    'it',
-    'of',
-    'for',
-    'on',
-    'with',
-    'to',
-    'and',
-    'when',
-    'visiting',
+    "a",
+    "an",
+    "the",
+    "is",
+    "in",
+    "it",
+    "of",
+    "for",
+    "on",
+    "with",
+    "to",
+    "and",
+    "when",
+    "visiting",
   ]);
   const keywords = [...new Set([...titleWords, ...descWords])]
     .filter((word) => word.length > 3 && !commonWords.has(word))
     .slice(0, 10);
-  return keywords.join(', ');
+  return keywords.join(", ");
 }
 
 // Generate metadata for the blog
@@ -68,8 +68,8 @@ export async function generateMetadata({ params }) {
   if (!data) {
     // Returning minimal metadata, Page component will handle the 404 display
     return {
-      title: 'Not Found',
-      description: 'The page you are looking for does not exist.',
+      title: "Not Found",
+      description: "The page you are looking for does not exist.",
     };
   }
 
@@ -77,17 +77,17 @@ export async function generateMetadata({ params }) {
   const metaTitle = data.seo?.metaTitle || data.title;
   const metaDescription = data.seo?.metaDescription || data.description;
   // Ensure absolute URLs for images
-  const shareImageUrl = data.seo?.shareImage?.startsWith('/')
+  const shareImageUrl = data.seo?.shareImage?.startsWith("/")
     ? `${process.env.BACK_URL_PREFIX}${data.seo.shareImage}`
     : data.seo?.shareImage || // Handle if it's already absolute
-      (data.displayImg?.startsWith('/')
+      (data.displayImg?.startsWith("/")
         ? `${process.env.BACK_URL_PREFIX}${data.displayImg}`
         : data.displayImg);
 
   const canonicalUrl = `${process.env.DOMAIN}/blogs/${slug}`;
 
   return {
-    title: metaTitle + ' | Travel Tailor',
+    title: metaTitle + " | Travel Tailor",
     description: metaDescription,
     // --- Canonical URL ---
     alternates: {
@@ -98,7 +98,7 @@ export async function generateMetadata({ params }) {
       title: metaTitle,
       description: metaDescription,
       url: canonicalUrl,
-      siteName: 'Travel Tailor',
+      siteName: "Travel Tailor",
       images: shareImageUrl
         ? [
             {
@@ -109,15 +109,15 @@ export async function generateMetadata({ params }) {
             },
           ]
         : [],
-      locale: 'en_US',
-      type: 'article',
+      locale: "en_US",
+      type: "article",
       publishedTime: data.createdAt,
       modifiedTime: data.updatedAt,
       authors: data.author ? [data.author] : [],
     },
     // --- Twitter Card (for Twitter sharing) ---
     twitter: {
-      card: shareImageUrl ? 'summary_large_image' : 'summary',
+      card: shareImageUrl ? "summary_large_image" : "summary",
       title: metaTitle,
       description: metaDescription,
       images: shareImageUrl ? [shareImageUrl] : [],
@@ -133,9 +133,9 @@ export async function generateMetadata({ params }) {
       googleBot: {
         index: true,
         follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
   };
@@ -170,11 +170,11 @@ async function BlogPage({ params }) {
   }
 
   const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
+    "@context": "https://schema.org",
+    "@type": "Article",
     mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`,
+      "@type": "WebPage",
+      "@id": `${process.env.NEXT_PUBLIC_DOMAIN}/blogs/${slug}`,
     },
     headline: data.seo?.metaTitle || data.title,
     description: data.seo?.metaDescription || data.description,
@@ -184,12 +184,12 @@ async function BlogPage({ params }) {
       ? `${process.env.NEXT_PUBLIC_URL_PREFIX}${data.displayImg}`
       : undefined,
     author: {
-      '@type': 'Person',
-      name: data.author || 'Travel Tailor',
+      "@type": "Person",
+      name: data.author || "Travel Tailor",
     },
     publisher: {
-      '@type': 'Organization',
-      name: 'Travel Tailor',
+      "@type": "Organization",
+      name: "Travel Tailor",
       // logo: {
       //     '@type': 'ImageObject',
       //     url: `/images/logo.png`,
@@ -204,7 +204,7 @@ async function BlogPage({ params }) {
   return (
     <article>
       <script
-        type='application/ld+json'
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
@@ -224,8 +224,8 @@ async function BlogPage({ params }) {
           <Blogs
             blogs={data.blogs}
             heading={{
-              title: 'Similar /sPosts\\s',
-              description: 'You might like these blogs',
+              title: "Similar /sPosts\\s",
+              description: "You might like these blogs",
             }}
           />
         )}
@@ -233,14 +233,14 @@ async function BlogPage({ params }) {
           <Tours
             tours={data.tours}
             heading={{
-              title: '/sTours\\s you might /n enjoy',
-              description: 'Explore the world with our curated tours',
+              title: "/sTours\\s you might /n enjoy",
+              description: "Explore the world with our curated tours",
             }}
           />
         )}
         <Banner
           title={data.bannerTitle || "Ready to Explore?/nLet's Plan Your Trip!"}
-          cta={data.bannerCta || 'Get a Quote'}
+          cta={data.bannerCta || "Get a Quote"}
           url={`/contact?src=${resolvedParams.slug}`}
         />
       </aside>

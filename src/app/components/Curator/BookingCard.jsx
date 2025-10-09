@@ -27,6 +27,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { cn } from "../../lib/utils";
+import { toast } from "../../hooks/use-toast";
 
 export default function EnquireNow({
   basePrice,
@@ -38,9 +39,13 @@ export default function EnquireNow({
   getDateRange,
   creatorId,
 }) {
+  console.log("tourType", tourType, getDateRange);
+
   const [dateRange, setDateRange] = useState(getDateRange);
   const [guests, setGuests] = useState({ adults: 2, children: 0 });
-  const [selectedTab, setSelectedTab] = useState("fixed_date");
+  const [selectedTab, setSelectedTab] = useState(
+    tourType == "both" ? "fixed_date" : tourType
+  );
   const [showGuestDetails, setShowGuestDetails] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
 
@@ -79,7 +84,7 @@ export default function EnquireNow({
     }
   };
 
-  const handleSendEnquiry = (e) => {
+  const handleSendEnquiry = async (e) => {
     e.preventDefault();
     const payload = {
       name,
@@ -100,16 +105,22 @@ export default function EnquireNow({
     };
     console.log("Enquiry Payload:", payload);
 
-    const res = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/enquiries`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/enquiries`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+    const result = await res.json(); // 👈 parse JSON response
 
-    if (!res.ok) {
+    console.log(result);
+
+    if (!result.success) {
       console.error("Failed to send enquiry:", res);
 
       return;
@@ -119,6 +130,7 @@ export default function EnquireNow({
     setName("");
     setEmail("");
     setPhone("");
+    toast({ title: "Success", description: "Enquiry sent successfully" });
   };
 
   return (
@@ -135,16 +147,18 @@ export default function EnquireNow({
 
         <CardContent className="flex flex-col gap-4">
           {/* Tab Selector */}
-          <Tabs
-            value={selectedTab}
-            onValueChange={handleTabChange}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2 text-sm sm:text-base">
-              <TabsTrigger value="fixed_date">Fixed Date</TabsTrigger>
-              <TabsTrigger value="flexible_date">Flexible Date</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          {tourType === "both" && (
+            <Tabs
+              value={selectedTab}
+              onValueChange={handleTabChange}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2 text-sm sm:text-base">
+                <TabsTrigger value="fixed_date">Fixed Date</TabsTrigger>
+                <TabsTrigger value="flexible_date">Flexible Date</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          )}
 
           {/* Date Range Picker */}
           <div className="flex flex-col gap-2">

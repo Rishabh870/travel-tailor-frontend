@@ -17,7 +17,12 @@ export default function Page({ params }) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile/${id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+            },
+          }
         );
         const data = await response.json();
         console.log("data", data);
@@ -36,20 +41,20 @@ export default function Page({ params }) {
   return (
     <div>
       <ProfileHeader
-        backgroundImg={profileData?.user.backgroundImg}
-        profileImage={profileData?.user.profileImg}
-        name={profileData?.user.name}
-        bio={profileData?.user.bio}
-        location={profileData?.user.location}
-        socialLinks={profileData?.user.social}
+        backgroundImg={profileData?.user?.backgroundImg}
+        profileImage={profileData?.user?.profileImg}
+        name={profileData?.user?.name}
+        bio={profileData?.user?.bio}
+        location={profileData?.user?.location}
+        socialLinks={profileData?.user?.social}
         badges={profileData?.badges}
-        stats={profileData?.blog.length}
-        createdAt={profileData?.user.createdAt}
-        tripsHosted={profileData?.tour.length}
+        stats={profileData?.blog?.length || 0}
+        createdAt={profileData?.user?.createdAt}
+        tripsHosted={profileData?.tour?.length || 0}
       />
 
       {/* Tours Grid */}
-      {profileData?.tour.length > 0 && (
+      {profileData?.tour?.length > 0 && (
         <TourGridSection
           title="Curated Tours"
           allUrl={`/creator/alltours/${id}`}
@@ -60,12 +65,13 @@ export default function Page({ params }) {
           visibleCount={4}
         />
       )}
-      {profileData?.blog.length > 0 && (
+      {profileData?.blog?.length > 0 && (
         <BlogGridSection
           title="Latest Blogs"
           url={`/creator/blogs`}
           allUrl={`/creator/allblogs/${id}`}
           data={profileData?.blog}
+          description="We have a few blogs post you might like to read about travelling, travelling tips, and more."
           CardComponent={Preview}
           type="blogs"
           visibleCount={4}

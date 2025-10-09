@@ -245,7 +245,7 @@
   flex-wrap: wrap;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   gap: 1.5rem; /* adds spacing between rows and columns */
 }
 
@@ -310,15 +310,15 @@
   color: var(--color-primary);
   border: 1px solid var(--color-primary);
 }
-
-.blogItem {
-  margin-top: 2rem;
-  width: 23rem;
-}
 .creatorBlogs {
   height: 100%;
   width: 100%;
   margin: auto;
+}
+
+.blogItem {
+  margin-top: 2rem;
+  width: 23rem;
 }
 
 .blogGridWrapper {

@@ -64,7 +64,7 @@ export default async function Home() {
 
       {/* {data.moments && data.moments.length > 0 && <MomentsHome monents={data.moments} />} */}
       {/* {reviews && reviews.length > 0 && <Reviews reviews={reviews} />} */}
-      {data?.tours && data?.tours.length > 0 && <Trips trips={data.tours} />}
+      {/* {data?.tours && data?.tours.length > 0 && <Trips trips={data.tours} />} */}
 
       {features[0]?.blogs && features[0]?.blogs.length > 0 && (
         <Blogs blogs={features[0]?.blogs.reverse()} />

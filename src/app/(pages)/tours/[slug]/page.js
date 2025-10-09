@@ -18,15 +18,12 @@ export const revalidate = false;
 // Separate function to fetch tour metadata
 async function fetchTourMetadata(slug) {
   try {
-    const response = await fetch(
-      `${process.env.API_URL}/apihome/tour/${slug}`,
-      {
-        cache: "force-cache",
-        headers: {
-          Authorization: `Bearer ${process.env.API_TOKEN}`,
-        },
-      }
-    );
+    const response = await fetch(`${process.env.API_URL}/api/tour/${slug}`, {
+      // cache: "force-cache",
+      headers: {
+        Authorization: `Bearer ${process.env.API_TOKEN}`,
+      },
+    });
 
     if (!response.ok) {
       return null;
@@ -77,6 +74,8 @@ export async function generateStaticParams() {
     });
 
     const tours = await response.json();
+
+    console.log(tours);
 
     return tours.map((tour) => ({
       slug: tour.slug,

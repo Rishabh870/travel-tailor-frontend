@@ -115,7 +115,7 @@ export default function ImageGallery({ images = [] }) {
 
           {/* Right: nested grid with equal rows (more robust on Windows) */}
           <div
-            className="col-span-5 grid gap-3 h-full"
+            className="col-span-5 grid gap-3 h-full overflow-hidden"
             style={{
               gridTemplateRows: `repeat(${Math.min(
                 3,
@@ -144,7 +144,6 @@ export default function ImageGallery({ images = [] }) {
                 </Button>
               </div>
             ))}
-            {/* If fewer than 3 side images, the grid auto-sizes without gaps */}
           </div>
         </div>
       </div>

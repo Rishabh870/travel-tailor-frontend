@@ -123,6 +123,10 @@ const Page = () => {
         All <span>Tours</span>
       </h2>
 
+      <p className={` text-center text-gray-400 `}>
+        View all tours created by this creator
+      </p>
+
       {error && <p className={styles.error}>{error}</p>}
       {isEmpty && <p className={styles.empty}>No tours found.</p>}
 

@@ -274,9 +274,12 @@ export default function TourPage() {
             <div className="lg:hidden mb-8">
               <EnquireNow
                 basePrice={tour.booking.pricing.adult}
-                currency={tour.price.currency}
                 tourDuration={parseInt(tour.overview.duration.split(" ")[0])}
                 tagMonths={tour.tagMonths}
+                tourType={tour.tourType}
+                tourId={tour.id}
+                getDateRange={tour.dateRange}
+                creatorId={tour.creator.id}
               />
             </div>
 

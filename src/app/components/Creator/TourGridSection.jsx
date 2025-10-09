@@ -30,18 +30,9 @@ const TourGridSection = ({
       {description && (
         <p className={styles.sectionDescription}>{description}</p>
       )}
-      <div
-        className={
-          type === "blogs"
-            ? styles.blogGridWrapper
-            : styles.gridWrapper + `  max-w-[90rem] mx-auto `
-        }
-      >
+      <div className={styles.gridWrapper + ` max-w-[90rem] mx-auto `}>
         {data?.slice(0, visibleCount).map((item, index) => (
-          <div
-            key={index}
-            className={type === "blogs" ? styles.blogItem : styles.gridItem}
-          >
+          <div key={index} className={styles.gridItem}>
             <Tour
               description={item.description}
               imgUrl={item.heroImg || item.displayImg}

@@ -7,6 +7,8 @@ import Footer from "./components/Footer/Footer";
 import WhatsAppButton from "./components/CustomUI/Button/Whatsapp";
 import AnalyticsLoader from "./lib/AnLoader";
 import PopupForm from "./components/Popup/PopupForm";
+import GoogleProviderClient from "./components/Auth/GoogleProviderClient";
+import { ToastContainer } from "react-toastify";
 
 export default function RootLayout({ children }) {
   const [setting, setSetting] = useState(null);
@@ -19,8 +21,8 @@ export default function RootLayout({ children }) {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
-            cache: "force-cache",
           },
+          // cache: "force-cache",
         });
         if (!res.ok)
           throw new Error(
@@ -30,7 +32,7 @@ export default function RootLayout({ children }) {
 
         // If API returns { data: { ...actualSettings } }, normalize it:
         const cfg = raw?.data ?? raw;
-        console.log("settings cfg", cfg);
+        // console.log("settings cfg", cfg);
         setSetting(cfg);
       } catch (err) {
         console.error(err);
@@ -58,6 +60,16 @@ export default function RootLayout({ children }) {
           />
         )}
 
+        {setting?.tracking?.extraScripts && (
+          <Script
+            id="extra-script"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: setting?.tracking.extraScripts, // Use the value of extraScripts directly
+            }}
+          />
+        )}
+
         <script
           src="https://accounts.google.com/gsi/client"
           async
@@ -79,21 +91,33 @@ export default function RootLayout({ children }) {
             />
           </noscript>
         )}
+        <GoogleProviderClient>
+          <Navbar />
+          {children}
+          <Footer setting={setting} />
+          {/* ... */}
+          {setting?.whatsapp?.number ? (
+            <WhatsAppButton
+              phoneNumber={setting.whatsapp.number}
+              // message={setting.whatsapp.message}
+              position="right"
+              tooltip="Chat on WhatsApp"
+            />
+          ) : null}
 
-        <Navbar />
-        {children}
-        <Footer setting={setting} />
-        {/* ... */}
-        {setting?.whatsapp?.number ? (
-          <WhatsAppButton
-            phoneNumber={setting.whatsapp.number}
-            // message={setting.whatsapp.message}
-            position="right"
-            tooltip="Chat on WhatsApp"
-          />
-        ) : null}
+          <PopupForm />
+        </GoogleProviderClient>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="light"
+        />
 
-        <PopupForm />
         <AnalyticsLoader />
       </body>
     </html>

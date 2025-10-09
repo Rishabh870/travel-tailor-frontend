@@ -4,138 +4,10 @@ import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { Star, MapPin } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 
-const advisor1 =
-  "https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=1570&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-const advisor2 =
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
-const advisor3 =
-  "https://images.unsplash.com/photo-1532074205216-d0e1f4b87368?q=80&w=1641&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-const advisors = [
-  {
-    id: 1,
-    name: "Priya Sharma",
-    image: advisor1,
-    rating: 4.9,
-    reviews: 234,
-    specialization: "Cultural & Heritage Tours",
-    location: "Mumbai, India",
-    tripCount: "500+ trips planned",
-  },
-  {
-    id: 2,
-    name: "Arjun Patel",
-    image: advisor2,
-    rating: 4.8,
-    reviews: 189,
-    specialization: "Adventure & Trekking",
-    location: "Bangalore, India",
-    tripCount: "350+ trips planned",
-  },
-  {
-    id: 3,
-    name: "Sarah Johnson",
-    image: advisor3,
-    rating: 4.9,
-    reviews: 412,
-    specialization: "Luxury Travel",
-    location: "New Delhi, India",
-    tripCount: "800+ trips planned",
-  },
-  {
-    id: 4,
-    name: "Rahul Kumar",
-    image: advisor1,
-    rating: 4.7,
-    reviews: 156,
-    specialization: "Budget Backpacking",
-    location: "Goa, India",
-    tripCount: "200+ trips planned",
-  },
-  {
-    id: 5,
-    name: "Maya Singh",
-    image: advisor2,
-    rating: 4.8,
-    reviews: 298,
-    specialization: "Wildlife & Nature",
-    location: "Rishikesh, India",
-    tripCount: "450+ trips planned",
-  },
-  {
-    id: 6,
-    name: "Vikram Reddy",
-    image: advisor3,
-    rating: 4.9,
-    reviews: 321,
-    specialization: "Spiritual Journeys",
-    location: "Varanasi, India",
-    tripCount: "600+ trips planned",
-  },
-  {
-    id: 11,
-    name: "Priya Sharma",
-    image: advisor1,
-    rating: 4.9,
-    reviews: 234,
-    specialization: "Cultural & Heritage Tours",
-    location: "Mumbai, India",
-    tripCount: "500+ trips planned",
-  },
-  {
-    id: 12,
-    name: "Arjun Patel",
-    image: advisor2,
-    rating: 4.8,
-    reviews: 189,
-    specialization: "Adventure & Trekking",
-    location: "Bangalore, India",
-    tripCount: "350+ trips planned",
-  },
-  {
-    id: 31,
-    name: "Sarah Johnson",
-    image: advisor3,
-    rating: 4.9,
-    reviews: 412,
-    specialization: "Luxury Travel",
-    location: "New Delhi, India",
-    tripCount: "800+ trips planned",
-  },
-  {
-    id: 41,
-    name: "Rahul Kumar",
-    image: advisor1,
-    rating: 4.7,
-    reviews: 156,
-    specialization: "Budget Backpacking",
-    location: "Goa, India",
-    tripCount: "200+ trips planned",
-  },
-  {
-    id: 15,
-    name: "Maya Singh",
-    image: advisor2,
-    rating: 4.8,
-    reviews: 298,
-    specialization: "Wildlife & Nature",
-    location: "Rishikesh, India",
-    tripCount: "450+ trips planned",
-  },
-  {
-    id: 16,
-    name: "Vikram Reddy",
-    image: advisor3,
-    rating: 4.9,
-    reviews: 321,
-    specialization: "Spiritual Journeys",
-    location: "Varanasi, India",
-    tripCount: "600+ trips planned",
-  },
-];
+const fallback = "/images/avatar.webp";
 
 const AdvisorCarousel = ({ data }) => {
-  console.log(data);
+  // console.log(data);
 
   return (
     <section className="py-16 bg-gradient-to-b from-background to-muted/30">
@@ -179,7 +51,7 @@ const AdvisorCarousel = ({ data }) => {
                     <a href={`/creator/${advisor._id}`}>
                       <div className="absolute inset-0 overflow-hidden">
                         <img
-                          src={advisor.profileImg}
+                          src={advisor.profileImg || fallback}
                           alt={advisor.name}
                           className="w-full h-full object-cover transition-transform scale-110 duration-700 ease-in-out group-hover:scale-100 group-hover:origin-center"
                         />

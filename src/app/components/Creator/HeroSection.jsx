@@ -1,23 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Search, MapPin } from "lucide-react";
 
 const HeroSection = () => {
-  // const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
 
-  // const handleSearch = (e) => {
-  //   e.preventDefault();
-  //   const trimmed = query.trim();
-  //   if (trimmed.length > 0) {
-  //     window.location.href = `/creator/search?q=${encodeURIComponent(
-  //       trimmed
-  //     )}&filter=all`;
-  //   } else {
-  //     window.location.href = `/creator/search`;
-  //   }
-  // };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    if (trimmed.length > 0) {
+      window.location.href = `/search?q=${encodeURIComponent(
+        trimmed
+      )}&filter=all`;
+    } else {
+      window.location.href = `/search`;
+    }
+  };
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -44,7 +45,7 @@ const HeroSection = () => {
           </p>
 
           {/* Search Bar */}
-          {/* <div className="rounded-2xl p-6 max-w-4xl mx-auto animate-slide-up">
+          <div className="rounded-2xl p-6 max-w-4xl mx-auto animate-slide-up">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
               <div className="relative bg-transparent backdrop-blur-md col-span-1 md:col-span-2 xl:col-span-3">
                 <MapPin className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
@@ -64,9 +65,9 @@ const HeroSection = () => {
                 Search Trips
               </Button>
             </div>
-          </div> */}
+          </div>
 
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <Button
               variant=""
               onClick={() => (window.location.href = `/contact`)}
@@ -75,7 +76,7 @@ const HeroSection = () => {
             >
               Let's Craft Your Journey
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
 

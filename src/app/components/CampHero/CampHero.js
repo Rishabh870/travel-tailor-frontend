@@ -6,13 +6,15 @@ import Image from "next/image";
 import styles from "./styles.module.css"; // We will create this file next
 import ArrowBtn from "../CustomUI/Button/ArrowBtn";
 import Varients from "../../lib/varients";
-import parseUrl from "../../../util/parseUrl";
+import parseUrl from "../../util/parseUrl";
 
 // The new CampHero component accepts `heroData` for the slider and `children` for the form
 function CampHero({ heroData, children }) {
   const [current, setCurrent] = useState(0);
   const [hero, setHero] = useState(heroData[0]);
   const imagesPreloaded = useRef(false);
+
+  console.log(hero);
 
   // Autoplay timer effect
   useEffect(() => {
@@ -30,7 +32,7 @@ function CampHero({ heroData, children }) {
         const link = document.createElement("link");
         link.rel = "preload";
         link.as = "image";
-        link.href = parseUrl(item.imgUrl);
+        link.href = parseUrl(item.img);
         document.head.appendChild(link);
       });
       imagesPreloaded.current = true;
@@ -66,31 +68,33 @@ function CampHero({ heroData, children }) {
       <div className={styles.campHeroSlider}>
         <div className={styles.backgroundStyle}></div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            className={styles.campHeroImgContainer}
-            key={hero.imgUrl}
-            initial={{ opacity: 0, filter: "brightness(0.4)" }}
-            animate={{ opacity: 1, filter: "brightness(0.8)" }}
-            exit={{ opacity: 0, filter: "brightness(0.4)" }}
-            transition={{ duration: 0.4 }}
-          >
-            <Image
-              src={parseUrl(hero.imgUrl)}
-              alt={hero.title}
-              width={1400}
-              height={1000}
-              className={styles.campHeroImg}
-              priority={true}
-            />
-          </motion.div>
-        </AnimatePresence>
+        {hero?.img && (
+          <AnimatePresence mode="wait">
+            <motion.div
+              className={styles.campHeroImgContainer}
+              key={hero.img}
+              initial={{ opacity: 0, filter: "brightness(0.4)" }}
+              animate={{ opacity: 1, filter: "brightness(0.8)" }}
+              exit={{ opacity: 0, filter: "brightness(0.4)" }}
+              transition={{ duration: 0.4 }}
+            >
+              <Image
+                src={parseUrl(hero?.img)}
+                alt={hero?.title}
+                width={1400}
+                height={1000}
+                className={styles.campHeroImg}
+                priority={true}
+              />
+            </motion.div>
+          </AnimatePresence>
+        )}
 
         <div className={styles.campHeroContent}>
           <AnimatePresence mode="wait">
             <motion.div
               className={styles.campHeroContentMain}
-              key={hero.title}
+              key={hero?.title}
               variants={Varients.heroHomeContentMain}
               initial="initial"
               animate="animate"

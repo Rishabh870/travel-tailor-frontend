@@ -18,7 +18,7 @@ async function fetchDestinationData(slug) {
     const response = await fetch(
       `${process.env.API_URL}/api/destinations/${slug}`,
       {
-        cache: "force-cache",
+        // cache: "force-cache",
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`,
         },
@@ -84,13 +84,15 @@ export async function generateMetadata({ params }) {
 export async function generateStaticParams() {
   try {
     const response = await fetch(
-      `${process.env.API_URL}/api/slugs/destination`,
+      `${process.env.API_URL}/apihome/slugs/destination`,
       {
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`, // Assuming auth is needed
         },
       }
     );
+
+    console.log(response);
 
     if (!response.ok) {
       console.error(

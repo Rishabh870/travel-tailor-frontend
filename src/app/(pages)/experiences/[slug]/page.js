@@ -96,7 +96,7 @@ export async function generateStaticParams() {
   try {
     // *** Adjust API endpoint for experience type slugs ***
     const response = await fetch(
-      `${process.env.API_URL}/api/slugs/experience`,
+      `${process.env.API_URL}/apihome/slugs/experience`,
       {
         headers: {
           Authorization: `Bearer ${process.env.API_TOKEN}`, // If auth is needed
