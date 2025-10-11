@@ -13,7 +13,7 @@ export default async function Creator() {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
         },
-        next: { revalidate: 60 }, // Optional: revalidation to refresh data every minute
+        // next: { revalidate: 60 }, // Optional: revalidation to refresh data every minute
       }
     );
 
@@ -26,7 +26,7 @@ export default async function Creator() {
 
     return (
       <div className="min-h-screen">
-        <HeroSection />
+        <HeroSection heroImg={data.heroImage} />
         {creators.length > 0 && <AdvisorCarousel data={creators} />}
 
         {/* Tours Grid */}

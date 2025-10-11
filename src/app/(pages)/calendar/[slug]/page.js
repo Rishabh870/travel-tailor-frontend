@@ -1,15 +1,15 @@
-'use client'; // Add this directive at the very top
+"use client"; // Add this directive at the very top
 
-import { useState, useEffect } from 'react';
-import { useParams, notFound } from 'next/navigation';
-import MonthHero from '../../../components/Hero/MonthHero';
-import Highlights from '../../../components/Sections/Highlights';
-import Destinations from '../../../components/Sections/Destinations';
-import Tours from '../../../components/Sections/Tours';
-import Experiences from '../../../components/Sections/Experiences';
-import Blogs from '../../../components/Featured/Blogs';
-import Banner from '../../../components/Banner/Banner';
-import Spinner from '../../../components/CustomUI/Spinner/Spinner';
+import { useState, useEffect } from "react";
+import { useParams, notFound } from "next/navigation";
+import MonthHero from "../../../components/Hero/MonthHero";
+import Highlights from "../../../components/Sections/Highlights";
+import Destinations from "../../../components/Sections/Destinations";
+import Tours from "../../../components/Sections/Tours";
+import Experiences from "../../../components/Sections/Experiences";
+import Blogs from "../../../components/Featured/Blogs";
+import Banner from "../../../components/Banner/Banner";
+import Spinner from "../../../components/CustomUI/Spinner/Spinner";
 
 async function fetchCalendarData(slug) {
   try {
@@ -19,7 +19,7 @@ async function fetchCalendarData(slug) {
 
     if (!apiUrl || !apiToken) {
       console.error(
-        'API URL or Token is not defined in environment variables for client-side fetching.',
+        "API URL or Token is not defined in environment variables for client-side fetching."
       );
       // Return null to indicate an issue that should lead to notFound()
       return null;
@@ -39,7 +39,7 @@ async function fetchCalendarData(slug) {
     // Handle other non-successful responses
     if (!response.ok) {
       console.error(
-        `Failed to fetch calendar data for ${slug}: ${response.status} ${response.statusText}`,
+        `Failed to fetch calendar data for ${slug}: ${response.status} ${response.statusText}`
       );
       // Throw an error for other failures, which will be caught and trigger notFound()
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
@@ -84,8 +84,8 @@ export default function CalendarPage() {
       } catch (err) {
         // Catch ANY error from fetchCalendarData (network issue, API error, JSON parsing error)
         console.error(
-          'Failed to load calendar data, triggering Not Found:',
-          err,
+          "Failed to load calendar data, triggering Not Found:",
+          err
         );
         notFound(); // Trigger Next.js not found page for any fetch error
       } finally {
@@ -99,7 +99,7 @@ export default function CalendarPage() {
   // --- Loading State ---
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center min-h-screen'>
+      <div className="flex justify-center items-center min-h-screen">
         <Spinner />
       </div>
     );
@@ -119,15 +119,15 @@ export default function CalendarPage() {
   // Ensure slug exists before deriving monthName (should be guaranteed by checks above)
   const monthName = slug
     ? slug.charAt(0).toUpperCase() + slug.slice(1)
-    : 'Month';
+    : "Month";
 
   const defaultDestinationsHeading = {
     title: `Best places /n to /svisit in ${monthName}\\s`,
-    description: 'Discover amazing places recommended for this month',
+    description: "Discover amazing places recommended for this month",
   };
   const defaultToursHeading = {
     title: `/sTrips\\s in /n ${monthName}`,
-    description: 'Check out these tours perfect for this time of year',
+    description: "Check out these tours perfect for this time of year",
   };
 
   return (
@@ -139,32 +139,34 @@ export default function CalendarPage() {
       {calendarData.highlight && <Highlights {...calendarData.highlight} />}
 
       {/* Destinations Section */}
-      {calendarData.destinations && calendarData.destinations.length > 0 && (
-        <Destinations
-          heading={defaultDestinationsHeading}
-          destinations={calendarData.destinations}
-        />
-      )}
+      {calendarData.tagDestinations &&
+        calendarData.tagDestinations.length > 0 && (
+          <Destinations
+            heading={defaultDestinationsHeading}
+            destinations={calendarData.tagDestinations}
+          />
+        )}
 
       {/* Experiences Section */}
-      {calendarData.experiences && calendarData.experiences.length > 2 && (
-        <Experiences experiences={calendarData.experiences} />
-      )}
+      {calendarData.tagExperiences &&
+        calendarData.tagExperiences.length > 2 && (
+          <Experiences experiences={calendarData.tagExperiences} />
+        )}
 
       {/* Tours Section */}
-      {calendarData.tours && calendarData.tours.length > 0 && (
-        <Tours heading={defaultToursHeading} tours={calendarData.tours} />
+      {calendarData.tagTours && calendarData.tagTours.length > 0 && (
+        <Tours heading={defaultToursHeading} tours={calendarData.tagTours} />
       )}
 
       {/* Blogs Section */}
-      {calendarData.blogs && calendarData.blogs.length > 0 && (
-        <Blogs blogs={calendarData.blogs} />
+      {calendarData.tagBlogs && calendarData.tagBlogs.length > 0 && (
+        <Blogs blogs={calendarData.tagBlogs} />
       )}
 
       {/* Banner Section */}
       <Banner
         title={calendarData.bannerTitle || `Plan Your ${monthName} Adventure!`}
-        cta={calendarData.bannerCta || 'Get Inspired'}
+        cta={calendarData.bannerCta || "Get Inspired"}
         url={`/contact?src=${slug}`}
       />
     </main>

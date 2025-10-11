@@ -19,8 +19,6 @@ const TourGridSection = ({
   const isExpanded = visibleCount >= data?.length;
   const router = useRouter();
 
-  console.log("data", data);
-
   return (
     <section className={styles.section + " " + className + " "}>
       <h2 className={styles.sectionTitle}>
@@ -31,20 +29,28 @@ const TourGridSection = ({
         <p className={styles.sectionDescription}>{description}</p>
       )}
       <div className={styles.gridWrapper + ` max-w-[90rem] mx-auto `}>
-        {data?.slice(0, visibleCount).map((item, index) => (
-          <div key={index} className={styles.gridItem}>
-            <Tour
-              description={item.description}
-              imgUrl={item.heroImg || item.displayImg}
-              title={item.title}
-              slug={item.slug}
-              id={item._id}
-              tag={`${item?.details?.totalDays} Days`}
-              type={"tours"}
-              className={type === "blogs" ? styles.creatorBlogs : className}
-            />
-          </div>
-        ))}
+        {data?.slice(0, visibleCount).map((item, index) => {
+          const tags =
+            type == "tours"
+              ? `${item?.details?.totalDays} Days`
+              : type == "destinations"
+              ? `Starting Price: ₹${item?.startingPrice}`
+              : `${item?.details?.city}, ${item?.details?.country}`;
+          return (
+            <div key={index} className={styles.gridItem}>
+              <Tour
+                description={item.description}
+                imgUrl={item.heroImg || item.displayImg}
+                title={item.title}
+                slug={item.slug}
+                id={item._id}
+                tag={tags}
+                type={"tours"}
+                className={type === "blogs" ? styles.creatorBlogs : className}
+              />
+            </div>
+          );
+        })}
       </div>
 
       {data?.length && (

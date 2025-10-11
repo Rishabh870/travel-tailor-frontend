@@ -1,4 +1,17 @@
 import Link from "next/link";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "./components/ui/carousel";
+import { Card, CardContent } from "./components/ui/card";
+import { MapPin, Star } from "lucide-react";
+import Image from "next/image";
+import Tour from "./components/CustomUI/Card/Tour";
+import TourGridSection from "./components/Creator/TourGridSection";
+import InfiniteTestimonials from "./components/Home/InfiniteTestimonials";
 
 export default async function Hero() {
   // ✅ Fetch on the server (SSR)
@@ -19,10 +32,13 @@ export default async function Hero() {
 
   const { data } = await res.json();
 
-  // console.log(data);
+  console.log(data);
 
   const destinations = data?.destinations || [];
+  const mainDestinations = data?.mainDestinations || [];
   const creators = data?.creators || [];
+  const upcomingTrips = data?.upcomingTours || [];
+  const reviews = data?.reviews || [];
 
   return (
     <section className="relative min-h-screen overflow-hidden">
@@ -68,20 +84,48 @@ export default async function Hero() {
       </div>
 
       {/* Two Section Layout */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-24 py-16 md:py-20">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-foreground">
+      <div className="xl:max-w-[90rem] mx-auto px-4 lg:px-6 py-16 md:py-20">
+        <h2
+          style={{
+            fontSize: `var(--fs-h2)`,
+            fontFamily: `var(--font-prime), sans-serif`,
+            fontWeight: `var(--font-weight-medium)`,
+            textAlign: "center",
+            color: "var(--color-foreground, #111)",
+          }}
+        >
           Get Set
-          <span className="ml-2 text-3xl md:text-4xl text-orange-600 tracking-tight leading-tight font-handwriting">
+          <span
+            style={{
+              marginLeft: "8px",
+              fontSize: "42px",
+              color: "var(--color-primary)",
+              letterSpacing: "-0.02em",
+              fontFamily: "var(--font-alt)",
+              fontWeight: "var(--font-weight-medium)",
+              display: "inline-block",
+            }}
+          >
             Travel...
           </span>
         </h2>
 
-        <p className="text-center text-muted-foreground mb-12 text-lg">
+        <p
+          style={{
+            marginLeft: "8px",
+            marginBottom: "32px",
+            fontSize: "var(--fs-p3)",
+            color: "var(--color-grey)",
+            textAlign: "center",
+            letterSpacing: "-0.02em",
+            lineHeight: "1.6",
+            fontWeight: `var(--font-weight-regular)`,
+          }}
+        >
           Discover destinations and connect with expert creators
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left: Destinations & Experiences */}
           <a
             href="/home"
             className="relative h-[500px] rounded-2xl overflow-hidden group shadow-lg block"
@@ -99,12 +143,11 @@ export default async function Hero() {
 
             <div className="relative h-full flex flex-col justify-end p-8">
               <h3 className="text-4xl font-bold text-white mb-3">
-                Destinations & Experiences
+                Custom Planning
               </h3>
               <p className="text-white/90 mb-6 text-lg">
                 Explore amazing places and unique activities
               </p>
-
               <div className="grid grid-cols-2 gap-3">
                 {destinations.slice(0, 2).map((dest) => (
                   <div
@@ -127,7 +170,6 @@ export default async function Hero() {
             </div>
           </a>
 
-          {/* Right: Creators & Tours */}
           <Link
             href="/creator"
             className="relative h-[500px] rounded-2xl overflow-hidden group shadow-lg block"
@@ -144,9 +186,7 @@ export default async function Hero() {
             </div>
 
             <div className="relative h-full flex flex-col justify-end p-8">
-              <h3 className="text-4xl font-bold text-white mb-3">
-                Creators & Tours
-              </h3>
+              <h3 className="text-4xl font-bold text-white mb-3">Trailsmith</h3>
               <p className="text-white/90 mb-6 text-lg">
                 Meet expert guides and join curated tours
               </p>
@@ -171,6 +211,71 @@ export default async function Hero() {
             </div>
           </Link>
         </div>
+      </div>
+
+      {/* Upcoming Trips Carousel */}
+      {upcomingTrips.length > 0 && (
+        <div className="">
+          <TourGridSection
+            data={upcomingTrips}
+            type="tours"
+            allUrl="/tours"
+            title={`Upcoming Adventures`}
+            description={`Join our next curated journeys`}
+          />
+        </div>
+      )}
+      {mainDestinations.length > 0 && (
+        <div className="">
+          <TourGridSection
+            data={mainDestinations}
+            type="destinations"
+            allUrl="/destinations"
+            title={`Travel Tailor`}
+            description={`For Customised Private Journeys`}
+          />
+        </div>
+      )}
+
+      <div className="xl:max-w-[90rem] mx-auto ">
+        {/* {reviews.length > 0 && (
+          <div className="grid grid-cols-1 mb-24 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {reviews.map((review, index) => (
+              <Card
+                key={index}
+                className="overflow-hidden w-[20rem] rounded-xl cursor-pointer mx-auto border-gray-200 hover-scale transition-all duration-300 hover:shadow-lg bg-white"
+              >
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <img
+                    src={review.img}
+                    alt={review.name}
+                    className="w-20 h-20 rounded-full object-cover shadow-md mb-4"
+                  />
+                  <h4 className="font-bold text-foreground mb-1">
+                    {review.name}
+                  </h4>
+                  <p className="text-muted-foreground text-sm flex items-center gap-1 mb-4">
+                    <MapPin className="h-3 w-3" />
+                    {review.place}
+                  </p>
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(review.stars)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-orange-500 text-orange-500"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    &quot;{review.review}&quot;
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )} */}
+
+        {reviews.length > 0 && <InfiniteTestimonials reviews={reviews} />}
       </div>
     </section>
   );

@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Search, MapPin } from "lucide-react";
 
-const HeroSection = () => {
+const HeroSection = ({ heroImg }) => {
   const [query, setQuery] = useState("");
 
   const handleSearch = (e) => {
@@ -19,13 +19,17 @@ const HeroSection = () => {
       window.location.href = `/search`;
     }
   };
+
+  const bgImg =
+    heroImg ||
+    "https://images.musement.com/cover/0003/14/koh-samui-xxl-jpg_header-213595.jpeg";
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative  min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('https://images.musement.com/cover/0003/14/koh-samui-xxl-jpg_header-213595.jpeg')`,
+          backgroundImage: `url(${bgImg})`,
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
@@ -46,8 +50,8 @@ const HeroSection = () => {
 
           {/* Search Bar */}
           <div className="rounded-2xl p-6 max-w-4xl mx-auto animate-slide-up">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
-              <div className="relative bg-transparent backdrop-blur-md col-span-1 md:col-span-2 xl:col-span-3">
+            <div className="grid grid-cols-4">
+              <div className="relative bg-transparent backdrop-blur-md col-span-3">
                 <MapPin className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   placeholder="Search Travel Stories and Trips"
@@ -59,7 +63,7 @@ const HeroSection = () => {
 
               <Button
                 onClick={handleSearch}
-                className="h-12 rounded-r-full col-span-2 xl:col-span-1 bg-orange-600 hover:bg-orange-700/90"
+                className="h-12 rounded-r-full col-span-1 bg-orange-600 hover:bg-orange-700/90"
               >
                 <Search className="mr-2 h-5 w-5" />
                 Search Trips

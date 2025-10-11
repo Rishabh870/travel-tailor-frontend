@@ -32,17 +32,6 @@ export default function TourHero({
         />
         <div className="absolute inset-0 bg-black/60" />
 
-        {/* Floating badges */}
-        {/* <div className='absolute top-8 left-8 flex gap-3'>
-          {badges.map((badge, i) => (
-            <Badge
-              key={i}
-              className='bg-white/95 text-gray-900 border-0 font-medium px-4 py-2 rounded-full backdrop-blur-sm'>
-              {badge}
-            </Badge>
-          ))}
-        </div> */}
-
         {/* Glass overlay card */}
         <div className="absolute inset-0 flex items-center justify-center px-5 md:p-6">
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg max-w-6xl w-full h-[520px] grid md:grid-cols-2 overflow-hidden">
@@ -143,15 +132,26 @@ export default function TourHero({
                 alt={title}
                 className="h-full w-full object-cover"
               />
+              {/* Floating badges */}
+              <div className="absolute top-4 left-4 flex gap-3">
+                {badges.map((badge, i) => (
+                  <Badge
+                    key={i}
+                    className="bg-white/95 text-gray-900 border-0 font-medium px-4 py-2 rounded-full backdrop-blur-sm"
+                  >
+                    {badge}
+                  </Badge>
+                ))}
+              </div>
               {/* Share button */}
-              <div className="absolute top-8 right-8 flex gap-3">
+              {/* <div className="absolute top-8 right-8 flex gap-3">
                 <Button
                   size="icon"
                   className="bg-white/95 hover:bg-white text-gray-900 rounded-full h-11 w-11 backdrop-blur-sm"
                 >
                   <Share2 className="h-5 w-5" />
                 </Button>
-              </div>
+              </div> */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
             </div>
           </div>
