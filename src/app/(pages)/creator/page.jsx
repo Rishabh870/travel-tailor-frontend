@@ -22,7 +22,14 @@ export default async function Creator() {
     }
 
     const data = await res.json();
-    const { blogs = [], tours = [], creators = [], reviews = [] } = data;
+
+    const {
+      blogs = [],
+      tours = [],
+      creators = [],
+      reviews = [],
+      happyCustomer,
+    } = data;
 
     return (
       <div className="min-h-screen">
@@ -44,7 +51,9 @@ export default async function Creator() {
           </div>
         )}
 
-        {reviews.length > 0 && <TestimonialsSection data={reviews} />}
+        {reviews.length > 0 && (
+          <TestimonialsSection data={reviews} happyCustomers={happyCustomer} />
+        )}
 
         {/* Blog Grid */}
         {blogs.length > 0 && (

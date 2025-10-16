@@ -208,19 +208,19 @@ async function BlogPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {data.displayImg && (
+      {data?.displayImg && (
         <BlogHero
-          imgUrl={data.displayImg}
-          title={data.title}
-          description={data.description}
-          auther={data.author}
-          date={data.createdAt}
+          imgUrl={data?.displayImg}
+          title={data?.title}
+          description={data?.description}
+          auther={data?.author}
+          date={data?.createdAt}
         />
       )}
-      {data.body && <BlogBody body={data.body} />}
+      {data?.body && <BlogBody body={data?.body} />}
 
       <aside>
-        {data.blogs.length > 0 && (
+        {data?.blogs?.length > 0 && (
           <Blogs
             blogs={data.blogs}
             heading={{
@@ -229,7 +229,7 @@ async function BlogPage({ params }) {
             }}
           />
         )}
-        {data.tours.length > 0 && (
+        {data?.tours?.length > 0 && (
           <Tours
             tours={data.tours}
             heading={{

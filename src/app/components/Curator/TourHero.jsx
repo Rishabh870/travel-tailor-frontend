@@ -34,7 +34,7 @@ export default function TourHero({
 
         {/* Glass overlay card */}
         <div className="absolute inset-0 flex items-center justify-center px-5 md:p-6">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg max-w-6xl w-full h-[520px] grid md:grid-cols-2 overflow-hidden">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg max-w-6xl w-full min-h-[520px] grid md:grid-cols-2 overflow-hidden">
             {/* Left: Details */}
             <div className="md:p-10 p-7 flex flex-col justify-center space-y-6">
               {/* Location */}

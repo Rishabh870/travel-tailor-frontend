@@ -98,7 +98,7 @@ function BlogsList({ data, currentPage, totalPages, onPageChange, fetchData }) {
           }
 
           const blogsInCategory = data.items.filter(
-            (blog) => blog.categories.some((cat) => cat === category._id) // Match blogs by category _id
+            (blog) => blog?.categories?.some((cat) => cat === category._id) // Match blogs by category _id
           );
 
           // Skip rendering categories with no blogs

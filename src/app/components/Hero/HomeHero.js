@@ -109,7 +109,7 @@ function HomeHero({ heroData }) {
                   href={`${process.env.NEXT_PUBLIC_URL_PREFIX}${hero.url}`}
                   className="md"
                 >
-                  {hero.CTA || "Explore"}
+                  {hero.CTA || hero.cta || "Explore"}
                 </Button>
               </motion.div>
             </motion.div>

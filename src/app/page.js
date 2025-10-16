@@ -1,17 +1,9 @@
 import Link from "next/link";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "./components/ui/carousel";
 import { Card, CardContent } from "./components/ui/card";
-import { MapPin, Star } from "lucide-react";
-import Image from "next/image";
+import { MapPin } from "lucide-react";
 import Tour from "./components/CustomUI/Card/Tour";
-import TourGridSection from "./components/Creator/TourGridSection";
-import InfiniteTestimonials from "./components/Home/InfiniteTestimonials";
+import styles from "./page.module.css";
+import { Button } from "./components/ui/button";
 
 export default async function Hero() {
   // ✅ Fetch on the server (SSR)
@@ -34,11 +26,11 @@ export default async function Hero() {
 
   console.log(data);
 
-  const destinations = data?.destinations || [];
-  const mainDestinations = data?.mainDestinations || [];
+  const popularDestination = data?.popularDestination || [];
+  const popularExperience = data?.popularExperience || [];
   const creators = data?.creators || [];
   const upcomingTrips = data?.upcomingTours || [];
-  const reviews = data?.reviews || [];
+  const fallback = "/images/avatar.webp";
 
   return (
     <section className="relative min-h-screen overflow-hidden">
@@ -62,221 +54,176 @@ export default async function Hero() {
 
         {/* Center Content */}
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <div className="mb-16">
-            <h1 className="text-2xl font-semibold text-white tracking-wider">
-              TRAVEL
-              <span className="text-orange-600">TAILOR</span>
-            </h1>
-          </div>
-
-          <h2 className="text-6xl mb-4 xl:text-7xl font-light text-orange-600 tracking-tight leading-tight font-handwriting">
+          <h2 className="text-6xl mb-4 font-light text-orange-600 tracking-tight leading-tight font-handwriting">
             Every Step,
             <br />
-            <span className="text-white font-sans text-5xl xl:text-7xl">
+            <span className="text-white font-sans text-6xl xl:text-8xl">
               Every Journey
             </span>
           </h2>
 
-          <p className="text-md md:text-2xl xl:text-4xl text-white/90 mb-6 xl:mb-12 font-light">
+          <p className="text-md md:text-2xl xl:text-3xl text-white/90 mb-6 xl:mb-12 font-light">
             Fly above the ordinary, travel today.
           </p>
-        </div>
-      </div>
-
-      {/* Two Section Layout */}
-      <div className="xl:max-w-[90rem] mx-auto px-4 lg:px-6 py-16 md:py-20">
-        <h2
-          style={{
-            fontSize: `var(--fs-h2)`,
-            fontFamily: `var(--font-prime), sans-serif`,
-            fontWeight: `var(--font-weight-medium)`,
-            textAlign: "center",
-            color: "var(--color-foreground, #111)",
-          }}
-        >
-          Get Set
-          <span
-            style={{
-              marginLeft: "8px",
-              fontSize: "42px",
-              color: "var(--color-primary)",
-              letterSpacing: "-0.02em",
-              fontFamily: "var(--font-alt)",
-              fontWeight: "var(--font-weight-medium)",
-              display: "inline-block",
-            }}
-          >
-            Travel...
-          </span>
-        </h2>
-
-        <p
-          style={{
-            marginLeft: "8px",
-            marginBottom: "32px",
-            fontSize: "var(--fs-p3)",
-            color: "var(--color-grey)",
-            textAlign: "center",
-            letterSpacing: "-0.02em",
-            lineHeight: "1.6",
-            fontWeight: `var(--font-weight-regular)`,
-          }}
-        >
-          Discover destinations and connect with expert creators
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <a
-            href="/home"
-            className="relative h-[500px] rounded-2xl overflow-hidden group shadow-lg block"
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-              style={{
-                backgroundImage: `url('${
-                  destinations[0]?.heroImg || "/fallback.jpg"
-                }')`,
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/80" />
-            </div>
-
-            <div className="relative h-full flex flex-col justify-end p-8">
-              <h3 className="text-4xl font-bold text-white mb-3">
-                Custom Planning
-              </h3>
-              <p className="text-white/90 mb-6 text-lg">
-                Explore amazing places and unique activities
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                {destinations.slice(0, 2).map((dest) => (
-                  <div
-                    key={dest._id}
-                    className="bg-white/15 backdrop-blur-md rounded-xl p-4 border border-white/20"
-                  >
-                    <p className="text-white text-sm font-semibold mb-1">
-                      {dest.title}
-                    </p>
-                    <p className="text-white/70 text-xs">
-                      {dest.createdBy?.name
-                        ? `By ${dest.createdBy.name}`
-                        : dest.startingPrice
-                        ? `From ₹${dest.startingPrice}`
-                        : ""}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </a>
-
-          <Link
-            href="/creator"
-            className="relative h-[500px] rounded-2xl overflow-hidden group shadow-lg block"
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-              style={{
-                backgroundImage: `url('${
-                  creators[0]?.profileImg || "/images/main.jpeg"
-                }')`,
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/80" />
-            </div>
-
-            <div className="relative h-full flex flex-col justify-end p-8">
-              <h3 className="text-4xl font-bold text-white mb-3">Trailsmith</h3>
-              <p className="text-white/90 mb-6 text-lg">
-                Meet expert guides and join curated tours
-              </p>
-
-              <div className="grid grid-cols-2 gap-3">
-                {creators.slice(0, 2).map((creator) => (
-                  <div
-                    key={creator._id}
-                    className="bg-white/15 backdrop-blur-md rounded-xl p-4 border border-white/20"
-                  >
-                    <p className="text-white text-sm font-semibold ">
-                      {creator.name}
-                    </p>
-                    {creator.location && creator.location !== "" && (
-                      <p className="text-white/70 text-xs mt-1">
-                        {creator.location || "Unknown location"}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Link>
-        </div>
-      </div>
-
-      {/* Upcoming Trips Carousel */}
-      {upcomingTrips.length > 0 && (
-        <div className="">
-          <TourGridSection
-            data={upcomingTrips}
-            type="tours"
-            allUrl="/tours"
-            title={`Upcoming Adventures`}
-            description={`Join our next curated journeys`}
-          />
-        </div>
-      )}
-      {mainDestinations.length > 0 && (
-        <div className="">
-          <TourGridSection
-            data={mainDestinations}
-            type="destinations"
-            allUrl="/destinations"
-            title={`Travel Tailor`}
-            description={`For Customised Private Journeys`}
-          />
-        </div>
-      )}
-
-      <div className="xl:max-w-[90rem] mx-auto ">
-        {/* {reviews.length > 0 && (
-          <div className="grid grid-cols-1 mb-24 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {reviews.map((review, index) => (
-              <Card
-                key={index}
-                className="overflow-hidden w-[20rem] rounded-xl cursor-pointer mx-auto border-gray-200 hover-scale transition-all duration-300 hover:shadow-lg bg-white"
-              >
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <img
-                    src={review.img}
-                    alt={review.name}
-                    className="w-20 h-20 rounded-full object-cover shadow-md mb-4"
-                  />
-                  <h4 className="font-bold text-foreground mb-1">
-                    {review.name}
-                  </h4>
-                  <p className="text-muted-foreground text-sm flex items-center gap-1 mb-4">
-                    <MapPin className="h-3 w-3" />
-                    {review.place}
-                  </p>
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(review.stars)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-4 h-4 fill-orange-500 text-orange-500"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    &quot;{review.review}&quot;
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+          <div>
+            <Link href="/contact">
+              <Button varient="outline" className=" bg-orange-600 text-white">
+                Let&#39;s craft your next adventure today!
+              </Button>
+            </Link>
           </div>
-        )} */}
-
-        {reviews.length > 0 && <InfiniteTestimonials reviews={reviews} />}
+        </div>
       </div>
+
+      <section className="py-16 ">
+        <div className="container mx-auto px-4">
+          {/* Header */}
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              Travel Tailor
+              <br />
+              <span className="text-orange-600 text-3xl md:text-4xl font-handwriting">
+                Customised Experiences
+              </span>
+            </h2>
+            <p className="text-md text-muted-foreground max-w-2xl mx-auto">
+              Handpicked journeys that bring you closer to culture, nature, and
+              adventure — all crafted by our expert travel curators.
+            </p>
+          </div>
+
+          <div className=" p-5 w-full">
+            {/* Grid Section */}
+            <h3 className="text-2xl font-bold mb-6 px-3">
+              Popular Destinations
+            </h3>
+            <div className="flex gap-4 justify-center">
+              {popularDestination?.slice(0, 4).map((item, index) => {
+                const tags = `Starting Price: ₹${item?.startingPrice}`;
+                return (
+                  <div key={index} className={styles.gridItem}>
+                    <Tour
+                      key={index}
+                      description={item.description}
+                      imgUrl={item.heroImg || item.displayImg}
+                      title={item.title}
+                      slug={item.slug}
+                      id={item._id}
+                      tag={tags}
+                      type={"destinations"}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Grid Section */}
+        </div>
+
+        <Link href="/home">
+          <Button className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white">
+            Check out Travel Tailor
+          </Button>
+        </Link>
+      </section>
+
+      <section className="py-16 ">
+        <div className="container mx-auto px-4">
+          {/* Header */}
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-5xl font-bold mb-2">
+              Trailsmith
+              <br />
+              <span className="text-orange-600 text-3xl md:text-4xl font-handwriting">
+                The Voice of Modern Travel Creators
+              </span>
+            </h2>
+
+            {/* 📝 Description */}
+            <p className="text-md text-muted-foreground max-w-2xl mx-auto">
+              Trailsmith is our creator-led tour blog — a space where seasoned
+              travelers and influencers share their hand-crafted journeys,
+              unique experiences, and insider stories from around the globe.
+            </p>
+          </div>
+
+          {/* Grid Section */}
+          <div className=" p-5 w-full">
+            <h3 className="text-2xl font-bold mb-6 px-3">Upcoming Trips</h3>
+            <div className="flex gap-4 justify-center">
+              {upcomingTrips?.slice(0, 4).map((item, index) => {
+                const tags = `${item?.details?.totalDays} Days`;
+                return (
+                  <div key={index} className={styles.gridItem}>
+                    <Tour
+                      key={index}
+                      description={item.description}
+                      imgUrl={item.heroImg || item.displayImg}
+                      title={item.title}
+                      slug={item.slug}
+                      id={item._id}
+                      tag={tags}
+                      type={"tours"}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Grid Section */}
+          <div className="p-5 w-full">
+            <h3 className="text-2xl font-bold mb-6 px-3">Travel Influencers</h3>
+
+            {/* Responsive Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 justify-items-center">
+              {creators?.slice(0, 6).map((advisor, index) => (
+                <Card
+                  key={index}
+                  className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in border-0 w-full "
+                >
+                  <CardContent className="p-0 relative h-64 md:h-72 lg:h-80">
+                    <a href={`/creator/${advisor._id}`}>
+                      {/* Image */}
+                      <div className="absolute inset-0 overflow-hidden">
+                        <img
+                          src={advisor.profileImg || fallback}
+                          alt={advisor.name}
+                          className="w-full h-full object-cover transition-transform scale-110 duration-700 ease-in-out group-hover:scale-100"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      </div>
+
+                      {/* Overlay Content */}
+                      <div className="relative z-10 h-full flex flex-col justify-end p-4 text-white">
+                        <h3 className="text-lg font-semibold mb-1 truncate">
+                          {advisor.name}
+                        </h3>
+
+                        <div className="flex items-center gap-1">
+                          <MapPin className="h-3.5 w-3.5 text-white/70" />
+                          <span className="text-xs text-white/70 truncate">
+                            {advisor.location}
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <Link href="/creator">
+          <Button
+            type="block"
+            varient="outline"
+            className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white"
+          >
+            Check Creators Tours
+          </Button>
+        </Link>
+      </section>
     </section>
   );
 }

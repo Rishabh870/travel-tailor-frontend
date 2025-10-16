@@ -6,7 +6,7 @@ import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import parseUrl from "../../util/parseUrl";
 
-const reviewsSection = ({ data }) => {
+const reviewsSection = ({ data, happyCustomers = "2,340" }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   console.log(data);
@@ -76,53 +76,58 @@ const reviewsSection = ({ data }) => {
                 return (
                   <CarouselItem key={index} className="flex p-6 w-full">
                     {/* 3 reviews in a single slide */}
-                    {data.slice(index, index + 3).map((testimonial, idx) => {
-                      const profileImage =
-                        testimonial.profileImg || testimonial.img;
-                      return (
-                        <div key={idx} className="basis-1/3 flex-shrink-0">
-                          <Card className="group m-3 h-full p-0 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in border-0">
-                            <CardContent className="p-6 relative">
-                              <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                  <img
-                                    src={profileImage}
-                                    className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-primary-foreground font-semibold"
-                                  />
-                                  <div>
-                                    <h4 className="font-semibold">
-                                      {testimonial.name}
-                                    </h4>
-                                    <p className="text-sm text-muted-foreground">
-                                      {testimonial.place}
-                                    </p>
+                    <div className="w-full flex flex-wrap sm:flex-nowrap gap-4    ">
+                      {data.slice(index, index + 3).map((testimonial, idx) => {
+                        const profileImage =
+                          testimonial.profileImg || testimonial.img;
+                        return (
+                          <div
+                            key={idx}
+                            className="flex flex-shrink-0 w-full sm:w-1/2 lg:w-1/3"
+                          >
+                            <Card className="group m-3 h-full p-0 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in border-0">
+                              <CardContent className="p-6 relative">
+                                <div className="flex items-center justify-between mb-4">
+                                  <div className="flex items-center gap-3">
+                                    <img
+                                      src={profileImage}
+                                      className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-primary-foreground font-semibold"
+                                    />
+                                    <div>
+                                      <h4 className="font-semibold">
+                                        {testimonial.name}
+                                      </h4>
+                                      <p className="text-sm text-muted-foreground">
+                                        {testimonial.place}
+                                      </p>
+                                    </div>
                                   </div>
+                                  <Quote className="h-8 w-8 text-orange-500/20" />
                                 </div>
-                                <Quote className="h-8 w-8 text-orange-500/20" />
-                              </div>
 
-                              <div className="flex items-center gap-1 mb-4">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={
-                                      "h-4 w-4 " +
-                                      (i < (Number(testimonial.stars) || 0)
-                                        ? "fill-yellow-400 text-yellow-400"
-                                        : "text-gray-300")
-                                    }
-                                  />
-                                ))}
-                              </div>
+                                <div className="flex items-center gap-1 mb-4">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={
+                                        "h-4 w-4 " +
+                                        (i < (Number(testimonial.stars) || 0)
+                                          ? "fill-yellow-400 text-yellow-400"
+                                          : "text-gray-300")
+                                      }
+                                    />
+                                  ))}
+                                </div>
 
-                              <p className="text-muted-foreground mb-4 leading-relaxed">
-                                "{testimonial.review}"
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      );
-                    })}
+                                <p className="text-muted-foreground mb-4 leading-relaxed">
+                                  "{testimonial.review}"
+                                </p>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </CarouselItem>
                 );
               }
@@ -132,7 +137,9 @@ const reviewsSection = ({ data }) => {
 
         <div className="text-center mt-4">
           <div className="inline-flex items-center gap-4">
-            <div className="text-2xl font-bold text-orange-500">2,340+</div>
+            <div className="text-2xl font-bold text-orange-500">
+              {happyCustomers}+
+            </div>
             <div className="text-muted-foreground">Happy Travelers</div>
           </div>
         </div>
