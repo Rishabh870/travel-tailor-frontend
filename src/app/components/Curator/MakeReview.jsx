@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog";
 import { Star, Upload, X, Image as ImageIcon } from "lucide-react";
-import { AuthDialog } from "../Auth/AuthDialog"; // ⬅️ adjust import path to where you placed AuthDialog
+import { AuthDialog } from "../Auth/authDialog"; // ⬅️ adjust import path to where you placed AuthDialog
 import { toast } from "../../hooks/use-toast";
 
 // ---------- constants ----------
