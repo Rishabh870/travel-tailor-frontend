@@ -10,7 +10,7 @@ import Blogs from "../../components/Featured/Blogs";
 import Banner from "../../components/Banner/Banner";
 import Steps from "../../components/Steps/Steps";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 async function getHomepageData() {
@@ -22,6 +22,7 @@ async function getHomepageData() {
       headers: {
         Authorization: `Bearer ${process.env.API_TOKEN}`,
       },
+      cache: "no-cache",
     });
 
     if (!response.ok) {
@@ -43,6 +44,8 @@ export default async function Home() {
 
   const bannerTitle = "Dreaming of an Adventure? /n Let's Talk!";
   const bannerCta = "Enquire now";
+
+  console.log(hero, months, destinations, reviews, features);
 
   return (
     <main>

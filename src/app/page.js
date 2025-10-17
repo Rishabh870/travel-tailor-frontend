@@ -6,12 +6,17 @@ import styles from "./page.module.css";
 import { Button } from "./components/ui/button";
 
 export const dynamic = "force-dynamic";
-export default async function Hero() {
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
+export default async function Main() {
   // ✅ Fetch on the server (SSR)
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/main`, {
     headers: {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
     },
+    cache: "no-store",
+
     // Force cache (no revalidation)
     // cache: "force-cache",
     // Or, if you want timed revalidation:
@@ -32,6 +37,8 @@ export default async function Hero() {
   const creators = data?.creators || [];
   const upcomingTrips = data?.upcomingTours || [];
   const fallback = "/images/avatar.webp";
+
+  console.log(popularDestination, popularExperience, creators, upcomingTrips);
 
   return (
     <section className="relative min-h-screen overflow-hidden">
@@ -76,7 +83,7 @@ export default async function Hero() {
         </div>
       </div>
 
-      {popularDestination > 0 && (
+      {popularDestination.length > 0 && (
         <section className="py-16 ">
           <div className="container mx-auto px-4">
             {/* Header */}
@@ -94,7 +101,7 @@ export default async function Hero() {
               </p>
             </div>
 
-            {popularDestination > 0 && (
+            {popularDestination.length > 0 && (
               <div className=" p-5 w-full">
                 {/* Grid Section */}
                 <h3 className="text-2xl font-bold mb-6 px-3">
@@ -132,7 +139,7 @@ export default async function Hero() {
         </section>
       )}
 
-      {(upcomingTrips > 0 || creators > 0) && (
+      {(upcomingTrips.length > 0 || creators.length > 0) && (
         <section className="py-16 ">
           <div className="container mx-auto px-4">
             {/* Header */}
@@ -154,7 +161,7 @@ export default async function Hero() {
             </div>
 
             {/* Grid Section */}
-            {upcomingTrips > 0 && (
+            {upcomingTrips.length > 0 && (
               <div className=" p-5 w-full">
                 <h3 className="text-2xl font-bold mb-6 px-3">Upcoming Trips</h3>
                 <div className="flex gap-4 justify-center">
@@ -179,7 +186,7 @@ export default async function Hero() {
               </div>
             )}
             {/* Grid Section */}
-            {creators > 0 && (
+            {creators.length > 0 && (
               <div className="p-5 w-full">
                 <h3 className="text-2xl font-bold mb-6 px-3">
                   Travel Influencers

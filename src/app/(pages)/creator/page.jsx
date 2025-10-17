@@ -5,6 +5,10 @@ import HeroSection from "../../components/Creator/HeroSection";
 import TourGridSection from "../../components/Creator/TourGridSection";
 import BlogGridSection from "../../components/Creator/BlogGridSection";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
 export default async function Creator() {
   try {
     const res = await fetch(
@@ -13,6 +17,7 @@ export default async function Creator() {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
         },
+        cache: "no-store",
         // next: { revalidate: 60 }, // Optional: revalidation to refresh data every minute
       }
     );
