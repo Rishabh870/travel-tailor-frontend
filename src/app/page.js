@@ -76,155 +76,167 @@ export default async function Hero() {
         </div>
       </div>
 
-      <section className="py-16 ">
-        <div className="container mx-auto px-4">
-          {/* Header */}
-          <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Travel Tailor
-              <br />
-              <span className="text-orange-600 text-3xl md:text-4xl font-handwriting">
-                Customised Experiences
-              </span>
-            </h2>
-            <p className="text-md text-muted-foreground max-w-2xl mx-auto">
-              Handpicked journeys that bring you closer to culture, nature, and
-              adventure — all crafted by our expert travel curators.
-            </p>
-          </div>
-
-          <div className=" p-5 w-full">
-            {/* Grid Section */}
-            <h3 className="text-2xl font-bold mb-6 px-3">
-              Popular Destinations
-            </h3>
-            <div className="flex gap-4 justify-center">
-              {popularDestination?.slice(0, 4).map((item, index) => {
-                const tags = `Starting Price: ₹${item?.startingPrice}`;
-                return (
-                  <div key={index} className={styles.gridItem}>
-                    <Tour
-                      key={index}
-                      description={item.description}
-                      imgUrl={item.heroImg || item.displayImg}
-                      title={item.title}
-                      slug={item.slug}
-                      id={item._id}
-                      tag={tags}
-                      type={"destinations"}
-                    />
-                  </div>
-                );
-              })}
+      {popularDestination > 0 && (
+        <section className="py-16 ">
+          <div className="container mx-auto px-4">
+            {/* Header */}
+            <div className="text-center mb-12 animate-fade-in">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+                Travel Tailor
+                <br />
+                <span className="text-orange-600 text-3xl md:text-4xl font-handwriting">
+                  Customised Experiences
+                </span>
+              </h2>
+              <p className="text-md text-muted-foreground max-w-2xl mx-auto">
+                Handpicked journeys that bring you closer to culture, nature,
+                and adventure — all crafted by our expert travel curators.
+              </p>
             </div>
-          </div>
-          {/* Grid Section */}
-        </div>
 
-        <Link href="/home">
-          <Button className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white">
-            Check out Travel Tailor
-          </Button>
-        </Link>
-      </section>
-
-      <section className="py-16 ">
-        <div className="container mx-auto px-4">
-          {/* Header */}
-          <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-3xl md:text-5xl font-bold mb-2">
-              Trailsmith
-              <br />
-              <span className="text-orange-600 text-3xl md:text-4xl font-handwriting">
-                The Voice of Modern Travel Creators
-              </span>
-            </h2>
-
-            {/* 📝 Description */}
-            <p className="text-md text-muted-foreground max-w-2xl mx-auto">
-              Trailsmith is our creator-led tour blog — a space where seasoned
-              travelers and influencers share their hand-crafted journeys,
-              unique experiences, and insider stories from around the globe.
-            </p>
-          </div>
-
-          {/* Grid Section */}
-          <div className=" p-5 w-full">
-            <h3 className="text-2xl font-bold mb-6 px-3">Upcoming Trips</h3>
-            <div className="flex gap-4 justify-center">
-              {upcomingTrips?.slice(0, 4).map((item, index) => {
-                const tags = `${item?.details?.totalDays} Days`;
-                return (
-                  <div key={index} className={styles.gridItem}>
-                    <Tour
-                      key={index}
-                      description={item.description}
-                      imgUrl={item.heroImg || item.displayImg}
-                      title={item.title}
-                      slug={item.slug}
-                      id={item._id}
-                      tag={tags}
-                      type={"tours"}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          {/* Grid Section */}
-          <div className="p-5 w-full">
-            <h3 className="text-2xl font-bold mb-6 px-3">Travel Influencers</h3>
-
-            {/* Responsive Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 justify-items-center">
-              {creators?.slice(0, 6).map((advisor, index) => (
-                <Card
-                  key={index}
-                  className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in border-0 w-full "
-                >
-                  <CardContent className="p-0 relative h-64 md:h-72 lg:h-80">
-                    <a href={`/creator/${advisor._id}`}>
-                      {/* Image */}
-                      <div className="absolute inset-0 overflow-hidden">
-                        <img
-                          src={advisor.profileImg || fallback}
-                          alt={advisor.name}
-                          className="w-full h-full object-cover transition-transform scale-110 duration-700 ease-in-out group-hover:scale-100"
+            {popularDestination > 0 && (
+              <div className=" p-5 w-full">
+                {/* Grid Section */}
+                <h3 className="text-2xl font-bold mb-6 px-3">
+                  Popular Destinations
+                </h3>
+                <div className="flex gap-4 justify-center">
+                  {popularDestination?.slice(0, 4).map((item, index) => {
+                    const tags = `Starting Price: ₹${item?.startingPrice}`;
+                    return (
+                      <div key={index} className={styles.gridItem}>
+                        <Tour
+                          key={index}
+                          description={item.description}
+                          imgUrl={item.heroImg || item.displayImg}
+                          title={item.title}
+                          slug={item.slug}
+                          id={item._id}
+                          tag={tags}
+                          type={"destinations"}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       </div>
-
-                      {/* Overlay Content */}
-                      <div className="relative z-10 h-full flex flex-col justify-end p-4 text-white">
-                        <h3 className="text-lg font-semibold mb-1 truncate">
-                          {advisor.name}
-                        </h3>
-
-                        <div className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5 text-white/70" />
-                          <span className="text-xs text-white/70 truncate">
-                            {advisor.location}
-                          </span>
-                        </div>
-                      </div>
-                    </a>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {/* Grid Section */}
           </div>
-        </div>
 
-        <Link href="/creator">
-          <Button
-            type="block"
-            varient="outline"
-            className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white"
-          >
-            Check Creators Tours
-          </Button>
-        </Link>
-      </section>
+          <Link href="/home">
+            <Button className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white">
+              Check out Travel Tailor
+            </Button>
+          </Link>
+        </section>
+      )}
+
+      {(upcomingTrips > 0 || creators > 0) && (
+        <section className="py-16 ">
+          <div className="container mx-auto px-4">
+            {/* Header */}
+            <div className="text-center mb-12 animate-fade-in">
+              <h2 className="text-3xl md:text-5xl font-bold mb-2">
+                Trailsmith
+                <br />
+                <span className="text-orange-600 text-3xl md:text-4xl font-handwriting">
+                  The Voice of Modern Travel Creators
+                </span>
+              </h2>
+
+              {/* 📝 Description */}
+              <p className="text-md text-muted-foreground max-w-2xl mx-auto">
+                Trailsmith is our creator-led tour blog — a space where seasoned
+                travelers and influencers share their hand-crafted journeys,
+                unique experiences, and insider stories from around the globe.
+              </p>
+            </div>
+
+            {/* Grid Section */}
+            {upcomingTrips > 0 && (
+              <div className=" p-5 w-full">
+                <h3 className="text-2xl font-bold mb-6 px-3">Upcoming Trips</h3>
+                <div className="flex gap-4 justify-center">
+                  {upcomingTrips?.slice(0, 4).map((item, index) => {
+                    const tags = `${item?.details?.totalDays} Days`;
+                    return (
+                      <div key={index} className={styles.gridItem}>
+                        <Tour
+                          key={index}
+                          description={item.description}
+                          imgUrl={item.heroImg || item.displayImg}
+                          title={item.title}
+                          slug={item.slug}
+                          id={item._id}
+                          tag={tags}
+                          type={"tours"}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {/* Grid Section */}
+            {creators > 0 && (
+              <div className="p-5 w-full">
+                <h3 className="text-2xl font-bold mb-6 px-3">
+                  Travel Influencers
+                </h3>
+
+                {/* Responsive Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 justify-items-center">
+                  {creators?.slice(0, 6).map((advisor, index) => (
+                    <Card
+                      key={index}
+                      className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in border-0 w-full "
+                    >
+                      <CardContent className="p-0 relative h-64 md:h-72 lg:h-80">
+                        <a href={`/creator/${advisor._id}`}>
+                          {/* Image */}
+                          <div className="absolute inset-0 overflow-hidden">
+                            <img
+                              src={advisor.profileImg || fallback}
+                              alt={advisor.name}
+                              className="w-full h-full object-cover transition-transform scale-110 duration-700 ease-in-out group-hover:scale-100"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          </div>
+
+                          {/* Overlay Content */}
+                          <div className="relative z-10 h-full flex flex-col justify-end p-4 text-white">
+                            <h3 className="text-lg font-semibold mb-1 truncate">
+                              {advisor.name}
+                            </h3>
+
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-3.5 w-3.5 text-white/70" />
+                              <span className="text-xs text-white/70 truncate">
+                                {advisor.location}
+                              </span>
+                            </div>
+                          </div>
+                        </a>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Link href="/creator">
+            <Button
+              type="block"
+              varient="outline"
+              className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white"
+            >
+              Check Creators Tours
+            </Button>
+          </Link>
+        </section>
+      )}
     </section>
   );
 }
