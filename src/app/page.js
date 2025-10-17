@@ -5,6 +5,7 @@ import Tour from "./components/CustomUI/Card/Tour";
 import styles from "./page.module.css";
 import { Button } from "./components/ui/button";
 
+export const dynamic = "force-dynamic";
 export default async function Hero() {
   // ✅ Fetch on the server (SSR)
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/main`, {

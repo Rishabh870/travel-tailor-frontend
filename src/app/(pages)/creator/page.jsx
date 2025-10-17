@@ -21,6 +21,8 @@ export default async function Creator() {
       throw new Error(`Failed to fetch (${res.status} ${res.statusText})`);
     }
 
+    console.log(res);
+
     const data = await res.json();
 
     const {
@@ -28,7 +30,7 @@ export default async function Creator() {
       tours = [],
       creators = [],
       reviews = [],
-      happyCustomer,
+      happyCustomer = 0,
     } = data;
 
     return (
