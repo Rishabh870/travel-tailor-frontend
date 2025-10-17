@@ -11,7 +11,7 @@ import Banner from "../../components/Banner/Banner";
 import Steps from "../../components/Steps/Steps";
 
 export const dynamic = "force-static";
-export const revalidate = false;
+export const revalidate = 0;
 
 async function getHomepageData() {
   console.log(`API_URL: ${process.env.API_URL}`);
