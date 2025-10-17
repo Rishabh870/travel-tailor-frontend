@@ -10,7 +10,7 @@ import Image from "next/image";
 
 import Button from "../CustomUI/Button/Button";
 // ⬇️ update the path to where your dialog lives
-import { AuthDialog } from "../Auth/authDialog";
+import { AuthDialog } from "../Auth/AuthDialog";
 
 function Navbar() {
   const pathname = usePathname();
