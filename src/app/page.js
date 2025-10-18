@@ -111,6 +111,15 @@ export default async function Main() {
                 })}
               </div>
             </div>
+            <Link href="/home">
+              <Button
+                type="block"
+                varient="outline"
+                className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white"
+              >
+                Check Travel Tailor
+              </Button>
+            </Link>
           </div>
         )}
       </div>
