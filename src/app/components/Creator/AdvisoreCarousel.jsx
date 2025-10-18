@@ -62,7 +62,7 @@ const AdvisorCarousel = ({ data }) => {
           <div className="flex gap-4 min-w-max">
             {displayData.map((advisor, index) => (
               <div
-                key={advisor._id || index} // Use index if there's no unique _id for duplicated items
+                key={index} // Use index if there's no unique _id for duplicated items
                 className="pl-6 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6"
               >
                 <Card className="group p-0 w-[230px] overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in border-0">
