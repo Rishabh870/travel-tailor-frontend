@@ -82,47 +82,66 @@ export default async function Main() {
           </div>
         </div>
       </div>
-
-      <div className="container mx-auto">
-        {popularDestination.length > 0 && (
-          <div className="p-5  w-full">
-            {/* Grid Section */}
-            <h3 className="text-2xl font-bold mb-6 px-3">
-              Popular Destinations
-            </h3>
-            <div className="overflow-x-auto scrollbar-hidden ">
-              <div className="flex  gap-4 justify-center min-w-max">
-                {popularDestination?.slice(0, 4).map((item, index) => {
-                  const tags = `Starting Price: ₹${item?.startingPrice}`;
-                  return (
-                    <div key={index} className={styles.gridItem}>
-                      <Tour
-                        key={index}
-                        description={item.description}
-                        imgUrl={item.heroImg || item.displayImg}
-                        title={item.title}
-                        slug={item.slug}
-                        id={item._id}
-                        tag={tags}
-                        type={"destinations"}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+      {popularDestination.length > 0 && (
+        <section className="py-16 ">
+          <div className="container mx-auto px-4">
+            {/* Header */}
+            <div className="text-center mb-12 animate-fade-in">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+                Travel Tailor
+                <br />
+                <span className="text-orange-600 text-3xl md:text-4xl font-handwriting">
+                  Customised Experiences
+                </span>
+              </h2>
+              <p className="text-md text-muted-foreground max-w-2xl mx-auto">
+                Handpicked journeys that bring you closer to culture, nature,
+                and adventure — all crafted by our expert travel curators.
+              </p>
             </div>
-            <Link href="/home">
-              <Button
-                type="block"
-                varient="outline"
-                className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white"
-              >
-                Check Travel Tailor
-              </Button>
-            </Link>
+            <div className="container mx-auto">
+              {popularDestination.length > 0 && (
+                <div className="p-5  w-full">
+                  {/* Grid Section */}
+                  <h3 className="text-2xl font-bold mb-6 px-3">
+                    Popular Destinations
+                  </h3>
+                  <div className="overflow-x-auto scrollbar-hidden ">
+                    <div className="flex  gap-4 justify-center min-w-max">
+                      {popularDestination?.slice(0, 4).map((item, index) => {
+                        const tags = `Starting Price: ₹${item?.startingPrice}`;
+                        return (
+                          <div key={index} className={styles.gridItem}>
+                            <Tour
+                              key={index}
+                              description={item.description}
+                              imgUrl={item.heroImg || item.displayImg}
+                              title={item.title}
+                              slug={item.slug}
+                              id={item._id}
+                              tag={tags}
+                              type={"destinations"}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <Link href="/home">
+                    <Button
+                      type="block"
+                      varient="outline"
+                      className="mx-auto block mt-12 rounded-full hover:bg-white border border-orange-600 hover:text-orange-600 bg-orange-600 text-white"
+                    >
+                      Check Travel Tailor
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+        </section>
+      )}
 
       {(upcomingTrips.length > 0 || creators.length > 0) && (
         <section className="py-16 ">
@@ -175,7 +194,7 @@ export default async function Main() {
 
             {/* Grid Section */}
             {creators.length > 0 && (
-              <div className="p-5 w-full">
+              <div className="md:p-5 w-full">
                 <h3 className="text-2xl font-bold mb-6 px-3">
                   Travel Influencers
                 </h3>
