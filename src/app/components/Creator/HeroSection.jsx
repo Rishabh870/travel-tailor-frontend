@@ -65,8 +65,8 @@ const HeroSection = ({ heroImg }) => {
                 onClick={handleSearch}
                 className="h-12 rounded-r-full col-span-1 bg-orange-600 hover:bg-orange-700/90"
               >
-                <Search className="mr-2 h-5 w-5" />
-                Search Trips
+                <Search className="mr-2 h-5 w-5 hidden md:block" />
+                Search
               </Button>
             </div>
           </div>

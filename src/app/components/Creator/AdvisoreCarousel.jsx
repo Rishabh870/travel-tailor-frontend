@@ -1,16 +1,46 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "../ui/card";
-import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import { Star, MapPin } from "lucide-react";
-import Autoplay from "embla-carousel-autoplay";
+import { MapPin } from "lucide-react";
 
 const fallback = "/images/avatar.webp";
 
 const AdvisorCarousel = ({ data }) => {
-  // console.log(data);
+  const carouselRef = useRef(null); // Reference to the carousel container
+  const [displayData, setDisplayData] = useState([]);
+
+  useEffect(() => {
+    // Repeat the data until we have 30 items
+    const repeatedData = [];
+    while (repeatedData.length < 30) {
+      repeatedData.push(...data); // Keep appending data
+    }
+    setDisplayData(repeatedData.slice(0, 30)); // Ensure only 30 items are shown
+
+    const scrollSpeed = 1; // Control the scrolling speed (1px per animation frame)
+
+    const scroll = () => {
+      if (carouselRef.current) {
+        const scrollWidth = carouselRef.current.scrollWidth;
+        const clientWidth = carouselRef.current.clientWidth;
+        const currentScroll = carouselRef.current.scrollLeft;
+
+        // If we've reached the end, reset the scroll position to the beginning
+        if (currentScroll + clientWidth >= scrollWidth) {
+          carouselRef.current.scrollLeft = 0; // Reset to the beginning
+        } else {
+          carouselRef.current.scrollLeft += scrollSpeed; // Scroll by 1px
+        }
+      }
+    };
+
+    const interval = setInterval(scroll, 15); // Slow scrolling (every 15ms)
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [data]);
 
   return (
-    <section className="py-16  bg-gradient-to-b from-background to-muted/30">
+    <section className="py-16 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -28,25 +58,14 @@ const AdvisorCarousel = ({ data }) => {
         </div>
 
         {/* Advisor Cards */}
-        <Carousel
-          className="w-full "
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          plugins={[
-            Autoplay({
-              delay: 3000,
-            }),
-          ]}
-        >
-          <CarouselContent className="-ml-6 px-3">
-            {data.map((advisor, index) => (
-              <CarouselItem
-                key={advisor._id}
-                className="pl-6 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6 "
+        <div className="overflow-x-auto scrollbar-hidden" ref={carouselRef}>
+          <div className="flex gap-4 min-w-max">
+            {displayData.map((advisor, index) => (
+              <div
+                key={advisor._id || index} // Use index if there's no unique _id for duplicated items
+                className="pl-6 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6"
               >
-                <Card className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in border-0">
+                <Card className="group p-0 w-[230px] overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in border-0">
                   <CardContent className="p-0 relative h-80">
                     <a href={`/creator/${advisor._id}`}>
                       <div className="absolute inset-0 overflow-hidden">
@@ -73,10 +92,10 @@ const AdvisorCarousel = ({ data }) => {
                     </a>
                   </CardContent>
                 </Card>
-              </CarouselItem>
+              </div>
             ))}
-          </CarouselContent>
-        </Carousel>
+          </div>
+        </div>
       </div>
     </section>
   );

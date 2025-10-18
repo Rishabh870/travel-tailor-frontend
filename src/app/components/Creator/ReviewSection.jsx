@@ -35,28 +35,6 @@ const reviewsSection = ({ data, happyCustomers = "2,340" }) => {
           </p>
         </div>
 
-        {/* Google Reviews Stats */}
-        {/* <div className="text-center mb-12 animate-scale-in">
-          <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 shadow-lg">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-              alt="Google"
-              className="w-6 h-6"
-            />
-            <span className="font-semibold">Google Reviews</span>
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className="h-4 w-4 fill-yellow-400 text-yellow-400"
-                />
-              ))}
-            </div>
-            <span className="font-bold">4.9/5</span>
-            <span className="text-muted-foreground">(2,340 reviews)</span>
-          </div>
-        </div> */}
-
         <Carousel
           className="w-full"
           opts={{
@@ -76,16 +54,16 @@ const reviewsSection = ({ data, happyCustomers = "2,340" }) => {
                 return (
                   <CarouselItem key={index} className="flex p-6 w-full">
                     {/* 3 reviews in a single slide */}
-                    <div className="w-full flex flex-wrap sm:flex-nowrap gap-4    ">
+                    <div className="w-full flex sm:flex-nowrap gap-4    ">
                       {data.slice(index, index + 3).map((testimonial, idx) => {
                         const profileImage =
                           testimonial.profileImg || testimonial.img;
                         return (
                           <div
                             key={idx}
-                            className="flex flex-shrink-0 w-full sm:w-1/2 lg:w-1/3"
+                            className="flex flex-shrink-0 w-full lg:w-1/3"
                           >
-                            <Card className="group m-3 h-full p-0 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in border-0">
+                            <Card className="group m-3 w-full min-w-[12rem] h-full p-0 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in border-0">
                               <CardContent className="p-6 relative">
                                 <div className="flex items-center justify-between mb-4">
                                   <div className="flex items-center gap-3">
