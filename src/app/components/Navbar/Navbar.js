@@ -50,6 +50,8 @@ function Navbar() {
           if (response.ok) {
             const data = await response.json();
             setUser(data);
+          } else {
+            localStorage.removeItem("token");
           }
         }
 

@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog";
 import { Star, Upload, X, Image as ImageIcon } from "lucide-react";
-import { AuthDialog } from "../Auth/authDialog"; // ⬅️ adjust import path to where you placed AuthDialog
+import { AuthDialog } from "../Auth/authDialog";
 import { toast } from "../../hooks/use-toast";
 
 // ---------- constants ----------
@@ -35,7 +35,7 @@ async function signUpload({ folder, filename, contentType, token }) {
     body: JSON.stringify({ folder, filename, contentType }),
   });
   if (!res.ok) throw new Error(`Sign failed: ${res.status}`);
-  return res.json(); // { path, uploadUrl, publicUrl }
+  return res.json();
 }
 
 async function uploadFileToGCS(file, folder, token) {
@@ -65,7 +65,7 @@ export default function MakeReview({ tourIdOrSlug }) {
   // auth
   const [authOpen, setAuthOpen] = useState(false);
   const [token, setToken] = useState("");
-  const pendingSubmitRef = useRef(false); // to auto-continue after auth
+  const pendingSubmitRef = useRef(false);
 
   // review form
   const [rating, setRating] = useState(0);
@@ -77,7 +77,7 @@ export default function MakeReview({ tourIdOrSlug }) {
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // read token on mount
+  // read token
   useEffect(() => {
     try {
       const t = localStorage.getItem("token") || "";
@@ -86,18 +86,12 @@ export default function MakeReview({ tourIdOrSlug }) {
   }, []);
 
   const onAuthSuccess = ({ token: t, user }) => {
-    // persist token and close modal
     localStorage.setItem("token", t);
     setToken(t);
     setAuthOpen(false);
-
-    // optionally prefill name if empty
     if (!reviewerName && user?.name) setReviewerName(user.name);
-
-    // if user clicked submit before auth, continue now
     if (pendingSubmitRef.current) {
       pendingSubmitRef.current = false;
-      // trigger submit again
       void doSubmit(t);
     }
   };
@@ -112,7 +106,6 @@ export default function MakeReview({ tourIdOrSlug }) {
       return;
     }
 
-    // quick client guards
     const text = reviewContent.trim();
     if (text.length < 10) return alert("Review must be at least 10 chars.");
     if (rating < 1 || rating > 5) return alert("Pick 1–5 stars.");
@@ -132,7 +125,7 @@ export default function MakeReview({ tourIdOrSlug }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${tk}`, // ⬅️ use JWT from localStorage
+          Authorization: `Bearer ${tk}`,
         },
         body: JSON.stringify(payload),
       });
@@ -160,14 +153,11 @@ export default function MakeReview({ tourIdOrSlug }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // if missing token, open auth first and remember we intended to submit
     if (!token) {
       pendingSubmitRef.current = true;
       setAuthOpen(true);
       return;
     }
-
     await doSubmit(token);
   };
 
@@ -185,11 +175,7 @@ export default function MakeReview({ tourIdOrSlug }) {
     try {
       const folder = `reviews/tours/${tourIdOrSlug || "unknown"}`;
       const urls = await Promise.all(
-        toUpload.map((file) => {
-          if (file.size > 10 * 1024 * 1024)
-            throw new Error(`${file.name} exceeds 10MB`);
-          return uploadFileToGCS(file, folder, token);
-        })
+        toUpload.map((file) => uploadFileToGCS(file, folder, token))
       );
       setUploadedImages((prev) => [...prev, ...urls]);
     } catch (err) {
@@ -205,8 +191,8 @@ export default function MakeReview({ tourIdOrSlug }) {
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const renderStarRating = () => {
-    return Array.from({ length: 5 }, (_, i) => (
+  const renderStarRating = () =>
+    Array.from({ length: 5 }, (_, i) => (
       <button
         key={i}
         type="button"
@@ -225,27 +211,24 @@ export default function MakeReview({ tourIdOrSlug }) {
         />
       </button>
     ));
-  };
 
   return (
     <>
-      {/* Auth Dialog */}
       <AuthDialog
         open={authOpen}
         onOpenChange={setAuthOpen}
         onAuthSuccess={onAuthSuccess}
       />
 
-      <Card className="p-0 py-6 border border-gray-100 mb-8">
-        <CardHeader>
-          <CardTitle>Write a Review</CardTitle>
+      <Card className="p-0 py-6 border border-gray-100 mb-8 w-full max-w-[700px] mx-auto sm:px-4">
+        <CardHeader className="px-4 sm:px-6">
+          <CardTitle className="text-lg sm:text-xl">Write a Review</CardTitle>
           <p className="text-sm text-muted-foreground">
             Share your experience with other travelers
           </p>
         </CardHeader>
 
-        <CardContent>
-          {/* If not authenticated, show a friendly CTA as well */}
+        <CardContent className="px-4 sm:px-6">
           {!token && (
             <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm">
               You’re not signed in.{" "}
@@ -262,7 +245,7 @@ export default function MakeReview({ tourIdOrSlug }) {
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 flex flex-col gap-4"
+            className="space-y-5 flex flex-col gap-4 w-full"
           >
             {/* Rating */}
             <div>
@@ -278,7 +261,7 @@ export default function MakeReview({ tourIdOrSlug }) {
             </div>
 
             {/* Name */}
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium mb-2 block">
                 Your Name
               </label>
@@ -288,12 +271,12 @@ export default function MakeReview({ tourIdOrSlug }) {
                 placeholder="Enter your name"
                 required
                 data-testid="input-reviewer-name"
-                className="py-3 px-4 border border-gray-100"
+                className="w-full py-3 px-4 border border-gray-100 rounded-md"
               />
             </div>
 
             {/* Review Title */}
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium mb-2 block">
                 Review Title
               </label>
@@ -303,12 +286,12 @@ export default function MakeReview({ tourIdOrSlug }) {
                 placeholder="Summarize your experience"
                 required
                 data-testid="input-review-title"
-                className="py-3 px-4 border border-gray-100"
+                className="w-full py-3 px-4 border border-gray-100 rounded-md"
               />
             </div>
 
             {/* Review Content */}
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium mb-2 block">
                 Your Review
               </label>
@@ -319,18 +302,18 @@ export default function MakeReview({ tourIdOrSlug }) {
                 rows={4}
                 required
                 data-testid="textarea-review-content"
-                className="py-3 px-4 border border-gray-100"
+                className="block wrap-anywhere  min-h-[120px] sm:min-h-[160px] resize-none py-3 px-4 border border-gray-100 rounded-md overflow-y-auto "
               />
             </div>
 
             {/* Image Upload */}
-            <div>
+            <div className="w-full">
               <label className="text-sm font-medium mb-2 block">
                 Add Photos (Optional - Max 3 images)
               </label>
 
               {uploadedImages.length > 0 && (
-                <div className="flex gap-2 mb-3">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {uploadedImages.map((image, index) => (
                     <div key={index} className="relative">
                       <img
@@ -360,7 +343,7 @@ export default function MakeReview({ tourIdOrSlug }) {
                   <DialogTrigger asChild>
                     <Button
                       type="button"
-                      disabled={token ? false : true}
+                      disabled={!token}
                       variant="outline"
                       className="w-full border-dashed border-gray-200"
                       data-testid="button-add-images"
@@ -369,14 +352,14 @@ export default function MakeReview({ tourIdOrSlug }) {
                       Add Photos ({uploadedImages.length}/3)
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="border border-gray-100">
+                  <DialogContent className="border border-gray-100 max-w-sm sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-orange-600">
                         Upload Images
                       </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
-                      <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center hover-elevate">
+                      <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:shadow-sm">
                         <Upload className="h-8 w-8 mx-auto mb-2 text-orange-500" />
                         <p className="text-sm text-gray-600 mb-2">
                           Drag and drop images here, or click to select

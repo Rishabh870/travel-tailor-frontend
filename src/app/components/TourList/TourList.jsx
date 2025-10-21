@@ -1,100 +1,73 @@
 "use client";
 
-import Spinner from "../CustomUI/Spinner/Spinner"; // Import Spinner component
-import styles from "./styles.module.css"; // Import Tailwind CSS classes
+import Spinner from "../CustomUI/Spinner/Spinner";
+import { motion } from "framer-motion";
 
 export default function TourList({
   tourData,
   isLoading,
   error,
   handleTourTypeChange,
-  handleLoadMore, // Function passed to load more data
+  handleLoadMore,
   tourType,
 }) {
-  console.log("tourData", tourData); // Logging tourData for debugging
+  const tourTypes = [
+    { key: "fixed_date", label: "Fixed Date" },
+    { key: "selectable_date", label: "Selectable Date" },
+    { key: "both", label: "Both" },
+  ];
 
-  // Infinite Scroll - Triggered when user scrolls to the bottom
   const handleScroll = (e) => {
     const bottom =
       e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
-    if (bottom && !isLoading) {
-      handleLoadMore(); // Call handleLoadMore when the bottom is reached
-    }
+    if (bottom && !isLoading) handleLoadMore();
   };
 
   return (
-    <div className="flex mx-auto max-w-[95rem]">
-      <div className="p-10 flex flex-col gap-3  ">
-        <h3 className="text-lg text-gray-800">Tour Types</h3>
-        <ul className=" flex flex-col items-start ">
-          <li>
-            <button
-              onClick={() => handleTourTypeChange("fixed_date")}
-              className={`w-full text-sm py-2 transition-colors duration-300 
-              ${
-                tourType === "fixed_date"
-                  ? "text-orange-600 " // Active button
-                  : "bg-transparent text-black   hover:text-orange-600 " // Non-active button
-              }`}
-            >
-              Fixed Date
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleTourTypeChange("selectable_date")}
-              className={`w-full text-sm py-2  transition-colors duration-300 
-              ${
-                tourType === "selectable_date"
-                  ? "text-orange-600 " // Active button
-                  : "bg-transparent text-black   hover:text-orange-600 " // Non-active button
-              }`}
-            >
-              Selectable Date
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleTourTypeChange("both")}
-              className={`w-full text-sm py-2  transition-colors duration-300 
-              ${
-                tourType === "both"
-                  ? "text-orange-600 " // Active button
-                  : "bg-transparent text-black   hover:text-orange-600 " // Non-active button
-              }`}
-            >
-              Both
-            </button>
-          </li>
-        </ul>
-      </div>
+    <section
+      className="flex flex-col md:flex-row gap-6 max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12"
+      onScroll={handleScroll}
+    >
+      {/* === Sidebar / Tour Types === */}
+      <nav
+        className={`md:w-60 flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-200 sticky md:top-[var(--header-height)]
+          md:h-[calc(100vh-var(--header-height)-2rem)] md:overflow-y-auto py-4 md:py-6 md:pr-4`}
+      >
+        <h3 className="text-lg font-medium text-gray-900 mb-3 md:mb-4 pl-2 md:pl-0">
+          Types
+        </h3>
 
-      <div className="flex-1 px-14" onScroll={handleScroll}>
+        {/* Horizontal on mobile, vertical on desktop */}
+        <ul className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible no-scrollbar pb-2 md:pb-0">
+          {tourTypes.map((type) => (
+            <li key={type.key} className="flex-shrink-0">
+              <button
+                onClick={() => handleTourTypeChange(type.key)}
+                className={`px-4 py-2 text-sm rounded-md whitespace-nowrap transition-all duration-200 font-medium
+                  ${
+                    tourType === type.key
+                      ? " text-orange-600 "
+                      : "text-gray-700 hover:text-orange-600"
+                  }`}
+              >
+                {type.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* === Main Content Area === */}
+      <main className="flex-1 pt-4 md:pt-6 pb-10">
         {isLoading && tourData?.length > 0 ? (
           <Spinner />
         ) : error ? (
-          <div
-            style={{
-              padding: "var(--pd-page)",
-              color: "red",
-              textAlign: "center",
-            }}
-          >
-            Error: {error}
-          </div>
+          <div className="text-center text-red-600 py-10">Error: {error}</div>
         ) : !tourData || tourData.length === 0 ? (
-          <div
-            style={{
-              padding: "var(--pd-page)",
-              textAlign: "center",
-              color: "var(--color-grey)",
-            }}
-          >
-            No tours found.
-          </div>
+          <div className="text-center text-gray-400 py-10">No tours found.</div>
         ) : (
-          <div className="px-14 py-10">
-            <h2 className="text-4xl mb-6">
+          <>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-8 border-b border-gray-200 pb-3">
               {tourType === "fixed_date"
                 ? "Fixed Date"
                 : tourType === "selectable_date"
@@ -103,42 +76,49 @@ export default function TourList({
               Tours
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
               {tourData.map((tour, index) => (
                 <div
                   key={index}
-                  className="relative bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer"
+                  className="relative rounded-xl overflow-hidden shadow-md bg-white cursor-pointer group transition-transform duration-300 hover:-translate-y-1"
                   onClick={() =>
                     (window.location.href = `/creator/tour/${tour.slug}`)
-                  } // On click redirect
+                  }
                 >
-                  {/* Image Wrapper */}
-                  <div className="relative">
+                  <div className="relative aspect-[4/3] bg-gray-100">
                     {tour.heroImg ? (
                       <img
                         src={tour.heroImg}
                         alt={tour.title}
-                        className="w-full h-64 object-cover rounded-t-2xl transform transition-transform duration-300 ease-in-out scale-105 hover:scale-100"
+                        className="w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-transform duration-700"
                       />
                     ) : (
-                      <div className="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-500 rounded-t-2xl">
+                      <div className="flex items-center justify-center w-full h-full bg-gray-200 text-gray-500">
                         No Image
                       </div>
                     )}
-
-                    {/* Title Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                      <h3 className="text-lg font-[700] text-white truncate">
-                        {tour.title}
-                      </h3>
-                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-[60%] bg-gradient-to-t from-black/80 to-transparent z-10" />
+                    <h3 className="absolute bottom-3 left-4 right-4 z-20 text-white font-medium text-lg truncate">
+                      {tour.title}
+                    </h3>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </>
         )}
-      </div>
-    </div>
+      </main>
+
+      {/* Hide scrollbar utility */}
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+    </section>
   );
 }

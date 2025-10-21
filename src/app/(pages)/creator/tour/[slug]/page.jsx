@@ -132,7 +132,7 @@ export default function TourPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen max-w-screen bg-gray-100">
       {/* Sticky Menu */}
 
       {/* Hero Section */}

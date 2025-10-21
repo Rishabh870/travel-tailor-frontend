@@ -9,7 +9,7 @@ export default function ModernGoogleButton({ onSuccess, onError }) {
     onSuccess: async (tokenResponse) => {
       try {
         console.log("Google login success:", tokenResponse);
-        toast.success("Google authentication successful!");
+
         onSuccess?.(tokenResponse); // Pass the whole token data upward
       } catch (err) {
         console.error("Google success handling error:", err);
